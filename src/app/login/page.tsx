@@ -3,6 +3,7 @@ import { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import PasswordInput from '@/components/PasswordInput';
 
 function LoginForm() {
   const router = useRouter();
@@ -35,7 +36,7 @@ function LoginForm() {
         <input id="email" type="email" required className="input" value={email}
           onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
         <label className="field-label" htmlFor="password">Password</label>
-        <input id="password" type="password" required className="input" value={password}
+        <PasswordInput id="password" required value={password}
           onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
         {error && <p className="mt-3 text-sm font-bold text-red-300">{error}</p>}
         <button className="btn mt-6" disabled={busy}>

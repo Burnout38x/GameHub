@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import PasswordInput from '@/components/PasswordInput';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -51,7 +52,7 @@ export default function RegisterPage() {
         <input id="email" type="email" required className="input" value={email}
           onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
         <label className="field-label" htmlFor="password">Password</label>
-        <input id="password" type="password" required minLength={6} className="input" value={password}
+        <PasswordInput id="password" required minLength={6} value={password}
           onChange={(e) => setPassword(e.target.value)} placeholder="At least 6 characters" />
         {error && <p className="mt-3 text-sm font-bold text-amber-300">{error}</p>}
         <button className="btn mt-6" disabled={busy}>
