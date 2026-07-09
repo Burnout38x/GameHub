@@ -13,7 +13,7 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
   if (room.round_phase !== 'answering') return jsonError('Round already revealed', 409);
   if (game.type !== 'quiz' && game.type !== 'prompt') return jsonError('Wrong endpoint for this game');
 
-  const turnBased = isTurnBased(game.slug, game.type);
+  const turnBased = isTurnBased(game.slug, game.type, room.mode);
   if (turnBased && room.turn_player_id !== userId) return jsonError('Not your turn', 403);
 
   const { answer } = await req.json().catch(() => ({}));
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
 
   if (done) {
     // Would You Rather "great minds" bonus: everyone picked the same side (2+ players).
-    if (game.config?.optionsFromContent && players.length > 1 && allAnswers) {
+    if (game.config?.optionsFromContent && !turnBased && players.length > 1 && allAnswers) {
       const values = allAnswers.map((a) => a.answer?.value);
       if (values.length === players.length && new Set(values).size === 1) {
         // WYR awards no points on submit, so the loaded scores are still current.

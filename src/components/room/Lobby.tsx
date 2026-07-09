@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import type { RoomBundle } from './RoomClient';
 import { callRoomApi } from './RoomClient';
+import LeaveButton from './LeaveButton';
 
 export default function Lobby(props: RoomBundle & { code: string; inRoom: boolean }) {
   const { room, game, players, userId, code, inRoom, refresh } = props;
@@ -28,6 +29,8 @@ export default function Lobby(props: RoomBundle & { code: string; inRoom: boolea
         <div className="pill mx-auto">
           {game.emoji} {game.name} · {room.difficulty} ·{' '}
           {game.type === 'memory' ? `${room.total_rounds} pairs` : `${room.total_rounds} rounds`}
+          {room.mode === 'spotlight' ? ' · 🎯 spotlight' : ''}
+          {room.is_public ? ' · 🌍 public' : ''}
         </div>
         <h1 className="mt-4 text-3xl font-black tracking-tight">Room Code</h1>
         <button
@@ -72,6 +75,7 @@ export default function Lobby(props: RoomBundle & { code: string; inRoom: boolea
           {!isHost && inRoom && (
             <p className="text-center text-sm text-white/55">Waiting for the host to start… ⏳</p>
           )}
+          {inRoom && <LeaveButton code={code} status={room.status} isHost={isHost} />}
         </div>
       </div>
     </div>

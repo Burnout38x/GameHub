@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { loadRoomContext, jsonError } from '@/lib/server/room-actions';
-import { shuffle } from '@/lib/game-utils';
+import { shuffle, spotlightRoundCount } from '@/lib/game-utils';
 
 /** POST /api/rooms/[code]/start — host starts the game. */
 export async function POST(_req: Request, { params }: { params: { code: string } }) {
@@ -26,7 +26,11 @@ export async function POST(_req: Request, { params }: { params: { code: string }
     const { data: prompts } = await q;
     if (!prompts || prompts.length === 0)
       return jsonError(`No ${room.difficulty} prompts for this game yet — ask the admin to add some`, 409);
-    const ids = shuffle(prompts.map((p) => p.id)).slice(0, room.total_rounds);
+    const target =
+      room.mode === 'spotlight' && players.length > 1
+        ? spotlightRoundCount(room.total_rounds, players.length, prompts.length)
+        : room.total_rounds;
+    const ids = shuffle(prompts.map((p) => p.id)).slice(0, target);
     update.prompt_ids = ids;
     update.total_rounds = ids.length;
   } else if (game.type === 'memory') {

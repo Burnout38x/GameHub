@@ -1,6 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { shuffle, generateRoomCode, isTurnBased, nextTurnPlayer } from '../src/lib/game-utils';
+import {
+  shuffle,
+  generateRoomCode,
+  isTurnBased,
+  nextTurnPlayer,
+  spotlightEligible,
+  spotlightRoundCount,
+} from '../src/lib/game-utils';
 import type { RoomPlayer } from '../src/lib/types';
 
 test('shuffle keeps every element exactly once', () => {
@@ -57,6 +64,33 @@ test('turn-based classification matches game design', () => {
   assert.equal(isTurnBased('never-have-i-ever', 'prompt'), false);
   assert.equal(isTurnBased('would-you-rather', 'prompt'), false);
   assert.equal(isTurnBased('doctor-dash', 'quiz'), false);
+});
+
+test('spotlight mode forces turn-based play for any game', () => {
+  assert.equal(isTurnBased('doctor-dash', 'quiz', 'spotlight'), true);
+  assert.equal(isTurnBased('never-have-i-ever', 'prompt', 'spotlight'), true);
+  assert.equal(isTurnBased('doctor-dash', 'quiz', 'classic'), false);
+  assert.equal(isTurnBased('never-have-i-ever', 'prompt', 'classic'), false);
+});
+
+test('spotlight eligibility covers quizzes and NHIE only', () => {
+  assert.equal(spotlightEligible('doctor-dash', 'quiz'), true);
+  assert.equal(spotlightEligible('movie-trivia', 'quiz'), true);
+  assert.equal(spotlightEligible('never-have-i-ever', 'prompt'), true);
+  assert.equal(spotlightEligible('would-you-rather', 'prompt'), false);
+  assert.equal(spotlightEligible('truth-or-dare', 'prompt'), false);
+  assert.equal(spotlightEligible('memory-match', 'memory'), false);
+  assert.equal(spotlightEligible('number-guess', 'guess'), false);
+});
+
+test('spotlight round count gives everyone equal turns', () => {
+  assert.equal(spotlightRoundCount(10, 2, 50), 10);
+  assert.equal(spotlightRoundCount(10, 3, 50), 9);
+  assert.equal(spotlightRoundCount(10, 4, 50), 12);
+  assert.equal(spotlightRoundCount(100, 8, 999), 96); // capped at 100 by the check constraint
+  assert.equal(spotlightRoundCount(10, 3, 4), 3); // few prompts: shrink to one each
+  assert.equal(spotlightRoundCount(5, 10, 999), 10); // more players than requested: one each
+  assert.equal(spotlightRoundCount(5, 10, 3), 3); // fewer prompts than players: play what exists
 });
 
 test('number guess scoring rewards fewer guesses, floor of 1', () => {

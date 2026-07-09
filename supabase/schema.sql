@@ -88,6 +88,8 @@ create table public.rooms (
   host_id uuid not null references public.profiles(id) on delete cascade,
   game_id uuid not null references public.games(id),
   difficulty text not null default 'mixed' check (difficulty in ('easy', 'hard', 'mixed')),
+  mode text not null default 'classic' check (mode in ('classic', 'spotlight')),
+  is_public boolean not null default false,
   total_rounds int not null default 10 check (total_rounds between 1 and 100),
   status text not null default 'lobby' check (status in ('lobby', 'playing', 'finished')),
   current_round int not null default 0,     -- 0-based index into prompt_ids
@@ -99,6 +101,7 @@ create table public.rooms (
   created_at timestamptz not null default now()
 );
 create index rooms_code_idx on public.rooms (code);
+create index rooms_browser_idx on public.rooms (is_public, status, created_at desc);
 
 -- Secrets clients must never read (number-guess target). No select policy on purpose.
 create table public.room_secrets (

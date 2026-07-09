@@ -32,6 +32,8 @@ export default function EndScreen({ room, game, players, userId }: RoomBundle) {
           gameId: room.game_id,
           difficulty: room.difficulty,
           totalRounds: room.total_rounds,
+          mode: room.mode,
+          isPublic: room.is_public,
           rematchOf: room.id,
         }),
       });

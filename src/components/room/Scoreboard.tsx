@@ -3,7 +3,7 @@ import type { RoomBundle } from './RoomClient';
 import { isTurnBased } from '@/lib/game-utils';
 
 export default function Scoreboard({ room, game, players, userId }: RoomBundle) {
-  const turnBased = isTurnBased(game.slug, game.type);
+  const turnBased = isTurnBased(game.slug, game.type, room.mode);
   const progress =
     game.type === 'memory'
       ? ((room.round_state?.matched ?? 0) / room.total_rounds) * 100

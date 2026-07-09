@@ -3,6 +3,7 @@ import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { Game } from '@/lib/types';
+import { spotlightEligible } from '@/lib/game-utils';
 
 function NewRoomForm() {
   const router = useRouter();
@@ -11,6 +12,8 @@ function NewRoomForm() {
   const [gameSlug, setGameSlug] = useState(params.get('game') ?? '');
   const [difficulty, setDifficulty] = useState('mixed');
   const [rounds, setRounds] = useState('10');
+  const [mode, setMode] = useState('classic');
+  const [isPublic, setIsPublic] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -29,6 +32,8 @@ function NewRoomForm() {
 
   const game = games.find((g) => g.slug === gameSlug);
   const isMemory = game?.type === 'memory';
+  const canSpotlight = game ? spotlightEligible(game.slug, game.type) : false;
+  const effectiveMode = canSpotlight ? mode : 'classic';
   const roundOptions = isMemory ? ['6', '8', '10', '12', '15', '20'] : ['5', '10', '15', '20', '30', '40'];
 
   async function submit(e: React.FormEvent) {
@@ -40,7 +45,13 @@ function NewRoomForm() {
       const res = await fetch('/api/rooms', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ gameId: game.id, difficulty, totalRounds: Number(rounds) }),
+        body: JSON.stringify({
+          gameId: game.id,
+          difficulty,
+          totalRounds: Number(rounds),
+          mode: effectiveMode,
+          isPublic,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Could not create room');
@@ -69,6 +80,21 @@ function NewRoomForm() {
         </select>
         {game && <p className="mt-2 text-xs text-white/50">{game.description}</p>}
 
+        {canSpotlight && (
+          <>
+            <label className="field-label" htmlFor="mode">Mode</label>
+            <select id="mode" className="input" value={mode} onChange={(e) => setMode(e.target.value)}>
+              <option value="classic">🤝 Classic — everyone answers at once</option>
+              <option value="spotlight">🎯 Spotlight — one player answers at a time</option>
+            </select>
+            {mode === 'spotlight' && (
+              <p className="mt-2 text-xs text-white/50">
+                Question count is rounded at start so everyone gets equal turns.
+              </p>
+            )}
+          </>
+        )}
+
         {game?.type !== 'guess' && game?.type !== 'memory' && (
           <>
             <label className="field-label" htmlFor="difficulty">Difficulty</label>
@@ -89,6 +115,17 @@ function NewRoomForm() {
               {r} {isMemory ? `pairs (${Number(r) * 2} cards)` : ''}
             </option>
           ))}
+        </select>
+
+        <label className="field-label" htmlFor="visibility">Visibility</label>
+        <select
+          id="visibility"
+          className="input"
+          value={isPublic ? 'public' : 'private'}
+          onChange={(e) => setIsPublic(e.target.value === 'public')}
+        >
+          <option value="private">🔒 Private — join by code only</option>
+          <option value="public">🌍 Public — listed in the room browser</option>
         </select>
 
         {error && <p className="mt-3 text-sm font-bold text-red-300">{error}</p>}

@@ -3,7 +3,18 @@ import { createClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
 
-export default async function GamesPage() {
+const NOTICES: Record<string, string> = {
+  host_left: 'Room closed by the host.',
+  not_enough_players: 'Room closed — not enough players to keep playing.',
+  removed: "You're no longer in that room.",
+};
+
+export default async function GamesPage({
+  searchParams,
+}: {
+  searchParams?: { notice?: string };
+}) {
+  const notice = searchParams?.notice ? NOTICES[searchParams.notice] : null;
   const supabase = createClient();
   const { data: games } = await supabase
     .from('games')
@@ -16,14 +27,24 @@ export default async function GamesPage() {
 
   return (
     <div className="flex flex-col gap-6">
+      {notice && (
+        <div className="glass-sm border-amber-300/40 bg-amber-400/10 p-4 text-sm font-bold text-amber-200">
+          ⚠️ {notice}
+        </div>
+      )}
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-3xl font-black tracking-tight">Game Library</h1>
           <p className="mt-1 text-white/60">Pick a game, create a room, share the code.</p>
         </div>
-        <Link href="/rooms/join" className="btn-secondary !w-auto px-6 !py-3">
-          Have a code? Join →
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/rooms" className="btn-secondary !w-auto px-6 !py-3">
+            Browse rooms →
+          </Link>
+          <Link href="/rooms/join" className="btn-secondary !w-auto px-6 !py-3">
+            Have a code? Join →
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

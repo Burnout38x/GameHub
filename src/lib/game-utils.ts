@@ -25,8 +25,23 @@ export function nextTurnPlayer(
   return players[(idx + 1) % players.length].profile_id;
 }
 
-/** Prompt games where one player acts per round instead of everyone answering at once. */
-export function isTurnBased(gameSlug: string, gameType: string): boolean {
+/** Games where one player acts per round instead of everyone answering at once. */
+export function isTurnBased(gameSlug: string, gameType: string, mode: string = 'classic'): boolean {
+  if (mode === 'spotlight') return true;
   if (gameType === 'memory' || gameType === 'guess') return true;
   return gameSlug === 'truth-or-dare' || gameSlug === 'two-minute-challenge';
+}
+
+/** Games that can be played in spotlight mode (one player answers at a time). */
+export function spotlightEligible(gameSlug: string, gameType: string): boolean {
+  return gameType === 'quiz' || gameSlug === 'never-have-i-ever';
+}
+
+/** Rounds the requested question count to a multiple of the player count for equal turns. */
+export function spotlightRoundCount(requested: number, playerCount: number, available: number): number {
+  const cap = Math.min(available, 100);
+  let perPlayer = Math.max(1, Math.round(requested / playerCount));
+  while (perPlayer > 1 && perPlayer * playerCount > cap) perPlayer--;
+  if (perPlayer * playerCount > cap) return Math.min(requested, cap);
+  return perPlayer * playerCount;
 }

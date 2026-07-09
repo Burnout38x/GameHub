@@ -14,7 +14,7 @@ export default function PromptPlay({ room, game, players, answers, prompt, userI
 
   const cfg = game.config ?? {};
   const content = prompt?.content ?? {};
-  const turnBased = isTurnBased(game.slug, game.type);
+  const turnBased = isTurnBased(game.slug, game.type, room.mode);
   const isMyTurn = room.turn_player_id === userId;
   const turnPlayer = players.find((p) => p.profile_id === room.turn_player_id);
   const myAnswer = answers.find((a) => a.profile_id === userId);

@@ -1,5 +1,6 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { Game, Prompt, Room, RoomPlayer, RoundAnswer } from '@/lib/types';
 import Lobby from './Lobby';
@@ -9,6 +10,7 @@ import PromptPlay from './PromptPlay';
 import MemoryPlay from './MemoryPlay';
 import GuessPlay from './GuessPlay';
 import Scoreboard from './Scoreboard';
+import LeaveButton from './LeaveButton';
 
 export interface RoomBundle {
   room: Room;
@@ -33,9 +35,11 @@ export async function callRoomApi(code: string, action: string, body: Record<str
 
 export default function RoomClient({ code, userId }: { code: string; userId: string }) {
   const supabase = useRef(createClient()).current;
+  const router = useRouter();
   const [bundle, setBundle] = useState<Omit<RoomBundle, 'userId' | 'refresh'> | null>(null);
   const [error, setError] = useState('');
   const roomIdRef = useRef<string | null>(null);
+  const wasInRoomRef = useRef(false);
 
   const load = useCallback(async () => {
     const { data: room } = await supabase.from('rooms').select('*').eq('code', code).single();
@@ -88,6 +92,23 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
     };
   }, [code, load, supabase]);
 
+  // Kick players back to /games when the room closes under them (host left / too few players).
+  useEffect(() => {
+    if (!bundle) return;
+    const { room, players } = bundle;
+    const amIn = players.some((p) => p.profile_id === userId);
+    const closedReason = room.status === 'finished' ? room.round_state?.closedReason : null;
+    if (closedReason && (amIn || wasInRoomRef.current)) {
+      router.replace(`/games?notice=${closedReason}`);
+      return;
+    }
+    if (wasInRoomRef.current && !amIn && room.status !== 'finished') {
+      router.replace('/games?notice=removed');
+      return;
+    }
+    if (amIn) wasInRoomRef.current = true;
+  }, [bundle, router, userId]);
+
   if (error)
     return <div className="glass mx-auto mt-16 max-w-md p-8 text-center text-red-300">{error}</div>;
   if (!bundle)
@@ -120,6 +141,7 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
       {game.type === 'prompt' && <PromptPlay {...full} />}
       {game.type === 'memory' && <MemoryPlay {...full} />}
       {game.type === 'guess' && <GuessPlay {...full} />}
+      <LeaveButton code={code} status={room.status} isHost={room.host_id === userId} />
     </div>
   );
 }

@@ -2,7 +2,7 @@
 import { useMemo, useState } from 'react';
 import type { RoomBundle } from './RoomClient';
 import { callRoomApi } from './RoomClient';
-import { shuffle } from '@/lib/game-utils';
+import { shuffle, isTurnBased } from '@/lib/game-utils';
 
 export default function QuizPlay({ room, game, players, answers, prompt, userId, refresh }: RoomBundle) {
   const [busy, setBusy] = useState(false);
@@ -21,8 +21,14 @@ export default function QuizPlay({ room, game, players, answers, prompt, userId,
   const revealed = room.round_phase === 'revealed';
   const waitingFor = players.length - answers.length;
 
+  const turnBased = isTurnBased(game.slug, game.type, room.mode);
+  const isMyTurn = room.turn_player_id === userId;
+  const turnPlayer = players.find((p) => p.profile_id === room.turn_player_id);
+  const turnAnswer = answers.find((a) => a.profile_id === room.turn_player_id);
+  const canAnswer = !revealed && !myAnswer && (!turnBased || isMyTurn);
+
   async function submit(option: string) {
-    if (myAnswer || revealed || busy) return;
+    if (!canAnswer || busy) return;
     setBusy(true);
     setError('');
     try {
@@ -51,6 +57,11 @@ export default function QuizPlay({ room, game, players, answers, prompt, userId,
 
   return (
     <div className="flex flex-col gap-3">
+      {turnBased && (
+        <div className="pill">
+          {isMyTurn ? '🎯 Your turn!' : `${turnPlayer?.display_name ?? '…'}'s turn`}
+        </div>
+      )}
       <div className="glass flex min-h-[180px] flex-col items-center justify-center gap-3 p-6 text-center">
         {content.emoji && <div className="text-6xl leading-tight drop-shadow-lg">{content.emoji}</div>}
         <div className="text-xl font-black leading-snug tracking-tight sm:text-2xl">
@@ -65,21 +76,21 @@ export default function QuizPlay({ room, game, players, answers, prompt, userId,
 
       <div className="grid gap-2.5">
         {options.map((option) => {
-          const mine = myAnswer?.answer?.value === option;
+          const picked = (turnBased ? turnAnswer : myAnswer)?.answer?.value === option;
           const cls = revealed
             ? option === content.answer
               ? 'option-correct'
-              : mine
+              : picked
                 ? 'option-wrong'
                 : ''
-            : mine
+            : picked
               ? 'border-indigo-300/70 bg-indigo-400/[0.15]'
               : '';
           return (
             <button
               key={option}
               className={`option-btn ${cls}`}
-              disabled={!!myAnswer || revealed || busy}
+              disabled={!canAnswer || busy}
               onClick={() => submit(option)}
             >
               {option}
@@ -90,21 +101,37 @@ export default function QuizPlay({ room, game, players, answers, prompt, userId,
 
       {error && <p className="text-sm font-bold text-red-300">{error}</p>}
 
-      {!revealed && myAnswer && (
+      {!revealed && !turnBased && myAnswer && (
         <div className="glass-sm p-4 text-sm text-white/70">
           Answer locked in ✔ Waiting for {waitingFor} more player{waitingFor === 1 ? '' : 's'}…
         </div>
       )}
 
+      {!revealed && turnBased && !isMyTurn && (
+        <div className="glass-sm p-4 text-sm text-white/70">
+          Waiting for {turnPlayer?.display_name ?? '…'} to answer…
+        </div>
+      )}
+
       {revealed && (
         <div className="glass-sm p-4 text-sm leading-relaxed text-white/85">
-          <strong>{myAnswer?.is_correct ? 'Correct! 🎉' : `The answer was: ${content.answer}`}</strong>
+          {turnBased ? (
+            <strong>
+              {turnAnswer?.is_correct
+                ? `${isMyTurn ? 'You' : turnPlayer?.display_name ?? 'They'} got it right! 🎉`
+                : `${isMyTurn ? 'You' : turnPlayer?.display_name ?? 'They'} picked "${turnAnswer?.answer?.value ?? '…'}" — the answer was: ${content.answer}`}
+            </strong>
+          ) : (
+            <strong>{myAnswer?.is_correct ? 'Correct! 🎉' : `The answer was: ${content.answer}`}</strong>
+          )}
           {game.config?.showFact && content.fact && (
             <p className="mt-1 text-white/70">💡 {content.fact}</p>
           )}
-          <div className="mt-2 text-xs text-white/50">
-            {answers.filter((a) => a.is_correct).length} of {players.length} got it right
-          </div>
+          {!turnBased && (
+            <div className="mt-2 text-xs text-white/50">
+              {answers.filter((a) => a.is_correct).length} of {players.length} got it right
+            </div>
+          )}
         </div>
       )}
 

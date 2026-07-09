@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { generateRoomCode } from '@/lib/game-utils';
+import { generateRoomCode, spotlightEligible } from '@/lib/game-utils';
 import { jsonError } from '@/lib/server/room-actions';
 
 /** POST /api/rooms — create a room and add the host as first player. */
@@ -13,18 +13,21 @@ export async function POST(req: NextRequest) {
   if (!user) return jsonError('Not logged in', 401);
 
   const body = await req.json().catch(() => ({}));
-  const { gameId, difficulty = 'mixed', totalRounds = 10, rematchOf } = body;
+  const { gameId, difficulty = 'mixed', totalRounds = 10, mode = 'classic', isPublic = false, rematchOf } = body;
   if (!gameId) return jsonError('gameId is required');
   if (!['easy', 'hard', 'mixed'].includes(difficulty)) return jsonError('Bad difficulty');
+  if (!['classic', 'spotlight'].includes(mode)) return jsonError('Bad mode');
   const rounds = Math.min(100, Math.max(1, Number(totalRounds) || 10));
 
   const admin = createAdminClient();
   const { data: game } = await admin
     .from('games')
-    .select('id, is_active')
+    .select('id, slug, type, is_active')
     .eq('id', gameId)
     .single();
   if (!game || !game.is_active) return jsonError('Game not found', 404);
+  if (mode === 'spotlight' && !spotlightEligible(game.slug, game.type))
+    return jsonError('Spotlight mode is not available for this game');
 
   const { data: profile } = await admin
     .from('profiles')
@@ -42,6 +45,8 @@ export async function POST(req: NextRequest) {
         host_id: user.id,
         game_id: gameId,
         difficulty,
+        mode,
+        is_public: !!isPublic,
         total_rounds: rounds,
       })
       .select()

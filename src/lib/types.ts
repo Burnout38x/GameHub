@@ -1,5 +1,6 @@
 export type GameType = 'quiz' | 'prompt' | 'memory' | 'guess';
 export type Difficulty = 'easy' | 'hard' | 'mixed';
+export type RoomMode = 'classic' | 'spotlight';
 export type RoomStatus = 'lobby' | 'playing' | 'finished';
 export type RoundPhase = 'answering' | 'revealed';
 
@@ -40,6 +41,8 @@ export interface Room {
   host_id: string;
   game_id: string;
   difficulty: Difficulty;
+  mode: RoomMode;
+  is_public: boolean;
   total_rounds: number;
   status: RoomStatus;
   current_round: number;
@@ -48,6 +51,7 @@ export interface Room {
   round_state: Record<string, any>;
   round_phase: RoundPhase;
   winner_ids: string[];
+  created_at: string;
 }
 
 export interface RoomPlayer {
