@@ -36,9 +36,13 @@ export default function RegisterPage() {
     });
     if (error) {
       // A duplicate name that slips past the check fails the profile trigger's unique index.
-      setError(error.message.includes('Database error')
-        ? 'That display name is already taken — try another.'
-        : error.message);
+      if (error.message.includes('Database error')) {
+        setError('That display name is already taken — try another.');
+      } else if (/rate limit/i.test(error.message)) {
+        setError('Too many signup emails sent recently — the email service needs to cool down. Please try again in about an hour.');
+      } else {
+        setError(error.message);
+      }
       setBusy(false);
       return;
     }

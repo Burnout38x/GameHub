@@ -17,7 +17,9 @@ export default function ForgotPasswordPage() {
       redirectTo: `${window.location.origin}/reset-password`,
     });
     if (error) {
-      setError(error.message);
+      setError(/rate limit/i.test(error.message)
+        ? 'Too many reset emails sent recently — the email service needs to cool down. Please try again in about an hour.'
+        : error.message);
       setBusy(false);
       return;
     }
