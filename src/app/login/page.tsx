@@ -38,6 +38,9 @@ function LoginForm() {
         <label className="field-label" htmlFor="password">Password</label>
         <PasswordInput id="password" required value={password}
           onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
+        <p className="mt-2 text-right text-sm">
+          <Link href="/forgot-password" className="font-bold text-indigo-300">Forgot password?</Link>
+        </p>
         {error && <p className="mt-3 text-sm font-bold text-red-300">{error}</p>}
         <button className="btn mt-6" disabled={busy}>
           {busy ? 'Logging in…' : 'Log in'}

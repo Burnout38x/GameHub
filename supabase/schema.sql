@@ -13,6 +13,9 @@ create table public.profiles (
   created_at timestamptz not null default now()
 );
 
+-- Display names are unique case-insensitively ("Blaze" and "blaze" are the same name).
+create unique index profiles_username_lower_idx on public.profiles (lower(username));
+
 -- Auto-create a profile on signup; the very first user becomes admin.
 create or replace function public.handle_new_user()
 returns trigger language plpgsql security definer set search_path = public as $$

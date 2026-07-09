@@ -18,13 +18,27 @@ export default function RegisterPage() {
     setBusy(true);
     setError('');
     const supabase = createClient();
+    const name = username.trim();
+    const { data: existing } = await supabase
+      .from('profiles')
+      .select('id')
+      .ilike('username', name.replace(/[%_\\]/g, '\\$&'))
+      .maybeSingle();
+    if (existing) {
+      setError('That display name is already taken — try another.');
+      setBusy(false);
+      return;
+    }
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { username: username.trim() } },
+      options: { data: { username: name } },
     });
     if (error) {
-      setError(error.message);
+      // A duplicate name that slips past the check fails the profile trigger's unique index.
+      setError(error.message.includes('Database error')
+        ? 'That display name is already taken — try another.'
+        : error.message);
       setBusy(false);
       return;
     }
