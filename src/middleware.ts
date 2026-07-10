@@ -1,7 +1,9 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
-const PROTECTED = ['/games', '/rooms', '/room', '/profile', '/admin'];
+// /games is intentionally public so people can browse without an account —
+// creating/joining/playing a room (/rooms, /room, /profile, /admin) still requires login.
+const PROTECTED = ['/rooms', '/room', '/profile', '/admin'];
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });

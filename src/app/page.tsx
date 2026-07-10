@@ -50,7 +50,7 @@ export default async function HomePage() {
       <section>
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-2xl font-black tracking-tight">Featured Games</h2>
-          <Link href={user ? '/games' : '/register'} className="text-sm font-bold text-indigo-300">
+          <Link href="/games" className="text-sm font-bold text-indigo-300">
             View all →
           </Link>
         </div>
