@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import SignOutButton from './SignOutButton';
+import { registrationAvailable } from '@/lib/config';
 
 export default function NavLinks({
   signedIn,
@@ -63,13 +64,15 @@ export default function NavLinks({
             <Link href="/login" className="pill">
               Log in
             </Link>
-            <Link
-              href="/register"
-              className="rounded-full px-4 py-2 text-[13px] font-extrabold text-[#0a0918]"
-              style={{ background: 'linear-gradient(135deg,#a5b4fc,#f9a8d4)' }}
-            >
-              Sign up
-            </Link>
+            {registrationAvailable && (
+              <Link
+                href="/register"
+                className="rounded-full px-4 py-2 text-[13px] font-extrabold text-[#0a0918]"
+                style={{ background: 'linear-gradient(135deg,#a5b4fc,#f9a8d4)' }}
+              >
+                Sign up
+              </Link>
+            )}
           </>
         )}
       </div>

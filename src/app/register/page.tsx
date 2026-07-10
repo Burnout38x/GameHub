@@ -4,8 +4,28 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import PasswordInput from '@/components/PasswordInput';
+import { registrationAvailable } from '@/lib/config';
 
 export default function RegisterPage() {
+  if (!registrationAvailable) {
+    return (
+      <div className="mx-auto mt-10 w-full max-w-md">
+        <div className="glass p-7 text-center">
+          <h1 className="text-3xl font-black tracking-tight">Signups are paused</h1>
+          <p className="mt-3 text-sm text-white/60">
+            New accounts aren&apos;t open right now. If you already have one, log in below.
+          </p>
+          <Link href="/login" className="btn mt-6 inline-block">
+            Log in
+          </Link>
+        </div>
+      </div>
+    );
+  }
+  return <RegisterForm />;
+}
+
+function RegisterForm() {
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');

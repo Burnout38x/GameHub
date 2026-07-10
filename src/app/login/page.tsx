@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import PasswordInput from '@/components/PasswordInput';
+import { registrationAvailable } from '@/lib/config';
 
 function LoginForm() {
   const router = useRouter();
@@ -45,10 +46,12 @@ function LoginForm() {
         <button className="btn mt-6" disabled={busy}>
           {busy ? 'Logging in…' : 'Log in'}
         </button>
-        <p className="mt-4 text-center text-sm text-white/60">
-          New here?{' '}
-          <Link href="/register" className="font-bold text-indigo-300">Create an account</Link>
-        </p>
+        {registrationAvailable && (
+          <p className="mt-4 text-center text-sm text-white/60">
+            New here?{' '}
+            <Link href="/register" className="font-bold text-indigo-300">Create an account</Link>
+          </p>
+        )}
       </form>
     </div>
   );
