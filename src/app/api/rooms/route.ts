@@ -38,7 +38,8 @@ export async function POST(req: NextRequest) {
   if (!game || !game.is_active) return jsonError('Game not found', 404);
   if (mode === 'spotlight' && !spotlightEligible(game.slug, game.type))
     return jsonError('Spotlight mode is not available for this game');
-  if (timer && game.type !== 'quiz') return jsonError('Timers are only available for quiz games');
+  if (timer && game.type !== 'quiz' && game.type !== 'chain')
+    return jsonError('Timers are not available for this game');
 
   const { data: profile } = await admin
     .from('profiles')

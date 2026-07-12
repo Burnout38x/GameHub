@@ -94,6 +94,26 @@ const GAMES: SeedGame[] = [
     config: { maxTurns: 18 },
     sort_order: 160,
   },
+  {
+    slug: 'rule-discoverer',
+    name: 'Rule Discoverer',
+    description: 'A secret word or number rule. Test examples, study the evidence, identify it first.',
+    emoji: '🧩',
+    type: 'rule',
+    config: {},
+    sort_order: 170,
+  },
+  {
+    slug: 'word-chain',
+    name: 'Word Association Chain',
+    description: 'Keep the chain alive — repeats are blocked and weak connections can be challenged to a vote.',
+    emoji: '🔗',
+    type: 'chain',
+    config: {
+      starters: ['ocean', 'music', 'school', 'fire', 'dream', 'coffee', 'moon', 'travel', 'garden', 'money', 'movie', 'family', 'summer', 'phone', 'rain'],
+    },
+    sort_order: 180,
+  },
 ];
 
 // The engine supports easy/hard; fold medium into easy and expert into hard.

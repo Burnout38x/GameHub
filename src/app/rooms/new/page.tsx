@@ -34,20 +34,30 @@ function NewRoomForm() {
   const game = games.find((g) => g.slug === gameSlug);
   useEffect(() => {
     // The ported speed games default to a timer; everything else starts casual.
-    setTimer(['mystery-card', 'reverse-definition', 'mental-math-duel'].includes(gameSlug) ? '15' : 'off');
+    setTimer(
+      ['mystery-card', 'reverse-definition', 'mental-math-duel'].includes(gameSlug)
+        ? '15'
+        : gameSlug === 'word-chain'
+          ? '12'
+          : 'off'
+    );
   }, [gameSlug]);
   const isMemory = game?.type === 'memory';
   const isPredict = game?.type === 'predict';
   const isCode = game?.type === 'code';
+  const isRule = game?.type === 'rule';
+  const isChain = game?.type === 'chain';
   const canSpotlight = game ? spotlightEligible(game.slug, game.type) : false;
   const effectiveMode = canSpotlight ? mode : 'classic';
   const roundOptions = isMemory
     ? ['6', '8', '10', '12', '15', '20']
     : isPredict
       ? ['6', '10', '14', '20']
-      : isCode
+      : isCode || isRule
         ? ['1', '3', '5']
-        : ['5', '10', '15', '20', '30', '40'];
+        : isChain
+          ? ['12', '20', '30']
+          : ['5', '10', '15', '20', '30', '40'];
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -64,7 +74,8 @@ function NewRoomForm() {
           totalRounds: Number(rounds),
           mode: effectiveMode,
           isPublic,
-          answerSeconds: game.type === 'quiz' && timer !== 'off' ? Number(timer) : null,
+          answerSeconds:
+            (game.type === 'quiz' || game.type === 'chain') && timer !== 'off' ? Number(timer) : null,
         }),
       });
       const data = await res.json();
@@ -114,7 +125,7 @@ function NewRoomForm() {
           </>
         )}
 
-        {game?.type !== 'guess' && game?.type !== 'memory' && !isPredict && !isCode && (
+        {game?.type !== 'guess' && game?.type !== 'memory' && !isPredict && !isCode && !isRule && !isChain && (
           <>
             <label className="field-label" htmlFor="difficulty">Difficulty</label>
             <select id="difficulty" className="input" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
@@ -141,9 +152,13 @@ function NewRoomForm() {
             ? 'Number of pairs'
             : isCode
               ? 'Codes to crack'
-              : game?.type === 'guess'
-                ? 'Number of rounds'
-                : 'Number of questions'}
+              : isRule
+                ? 'Rules to discover'
+                : isChain
+                  ? 'Number of turns'
+                  : game?.type === 'guess'
+                    ? 'Number of rounds'
+                    : 'Number of questions'}
         </label>
         <select id="rounds" className="input" value={rounds} onChange={(e) => setRounds(e.target.value)}>
           {roundOptions.map((r) => (
@@ -153,9 +168,9 @@ function NewRoomForm() {
           ))}
         </select>
 
-        {game?.type === 'quiz' && (
+        {(game?.type === 'quiz' || isChain) && (
           <>
-            <label className="field-label" htmlFor="timer">Timer per question</label>
+            <label className="field-label" htmlFor="timer">{isChain ? 'Timer per turn' : 'Timer per question'}</label>
             <select id="timer" className="input" value={timer} onChange={(e) => setTimer(e.target.value)}>
               <option value="off">🧘 No timer — casual pace</option>
               <option value="10">⏱ 10 seconds</option>

@@ -131,7 +131,11 @@ export default async function GamesPage({
                         ? 'Couple'
                         : g.type === 'code'
                           ? 'Deduction'
-                          : 'Duel'}
+                          : g.type === 'rule'
+                            ? 'Logic'
+                            : g.type === 'chain'
+                              ? 'Words'
+                              : 'Duel'}
               </span>
             </div>
             <div>

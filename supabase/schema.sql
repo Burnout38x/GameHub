@@ -60,7 +60,7 @@ create table public.games (
   name text not null,
   description text not null default '',
   emoji text not null default '🎮',
-  type text not null check (type in ('quiz', 'prompt', 'memory', 'guess', 'predict', 'code')),
+  type text not null check (type in ('quiz', 'prompt', 'memory', 'guess', 'predict', 'code', 'rule', 'chain')),
   -- type-specific settings, e.g. prompt games: {"choices":["I Have","Never"],"timerSeconds":0}
   -- memory: {"themes":{"Love":[["❤️","Heart"],...]}} ; guess: {"min":1,"max":100}
   config jsonb not null default '{}',
@@ -236,5 +236,7 @@ insert into public.games (slug, name, description, emoji, type, config, sort_ord
   ('mental-math-duel', 'Mental Math', 'Generated arithmetic, sequences and powers. The fastest brains take the round.', '⚡', 'quiz', '{}', 130),
   ('know-your-partner', 'Know Your Partner', 'Answer privately, then see how accurately your partner predicts your choices. Roles alternate.', '💞', 'predict', '{}', 140),
   ('who-remembers', 'Who Remembers It Better?', 'Both partners answer the same memory question privately — matching answers score for you both.', '📸', 'predict', '{"freeText": true}', 150),
-  ('code-crackers', 'Code Crackers', 'Take turns testing a secret digit code. Exact and misplaced clues — first to crack it scores.', '🔐', 'code', '{"maxTurns": 18}', 160);
+  ('code-crackers', 'Code Crackers', 'Take turns testing a secret digit code. Exact and misplaced clues — first to crack it scores.', '🔐', 'code', '{"maxTurns": 18}', 160),
+  ('rule-discoverer', 'Rule Discoverer', 'A secret word or number rule. Test examples, study the evidence, identify it first.', '🧩', 'rule', '{}', 170),
+  ('word-chain', 'Word Association Chain', 'Keep the chain alive — repeats are blocked and weak connections can be challenged to a vote.', '🔗', 'chain', '{"starters": ["ocean","music","school","fire","dream","coffee","moon","travel","garden","money","movie","family","summer","phone","rain"]}', 180);
 -- Their prompts are loaded by: npx tsx scripts/seed-online-ports.ts (or npm run seed:online)

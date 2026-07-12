@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { loadRoomContext, jsonError } from '@/lib/server/room-actions';
 import { shuffle, spotlightRoundCount, roundDeadline } from '@/lib/game-utils';
+import { buildRuleRound } from '@/lib/server/rule-round';
 
 /** POST /api/rooms/[code]/start — host starts the game. */
 export async function POST(_req: Request, { params }: { params: { code: string } }) {
@@ -13,6 +14,8 @@ export async function POST(_req: Request, { params }: { params: { code: string }
   if (players.length < 1) return jsonError('No players');
   if (game.type === 'predict' && players.length !== 2)
     return jsonError('This game needs exactly 2 players', 409);
+  if ((game.type === 'rule' || game.type === 'chain') && players.length < 2)
+    return jsonError('This game needs at least 2 players', 409);
 
   const firstTurn = players[0].profile_id;
   const update: Record<string, any> = {
@@ -73,6 +76,20 @@ export async function POST(_req: Request, { params }: { params: { code: string }
       maxTurns: game.config?.maxTurns ?? 18,
     };
     await admin.from('room_secrets').upsert({ room_id: room.id, secret: { code: digits } });
+  } else if (game.type === 'rule') {
+    const { ruleId, state } = buildRuleRound([]);
+    update.total_rounds = Math.min(room.total_rounds, 5);
+    update.round_state = { ...state, ruleRound: 0 };
+    await admin.from('room_secrets').upsert({ room_id: room.id, secret: { ruleId } });
+  } else if (game.type === 'chain') {
+    const starters: string[] = game.config?.starters ?? ['ocean', 'music', 'fire', 'dream', 'travel'];
+    update.total_rounds = Math.min(room.total_rounds, 60);
+    update.round_state = {
+      chain: [{ word: starters[Math.floor(Math.random() * starters.length)], by: null, name: null }],
+      turnIndex: 0,
+      challenge: null,
+      ...(room.answer_seconds ? { deadline: roundDeadline(room.answer_seconds) } : {}),
+    };
   }
 
   const { error } = await admin.from('rooms').update(update).eq('id', room.id);

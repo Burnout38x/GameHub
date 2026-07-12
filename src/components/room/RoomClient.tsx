@@ -11,6 +11,8 @@ import MemoryPlay from './MemoryPlay';
 import GuessPlay from './GuessPlay';
 import PredictPlay from './PredictPlay';
 import CodePlay from './CodePlay';
+import RulePlay from './RulePlay';
+import ChainPlay from './ChainPlay';
 import Scoreboard from './Scoreboard';
 import LeaveButton from './LeaveButton';
 
@@ -145,6 +147,8 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
       {game.type === 'guess' && <GuessPlay {...full} />}
       {game.type === 'predict' && <PredictPlay {...full} />}
       {game.type === 'code' && <CodePlay {...full} />}
+      {game.type === 'rule' && <RulePlay {...full} />}
+      {game.type === 'chain' && <ChainPlay {...full} />}
       <LeaveButton code={code} status={room.status} isHost={room.host_id === userId} />
     </div>
   );
