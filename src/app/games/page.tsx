@@ -9,6 +9,26 @@ const NOTICES: Record<string, string> = {
   removed: "You're no longer in that room.",
 };
 
+// Same-device games — no room/code needed, everyone plays on one screen.
+const LOCAL_GAMES = [
+  {
+    slug: 'mystery-card',
+    emoji: '🕵️',
+    name: 'Mystery Card',
+    description:
+      'A hidden card is described — race your friends to identify it before the timer ends. Race and turn-by-turn modes.',
+    meta: '2–6 players · 48 questions · timed',
+  },
+  {
+    slug: 'know-your-partner',
+    emoji: '💞',
+    name: 'Know Your Partner',
+    description:
+      'Answer privately, hand over the device, and see how accurately your partner can predict your choices.',
+    meta: 'Exactly 2 players · 72 questions · role switching',
+  },
+];
+
 export default async function GamesPage({
   searchParams,
 }: {
@@ -74,6 +94,37 @@ export default async function GamesPage({
               </span>
               <Link
                 href={`/rooms/new?game=${g.slug}`}
+                className="rounded-xl px-4 py-2 text-sm font-black text-[#0a0918]"
+                style={{ background: 'linear-gradient(135deg,#a5b4fc,#f9a8d4)' }}
+              >
+                Play →
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4">
+        <h2 className="text-2xl font-black tracking-tight">Pass & Play</h2>
+        <p className="mt-1 text-white/60">
+          Same-device games — no room or code needed, everyone plays on one screen.
+        </p>
+      </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {LOCAL_GAMES.map((g) => (
+          <div key={g.slug} className="glass flex flex-col gap-3 p-5">
+            <div className="flex items-start justify-between">
+              <div className="text-4xl">{g.emoji}</div>
+              <span className="pill !text-[11px] uppercase">Pass & Play</span>
+            </div>
+            <div>
+              <div className="text-lg font-black">{g.name}</div>
+              <p className="mt-1 text-sm leading-relaxed text-white/65">{g.description}</p>
+            </div>
+            <div className="mt-auto flex items-center justify-between pt-2">
+              <span className="text-xs font-bold text-white/45">{g.meta}</span>
+              <Link
+                href={`/games/local/${g.slug}`}
                 className="rounded-xl px-4 py-2 text-sm font-black text-[#0a0918]"
                 style={{ background: 'linear-gradient(135deg,#a5b4fc,#f9a8d4)' }}
               >
