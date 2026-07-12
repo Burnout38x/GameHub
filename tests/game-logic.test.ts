@@ -9,6 +9,8 @@ import {
   spotlightRoundCount,
 } from '../src/lib/game-utils';
 import type { RoomPlayer } from '../src/lib/types';
+import { codeFeedback, levenshtein, normalize, validateNames } from '../src/lib/local-games/logic';
+import { RULES, ruleAccepts } from '../src/lib/local-games/rule-bank';
 
 test('shuffle keeps every element exactly once', () => {
   const input = Array.from({ length: 50 }, (_, i) => i);
@@ -99,6 +101,40 @@ test('number guess scoring rewards fewer guesses, floor of 1', () => {
   assert.equal(score(7), 4);
   assert.equal(score(10), 1);
   assert.equal(score(25), 1);
+});
+
+test('code crackers feedback counts exact and misplaced digits', () => {
+  assert.deepEqual(codeFeedback([1, 2, 3, 4], [1, 2, 3, 4]), { exact: 4, misplaced: 0 });
+  assert.deepEqual(codeFeedback([4, 3, 2, 1], [1, 2, 3, 4]), { exact: 0, misplaced: 4 });
+  assert.deepEqual(codeFeedback([1, 2, 4, 3], [1, 2, 3, 4]), { exact: 2, misplaced: 2 });
+  assert.deepEqual(codeFeedback([5, 6, 7, 8], [1, 2, 3, 4]), { exact: 0, misplaced: 0 });
+  // Duplicates: guess 1122 vs secret 1212 -> first 1 exact, one extra 1 and one 2 misplaced... verify by definition
+  assert.deepEqual(codeFeedback([1, 1, 2, 2], [1, 2, 1, 2]), { exact: 2, misplaced: 2 });
+});
+
+test('who-remembers fuzzy matching tolerates small typos', () => {
+  assert.equal(levenshtein('Pizza Hut', 'pizza hut'), 0);
+  assert.equal(levenshtein('cinema', 'cinemma'), 1);
+  const similarity = (a: string, b: string) => {
+    const na = normalize(a);
+    const nb = normalize(b);
+    return 1 - levenshtein(na, nb) / Math.max(na.length, nb.length, 1);
+  };
+  assert.ok(similarity('the beach house', 'the beach hose') >= 0.84);
+  assert.ok(similarity('paris', 'london') < 0.84);
+});
+
+test('rule discoverer validators accept examples and reject counterexamples', () => {
+  for (const rule of RULES) {
+    for (const ex of rule.examples) assert.equal(ruleAccepts(rule, ex), true, `${rule.id} accepts ${ex}`);
+    for (const rej of rule.rejects) assert.equal(ruleAccepts(rule, rej), false, `${rule.id} rejects ${rej}`);
+  }
+});
+
+test('player name validation requires distinct names', () => {
+  assert.equal(validateNames(['Ana', 'Ben']), '');
+  assert.notEqual(validateNames(['Ana']), '');
+  assert.notEqual(validateNames(['Ana', 'ana']), '');
 });
 
 test('memory board build produces matched pairs', () => {
