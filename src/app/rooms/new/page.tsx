@@ -37,9 +37,17 @@ function NewRoomForm() {
     setTimer(['mystery-card', 'reverse-definition', 'mental-math-duel'].includes(gameSlug) ? '15' : 'off');
   }, [gameSlug]);
   const isMemory = game?.type === 'memory';
+  const isPredict = game?.type === 'predict';
+  const isCode = game?.type === 'code';
   const canSpotlight = game ? spotlightEligible(game.slug, game.type) : false;
   const effectiveMode = canSpotlight ? mode : 'classic';
-  const roundOptions = isMemory ? ['6', '8', '10', '12', '15', '20'] : ['5', '10', '15', '20', '30', '40'];
+  const roundOptions = isMemory
+    ? ['6', '8', '10', '12', '15', '20']
+    : isPredict
+      ? ['6', '10', '14', '20']
+      : isCode
+        ? ['1', '3', '5']
+        : ['5', '10', '15', '20', '30', '40'];
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -85,6 +93,11 @@ function NewRoomForm() {
           ))}
         </select>
         {game && <p className="mt-2 text-xs text-white/50">{game.description}</p>}
+        {isPredict && (
+          <p className="mt-2 text-xs font-bold text-indigo-200">
+            💞 For exactly 2 players — question count is evened out so you both get equal turns.
+          </p>
+        )}
 
         {canSpotlight && (
           <>
@@ -101,7 +114,7 @@ function NewRoomForm() {
           </>
         )}
 
-        {game?.type !== 'guess' && game?.type !== 'memory' && (
+        {game?.type !== 'guess' && game?.type !== 'memory' && !isPredict && !isCode && (
           <>
             <label className="field-label" htmlFor="difficulty">Difficulty</label>
             <select id="difficulty" className="input" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
@@ -112,8 +125,25 @@ function NewRoomForm() {
           </>
         )}
 
+        {isCode && (
+          <>
+            <label className="field-label" htmlFor="difficulty">Code length</label>
+            <select id="difficulty" className="input" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+              <option value="easy">🔢 4 digits (easier)</option>
+              <option value="mixed">🔢 5 digits</option>
+              <option value="hard">🔢 6 digits (harder)</option>
+            </select>
+          </>
+        )}
+
         <label className="field-label" htmlFor="rounds">
-          {isMemory ? 'Number of pairs' : game?.type === 'guess' ? 'Number of rounds' : 'Number of questions'}
+          {isMemory
+            ? 'Number of pairs'
+            : isCode
+              ? 'Codes to crack'
+              : game?.type === 'guess'
+                ? 'Number of rounds'
+                : 'Number of questions'}
         </label>
         <select id="rounds" className="input" value={rounds} onChange={(e) => setRounds(e.target.value)}>
           {roundOptions.map((r) => (

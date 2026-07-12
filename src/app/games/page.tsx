@@ -127,7 +127,11 @@ export default async function GamesPage({
                     ? 'Party'
                     : g.type === 'memory'
                       ? 'Board'
-                      : 'Duel'}
+                      : g.type === 'predict'
+                        ? 'Couple'
+                        : g.type === 'code'
+                          ? 'Deduction'
+                          : 'Duel'}
               </span>
             </div>
             <div>
@@ -136,7 +140,7 @@ export default async function GamesPage({
             </div>
             <div className="mt-auto flex items-center justify-between pt-2">
               <span className="text-xs font-bold text-white/45">
-                {g.type === 'quiz' || g.type === 'prompt'
+                {g.type === 'quiz' || g.type === 'prompt' || g.type === 'predict'
                   ? `${counts.get(g.id) ?? 0} prompts`
                   : 'Built-in content'}
               </span>

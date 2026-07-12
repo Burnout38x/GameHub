@@ -63,6 +63,9 @@ test('single player keeps the turn', () => {
 test('turn-based classification matches game design', () => {
   assert.equal(isTurnBased('memory-match', 'memory'), true);
   assert.equal(isTurnBased('number-guess', 'guess'), true);
+  assert.equal(isTurnBased('know-your-partner', 'predict'), true);
+  assert.equal(isTurnBased('who-remembers', 'predict'), true);
+  assert.equal(isTurnBased('code-crackers', 'code'), true);
   assert.equal(isTurnBased('truth-or-dare', 'prompt'), true);
   assert.equal(isTurnBased('two-minute-challenge', 'prompt'), true);
   assert.equal(isTurnBased('never-have-i-ever', 'prompt'), false);

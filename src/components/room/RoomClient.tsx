@@ -9,6 +9,8 @@ import QuizPlay from './QuizPlay';
 import PromptPlay from './PromptPlay';
 import MemoryPlay from './MemoryPlay';
 import GuessPlay from './GuessPlay';
+import PredictPlay from './PredictPlay';
+import CodePlay from './CodePlay';
 import Scoreboard from './Scoreboard';
 import LeaveButton from './LeaveButton';
 
@@ -141,6 +143,8 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
       {game.type === 'prompt' && <PromptPlay {...full} />}
       {game.type === 'memory' && <MemoryPlay {...full} />}
       {game.type === 'guess' && <GuessPlay {...full} />}
+      {game.type === 'predict' && <PredictPlay {...full} />}
+      {game.type === 'code' && <CodePlay {...full} />}
       <LeaveButton code={code} status={room.status} isHost={room.host_id === userId} />
     </div>
   );

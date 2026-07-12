@@ -51,7 +51,9 @@ export default function Lobby(props: RoomBundle & { code: string; inRoom: boolea
       </div>
 
       <div className="glass p-6">
-        <h2 className="text-lg font-black">Players ({players.length}/10)</h2>
+        <h2 className="text-lg font-black">
+          Players ({players.length}/{game.type === 'predict' ? 2 : 10})
+        </h2>
         <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
           {players.map((p) => (
             <li key={p.id} className="glass-sm flex items-center gap-3 px-4 py-3">

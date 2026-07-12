@@ -11,6 +11,8 @@ import path from 'node:path';
 import { MYSTERY_QUESTIONS } from '../src/lib/local-games/mystery-questions';
 import { REVERSE_CLUES } from '../src/lib/local-games/reverse-definition-bank';
 import { makeProblem } from '../src/lib/local-games/math-gen';
+import { PARTNER_QUESTIONS } from '../src/lib/local-games/partner-questions';
+import { MEMORY_PROMPTS } from '../src/lib/local-games/who-remembers-bank';
 
 const envPath = path.join(process.cwd(), '.env.local');
 if (existsSync(envPath)) {
@@ -27,7 +29,17 @@ if (!url || !key) {
 }
 const supabase = createClient(url, key, { auth: { persistSession: false } });
 
-const GAMES = [
+interface SeedGame {
+  slug: string;
+  name: string;
+  description: string;
+  emoji: string;
+  type: string;
+  config: Record<string, unknown>;
+  sort_order: number;
+}
+
+const GAMES: SeedGame[] = [
   {
     slug: 'mystery-card',
     name: 'Mystery Card',
@@ -54,6 +66,33 @@ const GAMES = [
     type: 'quiz',
     config: {},
     sort_order: 130,
+  },
+  {
+    slug: 'know-your-partner',
+    name: 'Know Your Partner',
+    description: 'Answer privately, then see how accurately your partner predicts your choices. Roles alternate.',
+    emoji: '💞',
+    type: 'predict',
+    config: {},
+    sort_order: 140,
+  },
+  {
+    slug: 'who-remembers',
+    name: 'Who Remembers It Better?',
+    description: 'Both partners answer the same memory question privately — matching answers score for you both.',
+    emoji: '📸',
+    type: 'predict',
+    config: { freeText: true },
+    sort_order: 150,
+  },
+  {
+    slug: 'code-crackers',
+    name: 'Code Crackers',
+    description: 'Take turns testing a secret digit code. Exact and misplaced clues — first to crack it scores.',
+    emoji: '🔐',
+    type: 'code',
+    config: { maxTurns: 18 },
+    sort_order: 160,
   },
 ];
 
@@ -83,7 +122,7 @@ async function main() {
         difficulty: toEngineDifficulty(q.difficulty),
         content: { question: q.clue, answer: q.answer, options: q.options },
       }));
-    } else {
+    } else if (game.slug === 'mental-math-duel') {
       const seen = new Set<string>();
       for (const level of ['easy', 'medium', 'hard'] as const) {
         let made = 0;
@@ -99,11 +138,25 @@ async function main() {
           made++;
         }
       }
+    } else if (game.slug === 'know-your-partner') {
+      prompts = PARTNER_QUESTIONS.map((q) => ({
+        game_id: row.id,
+        difficulty: 'easy',
+        content: { question: q.text, options: q.options, category: q.category },
+      }));
+    } else if (game.slug === 'who-remembers') {
+      prompts = MEMORY_PROMPTS.map((q) => ({
+        game_id: row.id,
+        difficulty: 'easy',
+        content: { question: q.text, category: q.category },
+      }));
     }
 
-    await supabase.from('prompts').delete().eq('game_id', row.id);
-    const { error: insErr } = await supabase.from('prompts').insert(prompts);
-    if (insErr) throw new Error(`insert prompts ${game.slug}: ${insErr.message}`);
+    if (prompts.length > 0) {
+      await supabase.from('prompts').delete().eq('game_id', row.id);
+      const { error: insErr } = await supabase.from('prompts').insert(prompts);
+      if (insErr) throw new Error(`insert prompts ${game.slug}: ${insErr.message}`);
+    }
     counts[game.slug] = prompts.length;
   }
   console.log('Seeded online games:', counts);

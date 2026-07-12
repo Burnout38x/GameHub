@@ -60,7 +60,7 @@ create table public.games (
   name text not null,
   description text not null default '',
   emoji text not null default '🎮',
-  type text not null check (type in ('quiz', 'prompt', 'memory', 'guess')),
+  type text not null check (type in ('quiz', 'prompt', 'memory', 'guess', 'predict', 'code')),
   -- type-specific settings, e.g. prompt games: {"choices":["I Have","Never"],"timerSeconds":0}
   -- memory: {"themes":{"Love":[["❤️","Heart"],...]}} ; guess: {"min":1,"max":100}
   config jsonb not null default '{}',
@@ -233,5 +233,8 @@ insert into public.games (slug, name, description, emoji, type, config, sort_ord
   ('number-guess', 'Number Guess Battle', 'A secret number between 1 and 100. Take turns; fewest guesses wins.', '🔢', 'guess', '{"min": 1, "max": 100}', 100),
   ('mystery-card', 'Mystery Card', 'A hidden living or non-living thing is described — identify it before the timer runs out.', '🕵️', 'quiz', '{}', 110),
   ('reverse-definition', 'Reverse Definition', 'Ordinary words described in strange, indirect ways. Decode the definition first.', '🔎', 'quiz', '{}', 120),
-  ('mental-math-duel', 'Mental Math', 'Generated arithmetic, sequences and powers. The fastest brains take the round.', '⚡', 'quiz', '{}', 130);
+  ('mental-math-duel', 'Mental Math', 'Generated arithmetic, sequences and powers. The fastest brains take the round.', '⚡', 'quiz', '{}', 130),
+  ('know-your-partner', 'Know Your Partner', 'Answer privately, then see how accurately your partner predicts your choices. Roles alternate.', '💞', 'predict', '{}', 140),
+  ('who-remembers', 'Who Remembers It Better?', 'Both partners answer the same memory question privately — matching answers score for you both.', '📸', 'predict', '{"freeText": true}', 150),
+  ('code-crackers', 'Code Crackers', 'Take turns testing a secret digit code. Exact and misplaced clues — first to crack it scores.', '🔐', 'code', '{"maxTurns": 18}', 160);
 -- Their prompts are loaded by: npx tsx scripts/seed-online-ports.ts (or npm run seed:online)

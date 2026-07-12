@@ -11,6 +11,8 @@ export async function POST(_req: Request, { params }: { params: { code: string }
   if (room.host_id !== userId) return jsonError('Only the host can start', 403);
   if (room.status !== 'lobby') return jsonError('Already started', 409);
   if (players.length < 1) return jsonError('No players');
+  if (game.type === 'predict' && players.length !== 2)
+    return jsonError('This game needs exactly 2 players', 409);
 
   const firstTurn = players[0].profile_id;
   const update: Record<string, any> = {
@@ -20,20 +22,21 @@ export async function POST(_req: Request, { params }: { params: { code: string }
     turn_player_id: firstTurn,
   };
 
-  if (game.type === 'quiz' || game.type === 'prompt') {
+  if (game.type === 'quiz' || game.type === 'prompt' || game.type === 'predict') {
     let q = admin.from('prompts').select('id').eq('game_id', game.id);
     if (room.difficulty !== 'mixed') q = q.eq('difficulty', room.difficulty);
     const { data: prompts } = await q;
     if (!prompts || prompts.length === 0)
       return jsonError(`No ${room.difficulty} prompts for this game yet — ask the admin to add some`, 409);
     const target =
-      room.mode === 'spotlight' && players.length > 1
-        ? spotlightRoundCount(room.total_rounds, players.length, prompts.length)
+      (room.mode === 'spotlight' || game.type === 'predict') && players.length > 1
+        ? spotlightRoundCount(room.total_rounds, players.length, prompts.length) // equal turns each
         : room.total_rounds;
     const ids = shuffle(prompts.map((p) => p.id)).slice(0, target);
     update.prompt_ids = ids;
     update.total_rounds = ids.length;
-    if (room.answer_seconds) update.round_state = { deadline: roundDeadline(room.answer_seconds) };
+    if (game.type === 'predict') update.round_state = { stage: game.config?.freeText ? 'collect' : 'subject' };
+    else if (room.answer_seconds) update.round_state = { deadline: roundDeadline(room.answer_seconds) };
   } else if (game.type === 'memory') {
     const themes: Record<string, [string, string][]> = game.config?.themes ?? {};
     const themeNames = Object.keys(themes);
@@ -57,6 +60,19 @@ export async function POST(_req: Request, { params }: { params: { code: string }
     await admin
       .from('room_secrets')
       .upsert({ room_id: room.id, secret: { value: secret } });
+  } else if (game.type === 'code') {
+    // Code length comes from the difficulty choice: easy=4, mixed=5, hard=6 digits.
+    const length = room.difficulty === 'easy' ? 4 : room.difficulty === 'hard' ? 6 : 5;
+    const digits = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, length);
+    update.total_rounds = Math.min(room.total_rounds, 5);
+    update.round_state = {
+      length,
+      guesses: [],
+      guessRound: 0,
+      turnCount: 0,
+      maxTurns: game.config?.maxTurns ?? 18,
+    };
+    await admin.from('room_secrets').upsert({ room_id: room.id, secret: { code: digits } });
   }
 
   const { error } = await admin.from('rooms').update(update).eq('id', room.id);

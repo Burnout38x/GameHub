@@ -1,4 +1,4 @@
-export type GameType = 'quiz' | 'prompt' | 'memory' | 'guess';
+export type GameType = 'quiz' | 'prompt' | 'memory' | 'guess' | 'predict' | 'code';
 export type Difficulty = 'easy' | 'hard' | 'mixed';
 export type RoomMode = 'classic' | 'spotlight';
 export type RoomStatus = 'lobby' | 'playing' | 'finished';

@@ -6,7 +6,7 @@ import { deadlinePassed, roundDeadline } from '@/lib/game-utils';
 export async function POST(req: NextRequest, { params }: { params: { code: string } }) {
   const ctx = await loadRoomContext(params.code);
   if (ctx instanceof NextResponse) return ctx;
-  const { admin, room, players, me } = ctx;
+  const { admin, room, game, players, me } = ctx;
 
   if (!me) return jsonError('You are not in this room', 403);
   if (room.status !== 'playing') return jsonError('Game is not running', 409);
@@ -42,9 +42,11 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
       current_round: next,
       round_phase: 'answering',
       turn_player_id: nextTurnPlayer(players, room.turn_player_id),
-      ...(room.answer_seconds
-        ? { round_state: { ...room.round_state, deadline: roundDeadline(room.answer_seconds) } }
-        : {}),
+      ...(game.type === 'predict'
+        ? { round_state: { stage: game.config?.freeText ? 'collect' : 'subject' } }
+        : room.answer_seconds
+          ? { round_state: { ...room.round_state, deadline: roundDeadline(room.answer_seconds) } }
+          : {}),
     })
     .eq('id', room.id)
     .eq('current_round', room.current_round); // optimistic concurrency
