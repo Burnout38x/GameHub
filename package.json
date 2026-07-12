@@ -9,6 +9,7 @@
     "lint": "next lint",
     "test": "tsx --test tests/*.test.ts",
     "seed:prompts": "node scripts/seed-prompts.mjs",
+    "seed:online": "tsx scripts/seed-online-ports.ts",
     "test:extract": "node scripts/test-extract.mjs"
   },
   "dependencies": {

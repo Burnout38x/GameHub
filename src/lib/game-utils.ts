@@ -25,6 +25,20 @@ export function nextTurnPlayer(
   return players[(idx + 1) % players.length].profile_id;
 }
 
+/** Extra slack added to server deadlines so slow connections aren't unfairly cut off. */
+const DEADLINE_GRACE_MS = 1500;
+
+/** ISO timestamp for when the current round's answers close. */
+export function roundDeadline(answerSeconds: number, now: number = Date.now()): string {
+  return new Date(now + answerSeconds * 1000 + DEADLINE_GRACE_MS).toISOString();
+}
+
+export function deadlinePassed(deadline: string | null | undefined, now: number = Date.now()): boolean {
+  if (!deadline) return false;
+  const t = Date.parse(deadline);
+  return Number.isFinite(t) && now > t;
+}
+
 /** Games where one player acts per round instead of everyone answering at once. */
 export function isTurnBased(gameSlug: string, gameType: string, mode: string = 'classic'): boolean {
   if (mode === 'spotlight') return true;

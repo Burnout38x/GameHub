@@ -90,6 +90,7 @@ create table public.rooms (
   difficulty text not null default 'mixed' check (difficulty in ('easy', 'hard', 'mixed')),
   mode text not null default 'classic' check (mode in ('classic', 'spotlight')),
   is_public boolean not null default false,
+  answer_seconds int check (answer_seconds is null or answer_seconds between 5 and 120),
   total_rounds int not null default 10 check (total_rounds between 1 and 100),
   status text not null default 'lobby' check (status in ('lobby', 'playing', 'finished')),
   current_round int not null default 0,     -- 0-based index into prompt_ids
@@ -229,4 +230,8 @@ insert into public.games (slug, name, description, emoji, type, config, sort_ord
   ('truth-or-dare', 'Truth or Dare', 'Answer honestly or do the dare. Completed = 1 point.', '😈', 'prompt', '{"choices": ["Completed", "Skipped"], "scoreChoice": "Completed"}', 70),
   ('two-minute-challenge', '2-Minute Challenge', 'Quick random challenges with a timer. Complete them to score.', '⏱️', 'prompt', '{"choices": ["Completed", "Failed"], "scoreChoice": "Completed", "timerSeconds": 120}', 80),
   ('memory-match', 'Memory Match', 'Flip cards and find pairs. Match to keep your turn.', '🃏', 'memory', '{"pairs": 8, "themes": {"Love": [["❤️","Heart"],["🌹","Rose"],["💍","Ring"],["💌","Love Letter"],["🧸","Teddy"],["🍫","Chocolate"],["🎁","Gift"],["🕯️","Candle"],["🥰","Smile"],["💐","Bouquet"],["🌙","Moon"],["⭐","Star"],["🎶","Music"],["🍓","Strawberry"],["☕","Coffee"],["🍿","Movie"],["📸","Photo"],["🫶","Hands"],["✨","Sparkle"],["🏖️","Beach"]], "Food": [["🍕","Pizza"],["🍔","Burger"],["🍟","Fries"],["🌮","Taco"],["🍣","Sushi"],["🍩","Donut"],["🍰","Cake"],["🍦","Ice Cream"],["🍗","Chicken"],["🥞","Pancakes"],["🍝","Pasta"],["🥗","Salad"],["🍪","Cookie"],["🍜","Noodles"],["🥐","Croissant"],["🍇","Grapes"],["🍉","Watermelon"],["🍌","Banana"],["🥭","Mango"],["☕","Coffee"]], "Animals": [["🐶","Dog"],["🐱","Cat"],["🦁","Lion"],["🐯","Tiger"],["🐵","Monkey"],["🐼","Panda"],["🐸","Frog"],["🦊","Fox"],["🐻","Bear"],["🐰","Rabbit"],["🐨","Koala"],["🐷","Pig"],["🐮","Cow"],["🐔","Chicken"],["🐧","Penguin"],["🦋","Butterfly"],["🐢","Turtle"],["🐬","Dolphin"],["🦓","Zebra"],["🦒","Giraffe"]], "Movie Night": [["🎬","Movie"],["🍿","Popcorn"],["🎟️","Ticket"],["📽️","Projector"],["🎭","Drama"],["🦸","Hero"],["🧙","Wizard"],["👻","Ghost"],["🤖","Robot"],["👽","Alien"],["🦖","Dinosaur"],["🏴‍☠️","Pirate"],["👑","King"],["🕵️","Detective"],["🚀","Space"],["🔥","Action"],["❤️","Romance"],["😂","Comedy"],["😱","Horror"],["🏆","Award"]]}}', 90),
-  ('number-guess', 'Number Guess Battle', 'A secret number between 1 and 100. Take turns; fewest guesses wins.', '🔢', 'guess', '{"min": 1, "max": 100}', 100);
+  ('number-guess', 'Number Guess Battle', 'A secret number between 1 and 100. Take turns; fewest guesses wins.', '🔢', 'guess', '{"min": 1, "max": 100}', 100),
+  ('mystery-card', 'Mystery Card', 'A hidden living or non-living thing is described — identify it before the timer runs out.', '🕵️', 'quiz', '{}', 110),
+  ('reverse-definition', 'Reverse Definition', 'Ordinary words described in strange, indirect ways. Decode the definition first.', '🔎', 'quiz', '{}', 120),
+  ('mental-math-duel', 'Mental Math', 'Generated arithmetic, sequences and powers. The fastest brains take the round.', '⚡', 'quiz', '{}', 130);
+-- Their prompts are loaded by: npx tsx scripts/seed-online-ports.ts (or npm run seed:online)

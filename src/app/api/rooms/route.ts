@@ -13,11 +13,21 @@ export async function POST(req: NextRequest) {
   if (!user) return jsonError('Not logged in', 401);
 
   const body = await req.json().catch(() => ({}));
-  const { gameId, difficulty = 'mixed', totalRounds = 10, mode = 'classic', isPublic = false, rematchOf } = body;
+  const {
+    gameId,
+    difficulty = 'mixed',
+    totalRounds = 10,
+    mode = 'classic',
+    isPublic = false,
+    answerSeconds = null,
+    rematchOf,
+  } = body;
   if (!gameId) return jsonError('gameId is required');
   if (!['easy', 'hard', 'mixed'].includes(difficulty)) return jsonError('Bad difficulty');
   if (!['classic', 'spotlight'].includes(mode)) return jsonError('Bad mode');
   const rounds = Math.min(100, Math.max(1, Number(totalRounds) || 10));
+  const timer =
+    answerSeconds == null ? null : Math.min(120, Math.max(5, Number(answerSeconds) || 0)) || null;
 
   const admin = createAdminClient();
   const { data: game } = await admin
@@ -28,6 +38,7 @@ export async function POST(req: NextRequest) {
   if (!game || !game.is_active) return jsonError('Game not found', 404);
   if (mode === 'spotlight' && !spotlightEligible(game.slug, game.type))
     return jsonError('Spotlight mode is not available for this game');
+  if (timer && game.type !== 'quiz') return jsonError('Timers are only available for quiz games');
 
   const { data: profile } = await admin
     .from('profiles')
@@ -47,6 +58,7 @@ export async function POST(req: NextRequest) {
         difficulty,
         mode,
         is_public: !!isPublic,
+        answer_seconds: timer,
         total_rounds: rounds,
       })
       .select()

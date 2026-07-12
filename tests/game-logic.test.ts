@@ -7,6 +7,8 @@ import {
   nextTurnPlayer,
   spotlightEligible,
   spotlightRoundCount,
+  roundDeadline,
+  deadlinePassed,
 } from '../src/lib/game-utils';
 import type { RoomPlayer } from '../src/lib/types';
 import { codeFeedback, levenshtein, normalize, validateNames } from '../src/lib/local-games/logic';
@@ -101,6 +103,17 @@ test('number guess scoring rewards fewer guesses, floor of 1', () => {
   assert.equal(score(7), 4);
   assert.equal(score(10), 1);
   assert.equal(score(25), 1);
+});
+
+test('round deadlines include grace and expire correctly', () => {
+  const t0 = Date.parse('2026-07-11T12:00:00.000Z');
+  const deadline = roundDeadline(15, t0);
+  assert.equal(Date.parse(deadline), t0 + 15000 + 1500); // 15s + latency grace
+  assert.equal(deadlinePassed(deadline, t0 + 10000), false);
+  assert.equal(deadlinePassed(deadline, t0 + 17000), true);
+  assert.equal(deadlinePassed(null), false); // untimed rooms never expire
+  assert.equal(deadlinePassed(undefined), false);
+  assert.equal(deadlinePassed('not-a-date'), false);
 });
 
 test('code crackers feedback counts exact and misplaced digits', () => {

@@ -14,6 +14,7 @@ function NewRoomForm() {
   const [rounds, setRounds] = useState('10');
   const [mode, setMode] = useState('classic');
   const [isPublic, setIsPublic] = useState(false);
+  const [timer, setTimer] = useState('off');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -31,6 +32,10 @@ function NewRoomForm() {
   }, []);
 
   const game = games.find((g) => g.slug === gameSlug);
+  useEffect(() => {
+    // The ported speed games default to a timer; everything else starts casual.
+    setTimer(['mystery-card', 'reverse-definition', 'mental-math-duel'].includes(gameSlug) ? '15' : 'off');
+  }, [gameSlug]);
   const isMemory = game?.type === 'memory';
   const canSpotlight = game ? spotlightEligible(game.slug, game.type) : false;
   const effectiveMode = canSpotlight ? mode : 'classic';
@@ -51,6 +56,7 @@ function NewRoomForm() {
           totalRounds: Number(rounds),
           mode: effectiveMode,
           isPublic,
+          answerSeconds: game.type === 'quiz' && timer !== 'off' ? Number(timer) : null,
         }),
       });
       const data = await res.json();
@@ -116,6 +122,24 @@ function NewRoomForm() {
             </option>
           ))}
         </select>
+
+        {game?.type === 'quiz' && (
+          <>
+            <label className="field-label" htmlFor="timer">Timer per question</label>
+            <select id="timer" className="input" value={timer} onChange={(e) => setTimer(e.target.value)}>
+              <option value="off">🧘 No timer — casual pace</option>
+              <option value="10">⏱ 10 seconds</option>
+              <option value="15">⏱ 15 seconds</option>
+              <option value="20">⏱ 20 seconds</option>
+              <option value="30">⏱ 30 seconds</option>
+            </select>
+            {timer !== 'off' && (
+              <p className="mt-2 text-xs text-white/50">
+                Answers lock when the timer ends — enforced by the server for everyone.
+              </p>
+            )}
+          </>
+        )}
 
         <label className="field-label" htmlFor="visibility">Visibility</label>
         <select

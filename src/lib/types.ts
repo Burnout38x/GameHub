@@ -43,6 +43,7 @@ export interface Room {
   difficulty: Difficulty;
   mode: RoomMode;
   is_public: boolean;
+  answer_seconds: number | null;
   total_rounds: number;
   status: RoomStatus;
   current_round: number;

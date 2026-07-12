@@ -1,5 +1,5 @@
 'use client';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { RoomBundle } from './RoomClient';
 import { callRoomApi } from './RoomClient';
 import { shuffle, isTurnBased } from '@/lib/game-utils';
@@ -25,7 +25,29 @@ export default function QuizPlay({ room, game, players, answers, prompt, userId,
   const isMyTurn = room.turn_player_id === userId;
   const turnPlayer = players.find((p) => p.profile_id === room.turn_player_id);
   const turnAnswer = answers.find((a) => a.profile_id === room.turn_player_id);
-  const canAnswer = !revealed && !myAnswer && (!turnBased || isMyTurn);
+
+  // Timed rooms: count down to the server deadline; when it passes, ask the
+  // server to reveal the round (any client may do it — the server race-guards).
+  const deadline = room.answer_seconds ? room.round_state?.deadline : null;
+  const [now, setNow] = useState(() => Date.now());
+  const timedOutRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!deadline || revealed) return;
+    const id = setInterval(() => setNow(Date.now()), 500);
+    return () => clearInterval(id);
+  }, [deadline, revealed]);
+  const secondsLeft = deadline ? Math.max(0, Math.ceil((Date.parse(deadline) - now) / 1000)) : null;
+  const expired = secondsLeft === 0;
+  useEffect(() => {
+    if (!deadline || revealed || !expired || timedOutRef.current === deadline) return;
+    timedOutRef.current = deadline;
+    callRoomApi(room.code, 'advance', { fromRound: room.current_round })
+      .catch(() => {})
+      .finally(refresh);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expired, deadline, revealed]);
+
+  const canAnswer = !revealed && !myAnswer && (!turnBased || isMyTurn) && !expired;
 
   async function submit(option: string) {
     if (!canAnswer || busy) return;
@@ -57,9 +79,18 @@ export default function QuizPlay({ room, game, players, answers, prompt, userId,
 
   return (
     <div className="flex flex-col gap-3">
-      {turnBased && (
-        <div className="pill">
-          {isMyTurn ? '🎯 Your turn!' : `${turnPlayer?.display_name ?? '…'}'s turn`}
+      {(turnBased || secondsLeft !== null) && (
+        <div className="flex items-center gap-2">
+          {turnBased && (
+            <div className="pill">
+              {isMyTurn ? '🎯 Your turn!' : `${turnPlayer?.display_name ?? '…'}'s turn`}
+            </div>
+          )}
+          {secondsLeft !== null && !revealed && (
+            <div className={`pill ${secondsLeft <= 5 ? '!border-red-400/60 !text-red-300' : ''}`}>
+              ⏱ {secondsLeft}s
+            </div>
+          )}
         </div>
       )}
       <div className="glass flex min-h-[180px] flex-col items-center justify-center gap-3 p-6 text-center">

@@ -31,6 +31,7 @@ export default function Lobby(props: RoomBundle & { code: string; inRoom: boolea
           {game.type === 'memory' ? `${room.total_rounds} pairs` : `${room.total_rounds} rounds`}
           {room.mode === 'spotlight' ? ' · 🎯 spotlight' : ''}
           {room.is_public ? ' · 🌍 public' : ''}
+          {room.answer_seconds ? ` · ⏱ ${room.answer_seconds}s` : ''}
         </div>
         <h1 className="mt-4 text-3xl font-black tracking-tight">Room Code</h1>
         <button

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { loadRoomContext, jsonError } from '@/lib/server/room-actions';
-import { isTurnBased } from '@/lib/game-utils';
+import { isTurnBased, deadlinePassed } from '@/lib/game-utils';
 
 /** POST /api/rooms/[code]/answer — submit an answer for the current round (quiz + prompt games). */
 export async function POST(req: NextRequest, { params }: { params: { code: string } }) {
@@ -15,6 +15,17 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
 
   const turnBased = isTurnBased(game.slug, game.type, room.mode);
   if (turnBased && room.turn_player_id !== userId) return jsonError('Not your turn', 403);
+
+  // Timed rooms: late answers are rejected and the round reveals as-is.
+  if (room.answer_seconds && deadlinePassed(room.round_state?.deadline)) {
+    await admin
+      .from('rooms')
+      .update({ round_phase: 'revealed' })
+      .eq('id', room.id)
+      .eq('current_round', room.current_round)
+      .eq('round_phase', 'answering');
+    return jsonError('Time is up — round is over', 409);
+  }
 
   const { answer } = await req.json().catch(() => ({}));
   if (typeof answer !== 'string' || answer.length === 0 || answer.length > 200)
