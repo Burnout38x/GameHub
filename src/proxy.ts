@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
-const PROTECTED = ['/rooms', '/room', '/profile', '/admin'];
+const PROTECTED = ['/rooms', '/room', '/profile', '/admin', '/leaderboard'];
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -34,6 +34,13 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
   if (user && (path === '/login' || path === '/register')) {
+    const next = request.nextUrl.searchParams.get('next');
+    if (next?.startsWith('/') && !next.startsWith('//') && !next.includes('\\')) {
+      const destination = new URL(next, request.url);
+      if (destination.origin === request.nextUrl.origin && !['/login', '/register'].includes(destination.pathname)) {
+        return NextResponse.redirect(destination);
+      }
+    }
     const url = request.nextUrl.clone();
     url.pathname = '/games';
     url.search = '';

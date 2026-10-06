@@ -33,7 +33,7 @@ function LoginForm() {
     <div className="mx-auto mt-10 w-full max-w-md">
       <form onSubmit={submit} className="glass p-7">
         <h1 className="text-3xl font-black tracking-tight">Welcome back</h1>
-        <p className="mt-1 text-sm text-white/60">Log in to start a game night.</p>
+        <p className="mt-1 text-sm text-white/60">{params.get('next')?.split('?')[0] === '/leaderboard' ? 'Log in to see the leaderboard and compare your scores.' : 'Log in to start a game night.'}</p>
         <label className="field-label" htmlFor="email">Email</label>
         <input id="email" type="email" required className="input" value={email}
           onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />

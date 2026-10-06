@@ -1,9 +1,12 @@
 import { createClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
 export default async function LeaderboardPage() {
   const supabase = await createClient();
+  const { data: { user }, error } = await supabase.auth.getUser();
+  if (error || !user) redirect('/login?next=/leaderboard');
   const { data: players } = await supabase
     .from('profiles')
     .select('id, username, games_played, games_won, total_points, best_streak')
