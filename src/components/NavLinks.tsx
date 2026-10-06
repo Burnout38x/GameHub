@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
 import SignOutButton from './SignOutButton';
@@ -10,7 +11,7 @@ export default function NavLinks({ signedIn, username, isAdmin }: {
 }) {
   const pathname = usePathname();
   const locked = pathname?.startsWith('/room/');
-  const brand = <span className="flex items-center gap-2 text-lg font-black sm:text-xl tracking-tight"><span aria-hidden="true" className="grid h-8 w-8 place-items-center sm:h-9 sm:w-9 rounded-xl bg-[#f7bd78] text-lg">🎲</span><span>Game<span className="text-[#9cddd2]">Hub</span></span></span>;
+  const brand = <span className="flex items-center gap-2 text-lg font-black sm:text-xl tracking-tight"><Image src="/brand/gamehub-logo.png" alt="" width={40} height={40} sizes="40px" className="h-10 w-10 shrink-0 object-contain" priority /><span>Game<span className="text-[#9cddd2]">Hub</span></span></span>;
   if (locked) return <>{brand}<div className="flex items-center gap-2"><span className="pill">Game room</span><ThemeToggle /></div></>;
   const links = [['/games', 'Games'], ['/rooms', 'Rooms'], ['/leaderboard', 'Leaderboard'], ['/themes', 'Themes'], ['/report', 'Report an issue']];
   return <>
