@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import AdminNav from '@/components/admin/AdminNav';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 
@@ -18,11 +18,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-3xl font-black tracking-tight">👑 Admin Console</h1>
-        <nav className="flex flex-wrap gap-2">
-          <Link href="/admin" className="pill">Dashboard</Link>
-          <Link href="/admin/games" className="pill">Games</Link>
-          <Link href="/admin/prompts" className="pill">Prompts</Link>
-        </nav>
+        <AdminNav />
       </div>
       {children}
     </div>

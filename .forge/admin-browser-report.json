@@ -1,0 +1,41 @@
+{
+  "checks": [
+    "guest and player cannot read admin accounts/reports or moderate",
+    "player submits a report through the form",
+    "concurrent submissions enforce exactly five reports per hour",
+    "database denies direct report reads and privileged RPCs",
+    "admin sees account email and profile statistics",
+    "admin resolves and reopens reports",
+    "aggregate player results match exact database counts",
+    "dark-375-/themes",
+    "dark-375-/games",
+    "dark-375-/admin/users",
+    "dark-375-/admin/reports",
+    "dark-375-/admin/reports/inbox",
+    "light-375-/themes",
+    "light-375-/games",
+    "light-375-/admin/users",
+    "light-375-/admin/reports",
+    "light-375-/admin/reports/inbox",
+    "arcade-375-/themes",
+    "arcade-375-/games",
+    "arcade-375-/admin/users",
+    "arcade-375-/admin/reports",
+    "arcade-375-/admin/reports/inbox",
+    "ocean-375-/themes",
+    "ocean-375-/games",
+    "ocean-375-/admin/users",
+    "ocean-375-/admin/reports",
+    "ocean-375-/admin/reports/inbox",
+    "admin-directory-320",
+    "admin-directory-1440"
+  ],
+  "errors": [],
+  "violations": [],
+  "screenshots": [
+    ".forge/screenshots/admin-dark.png",
+    ".forge/screenshots/admin-light.png",
+    ".forge/screenshots/admin-arcade.png",
+    ".forge/screenshots/admin-ocean.png"
+  ]
+}

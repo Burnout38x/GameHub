@@ -18,7 +18,7 @@ export default async function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#10151b]/95 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-[var(--canvas)]/95 backdrop-blur-xl">
       <nav className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
         <NavLinks
           signedIn={!!user}

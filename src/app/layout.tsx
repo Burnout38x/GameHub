@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import Navbar from '@/components/Navbar';
+import { THEME_BOOTSTRAP } from '@/lib/themes';
 import localFont from 'next/font/local';
 
 const geist = localFont({ src: './fonts/GeistVF.woff', display: 'swap' });
@@ -20,7 +21,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head><script dangerouslySetInnerHTML={{ __html: `try{document.documentElement.dataset.theme=localStorage.getItem("gamehub-theme")==="light"?"light":"dark"}catch(e){}` }} /></head>
+      <head><script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP }} /></head>
       <body className={`${geist.className} antialiased`}>
         <a href="#main-content" className="skip-link">Skip to content</a>
         <Navbar />

@@ -12,7 +12,7 @@ export default function NavLinks({ signedIn, username, isAdmin }: {
   const locked = pathname?.startsWith('/room/');
   const brand = <span className="flex items-center gap-2 text-lg font-black sm:text-xl tracking-tight"><span aria-hidden="true" className="grid h-8 w-8 place-items-center sm:h-9 sm:w-9 rounded-xl bg-[#f7bd78] text-lg">🎲</span><span>Game<span className="text-[#9cddd2]">Hub</span></span></span>;
   if (locked) return <>{brand}<div className="flex items-center gap-2"><span className="pill">Game room</span><ThemeToggle /></div></>;
-  const links = [['/games', 'Games'], ['/rooms', 'Rooms'], ['/leaderboard', 'Leaderboard']];
+  const links = [['/games', 'Games'], ['/rooms', 'Rooms'], ['/leaderboard', 'Leaderboard'], ['/themes', 'Themes'], ['/report', 'Report an issue']];
   return <>
     <Link href="/" aria-label="GameHub home">{brand}</Link>
     <div className="flex min-w-0 items-center gap-2">

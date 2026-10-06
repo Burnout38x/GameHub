@@ -180,3 +180,13 @@ development-only findings from the single unpatched `braces` advisory
 Next's ESLint plugin. Do not run lint on attacker-supplied glob patterns. No audit warning
 is suppressed; update the lint chain when upstream publishes a fix. Details and commands
 are recorded in `.forge/dependency-upgrade.md`.
+
+### Admin reports and appearance
+
+Admins can open **Admin → Users & accounts** to browse paginated accounts, email/confirmation status, sign-in methods, last sign-in dates and player statistics. Search and status filters apply to the current page. Account details are checked server-side against the current database role.
+
+**Admin → Reports** provides UTC7/30/90-day online usage metrics and a player-report inbox. Player results count each participant separately; finished-room counts refer to rooms created in the selected period. Local pass-and-play activity is not collected. Signed-in players can use **Report an issue**; admins can resolve and reopen reports. Reports are private, with an atomic limit of five submissions per account per hour.
+
+Before deploying this version to another environment, apply `supabase/migrations/20261006232153_player_reports.sql` atomically after the earlier migrations. It adds a private report table, server-only submission/analytics functions, and reporting indexes. No existing account or game records are modified. Rollback: revert the app first; keep report data, or export it before removing the new table/functions. The additive objects can safely remain with the older app.
+
+**Themes** offers Game night, Daylight, Neon arcade and Ocean lounge. Choices persist on the current device and synchronize between its tabs. The library combines gameplay categories, curated audience picks, search and online/pass-and-play filters.

@@ -1,0 +1,72 @@
+
+> gamehub@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.4.0 (webpack)
+- Environments: .env.local
+✓ Running next.config.mjs took 11ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.2s
+  Running TypeScript ...
+  Finished TypeScript in 3.3s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/22) ...
+  Generating static pages using 11 workers (5/22)
+  Generating static pages using 11 workers (10/22)
+  Generating static pages using 11 workers (16/22)
+✓ Generating static pages using 11 workers (22/22) in 161ms
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /admin/games
+├ ƒ /admin/prompts
+├ ƒ /admin/reports
+├ ƒ /admin/reports/inbox
+├ ƒ /admin/users
+├ ƒ /api/admin/reports
+├ ƒ /api/reports
+├ ƒ /api/rooms
+├ ƒ /api/rooms/[code]
+├ ƒ /api/rooms/[code]/advance
+├ ƒ /api/rooms/[code]/answer
+├ ƒ /api/rooms/[code]/chain
+├ ƒ /api/rooms/[code]/crack
+├ ƒ /api/rooms/[code]/guess
+├ ƒ /api/rooms/[code]/join
+├ ƒ /api/rooms/[code]/leave
+├ ƒ /api/rooms/[code]/memory
+├ ƒ /api/rooms/[code]/predict
+├ ƒ /api/rooms/[code]/rule
+├ ƒ /api/rooms/[code]/start
+├ ƒ /api/rooms/[code]/timer
+├ ƒ /forgot-password
+├ ƒ /games
+├ ƒ /games/local/code-crackers
+├ ƒ /games/local/know-your-partner
+├ ƒ /games/local/mental-math-duel
+├ ƒ /games/local/mystery-card
+├ ƒ /games/local/reverse-definition
+├ ƒ /games/local/rule-discoverer
+├ ƒ /games/local/who-remembers
+├ ƒ /games/local/word-chain
+├ ƒ /leaderboard
+├ ƒ /login
+├ ƒ /profile
+├ ƒ /register
+├ ƒ /report
+├ ƒ /reset-password
+├ ƒ /room/[code]
+├ ƒ /rooms
+├ ƒ /rooms/join
+├ ƒ /rooms/new
+└ ƒ /themes
+
+
+ƒ Proxy (Middleware)
+
+ƒ  (Dynamic)  server-rendered on demand

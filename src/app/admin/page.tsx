@@ -35,7 +35,7 @@ export default async function AdminDashboard() {
           ['🎮 Games', games?.length ?? 0],
           ['👥 Players', playerCount ?? 0],
           ['🚪 Rooms created', roomCount ?? 0],
-          ['🏁 Matches finished', matchCount ?? 0],
+          ['🏁 Player results', matchCount ?? 0],
         ].map(([name, value]) => (
           <div key={name as string} className="glass p-5">
             <div className="text-sm text-white/60">{name}</div>
@@ -84,6 +84,8 @@ export default async function AdminDashboard() {
       </div>
 
       <div className="flex flex-wrap gap-3">
+        <Link href="/admin/users" className="btn-secondary !w-auto px-6">Users & accounts →</Link>
+        <Link href="/admin/reports" className="btn-secondary !w-auto px-6">Reports & insights →</Link>
         <Link href="/admin/prompts" className="btn !w-auto px-6">➕ Add prompts</Link>
         <Link href="/admin/games" className="btn-secondary !w-auto px-6">🎮 Manage / create games</Link>
       </div>

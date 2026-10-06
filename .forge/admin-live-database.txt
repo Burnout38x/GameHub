@@ -1,0 +1,38 @@
+    version     |        name
+----------------+---------------------
+ 202610060001   | multiplayer_actions
+ 202610060002   | private_game_reads
+ 20261006232153 | player_reports
+(3 rows)
+
+ profiles | rooms | matches | reports
+----------+-------+---------+---------
+        4 |    24 |      20 |       0
+(1 row)
+
+       proname        | anon_execute | player_execute | server_execute
+----------------------+--------------+----------------+----------------
+ admin_usage_report   | f            | f              | t
+ submit_player_report | f            | f              | t
+(2 rows)
+
+ relrowsecurity | anon_read | player_read
+----------------+-----------+-------------
+ t              | f         | f
+(1 row)
+
+ report_profile_count
+----------------------
+ 4
+(1 row)
+
+                                                  QUERY PLAN
+---------------------------------------------------------------------------------------------------------------
+ Limit  (cost=0.15..2.37 rows=1 width=24)
+   ->  Index Scan using player_reports_status_created_idx on player_reports  (cost=0.15..2.37 rows=1 width=24)
+         Index Cond: (status = 'open'::text)
+(3 rows)
+
+
+WARNING:  invalid configuration parameter name "supautils.restrict_extension_versions", removing it
+DETAIL:  "supautils" is now a reserved prefix.
