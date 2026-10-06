@@ -8,8 +8,8 @@ type LocalGame = { slug: string; name: string; description: string; emoji: strin
 const initialFilters: LibraryFilters = { search: '', category: 'all', audience: 'all', mode: 'all' };
 const modes: { id: GameMode; label: string }[] = [{ id: 'all', label: 'All ways to play' }, { id: 'online', label: 'Online rooms' }, { id: 'local', label: 'Pass & play' }];
 
-export default function GameLibrary({ online, local }: { online: OnlineGame[]; local: LocalGame[] }) {
-  const [filters, setFilters] = useState<LibraryFilters>(initialFilters);
+export default function GameLibrary({ online, local, initialSearch = '' }: { online: OnlineGame[]; local: LocalGame[]; initialSearch?: string }) {
+  const [filters, setFilters] = useState<LibraryFilters>({ ...initialFilters, search: initialSearch });
   const onlineGames = online.filter(game => matchesGame(game, filters, 'online'));
   const localGames = local.filter(game => matchesGame(game, filters, 'local'));
   const onlineCount = online.filter(game => matchesGame(game, { ...filters, mode: 'all' }, 'online')).length;
@@ -18,8 +18,8 @@ export default function GameLibrary({ online, local }: { online: OnlineGame[]; l
   const filtered = Object.keys(initialFilters).some(key => filters[key as keyof LibraryFilters] !== initialFilters[key as keyof LibraryFilters]);
   return <>
     <div className="glass-sm space-y-4 p-4 sm:p-5">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <div><label htmlFor="game-search" className="mb-2 block text-sm font-bold">Find a game</label><input id="game-search" className="input" type="search" value={filters.search} onChange={event => setFilters({ ...filters, search: event.target.value })} placeholder="Search games or categories…" /></div>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="sm:col-span-2"><label htmlFor="game-search" className="mb-2 block text-sm font-bold">Find a game</label><input id="game-search" className="input" type="search" maxLength={100} value={filters.search} onChange={event => setFilters({ ...filters, search: event.target.value })} placeholder="Search by game name, category or keyword…" /></div>
         <div><label htmlFor="game-category" className="mb-2 block text-sm font-bold">What feels fun?</label><select id="game-category" className="input" value={filters.category} onChange={event => setFilters({ ...filters, category: event.target.value as LibraryFilters['category'] })}><option value="all">Every category</option>{GAME_CATEGORIES.map(category => <option key={category.id} value={category.id}>{category.label}</option>)}</select></div>
         <div><label htmlFor="game-audience" className="mb-2 block text-sm font-bold">Who’s playing?</label><select id="game-audience" className="input" value={filters.audience} onChange={event => setFilters({ ...filters, audience: event.target.value as LibraryFilters['audience'] })}><option value="all">Everyone · all games</option><option value="couples">Couples picks</option><option value="groups">Friends & groups</option><option value="family">Family puzzles</option></select></div>
       </div>

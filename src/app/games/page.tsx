@@ -16,10 +16,11 @@ const NOTICES: Record<string, string> = {
 export default async function GamesPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ notice?: string }>;
+  searchParams?: Promise<{ notice?: string; q?: string | string[] }>;
 }) {
   const query = await searchParams;
   const notice = query?.notice ? NOTICES[query.notice] : null;
+  const search = typeof query?.q === 'string' ? query.q.trim().slice(0, 100) : '';
   const supabase = await createClient();
   const { data: games } = await supabase
     .from('games')
@@ -49,7 +50,7 @@ export default async function GamesPage({
         </div>
       </div>
 
-      <GameLibrary online={games ?? []} local={LOCAL_GAMES} />
+      <GameLibrary key={search} online={games ?? []} local={LOCAL_GAMES} initialSearch={search} />
     </div>
   );
 }

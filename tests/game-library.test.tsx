@@ -63,3 +63,14 @@ test('library filters show accurate per-mode counts, preserve launch links, and 
   assert.equal(view.getByRole('button', { name: 'All ways to play 11' }).getAttribute('aria-pressed'), 'true');
   assert.equal(view.getByRole('link', { name: 'Create Mental Math room' }).getAttribute('href'), '/rooms/new?game=mental-math-duel');
 });
+
+test('navigation search initializes both catalogs and can be cleared without losing games', t => {
+  const view = render(<GameLibrary online={online} local={LOCAL_GAMES} initialSearch="mental math" />);
+  t.after(cleanup);
+  assert.equal((view.getByLabelText('Find a game') as HTMLInputElement).value, 'mental math');
+  assert.ok(view.getByRole('link', { name: 'Create Mental Math room' }));
+  assert.ok(view.getByRole('link', { name: 'Play Mental Math Duel on one device' }));
+  assert.equal(view.queryByRole('link', { name: 'Create Truth or Dare room' }), null);
+  fireEvent.click(view.getByRole('button', { name: 'Reset filters' }));
+  assert.ok(view.getByRole('link', { name: 'Create Truth or Dare room' }));
+});
