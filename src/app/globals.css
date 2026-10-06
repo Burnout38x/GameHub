@@ -166,6 +166,24 @@ body {
 .option-btn { box-shadow: 0 3px 0 var(--control-shadow); }
 .input { transition: border-color 160ms ease-out, box-shadow 160ms ease-out; }
 .input:focus-visible { box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-cool) 12%, transparent); }
+/* Keep the dropdown chevron clear of the rounded edge and selected text. */
+select.input:not([multiple]):not([size]) {
+  appearance: none;
+  padding-right: 3rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='m4 6 4 4 4-4' stroke='%239cddd2' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position: right 1rem center;
+  background-size: 1rem;
+  background-repeat: no-repeat;
+}
+[data-theme="light"] select.input:not([multiple]):not([size]) {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='m4 6 4 4 4-4' stroke='%23176860' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+@media (forced-colors: active) {
+  :root select.input:not([multiple]):not([size]) {
+    appearance: auto;
+    background-image: none;
+  }
+}
 .game-card { --tile-color: var(--accent-cool); border-top: 3px solid color-mix(in srgb, var(--tile-color) 55%, var(--surface)); }
 .game-card:nth-child(3n + 2) { --tile-color: var(--play-violet); }
 .game-card:nth-child(3n) { --tile-color: var(--play-rose); }
