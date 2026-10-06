@@ -6,7 +6,7 @@ import { jsonError } from '@/lib/server/room-actions';
 
 /** POST /api/rooms — create a room and add the host as first player. */
 export async function POST(req: NextRequest) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -25,9 +25,9 @@ export async function POST(req: NextRequest) {
   if (!gameId) return jsonError('gameId is required');
   if (!['easy', 'hard', 'mixed'].includes(difficulty)) return jsonError('Bad difficulty');
   if (!['classic', 'spotlight'].includes(mode)) return jsonError('Bad mode');
-  const rounds = Math.min(100, Math.max(1, Number(totalRounds) || 10));
+  const rounds = Math.min(100, Math.max(1, Math.floor(Number(totalRounds) || 10)));
   const timer =
-    answerSeconds == null ? null : Math.min(120, Math.max(5, Number(answerSeconds) || 0)) || null;
+    answerSeconds == null ? null : Math.min(120, Math.max(5, Math.floor(Number(answerSeconds) || 0))) || null;
 
   const admin = createAdminClient();
   const { data: game } = await admin
@@ -69,11 +69,16 @@ export async function POST(req: NextRequest) {
   }
   if (!room) return jsonError('Could not create room, try again', 500);
 
-  await admin.from('room_players').insert({
+  const { error: hostError } = await admin.from('room_players').insert({
     room_id: room.id,
     profile_id: user.id,
     display_name: profile?.username ?? 'Host',
   });
+
+  if (hostError) {
+    await admin.from('rooms').delete().eq('id', room.id);
+    return jsonError('Could not add you to the room. Please try again.', 500);
+  }
 
   // Rematch: stamp the old room so everyone still on its end screen can follow along.
   if (typeof rematchOf === 'string') {

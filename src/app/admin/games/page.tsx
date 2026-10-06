@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { Game } from '@/lib/types';
 
@@ -15,20 +15,26 @@ const NEW_GAME_TEMPLATES: Record<string, { config: any; help: string }> = {
 };
 
 export default function AdminGamesPage() {
-  const supabase = createClient();
+  const [supabase] = useState(createClient);
   const [games, setGames] = useState<Game[]>([]);
   const [msg, setMsg] = useState('');
   const [showNew, setShowNew] = useState(false);
   const [form, setForm] = useState({ name: '', emoji: '🎲', description: '', type: 'quiz', config: '{}' });
 
-  async function load() {
-    const { data } = await supabase.from('games').select('*').order('sort_order');
-    setGames((data as Game[]) ?? []);
+  const load = useCallback(async () => {
+    const { data, error } = await supabase.from('games').select('*').order('sort_order');
+    if (error) throw error;
+    return (data as Game[]) ?? [];
+  }, [supabase]);
+  function refresh() {
+    void load().then(setGames).catch(() => setMsg('Could not load games. Please try again.'));
   }
   useEffect(() => {
-    load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    let active = true;
+    void load().then((data) => { if (active) setGames(data); })
+      .catch(() => { if (active) setMsg('Could not load games. Please try again.'); });
+    return () => { active = false; };
+  }, [load]);
 
   function flash(m: string) {
     setMsg(m);
@@ -38,13 +44,13 @@ export default function AdminGamesPage() {
   async function toggleActive(g: Game) {
     const { error } = await supabase.from('games').update({ is_active: !g.is_active }).eq('id', g.id);
     flash(error ? `Error: ${error.message}` : `${g.name} is now ${g.is_active ? 'hidden' : 'live'}`);
-    load();
+    refresh();
   }
 
   async function saveEdit(g: Game, patch: Partial<Game>) {
     const { error } = await supabase.from('games').update(patch).eq('id', g.id);
     flash(error ? `Error: ${error.message}` : 'Saved ✔');
-    load();
+    refresh();
   }
 
   async function createGame(e: React.FormEvent) {
@@ -70,7 +76,7 @@ export default function AdminGamesPage() {
     flash(`Created "${form.name}" — now add prompts for it!`);
     setShowNew(false);
     setForm({ name: '', emoji: '🎲', description: '', type: 'quiz', config: '{}' });
-    load();
+    refresh();
   }
 
   return (

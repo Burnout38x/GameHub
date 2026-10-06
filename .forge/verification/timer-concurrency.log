@@ -1,0 +1,3 @@
+PASS 1-round quiz: two simultaneous expiry calls reveal only; manual Finish performs transition
+PASS 2-round quiz: two simultaneous expiry calls reveal only; manual Next performs transition
+Timer concurrency regression: 2 real multi-client scenarios passed

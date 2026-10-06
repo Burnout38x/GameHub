@@ -1,17 +1,24 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
-  const supabase = createClient();
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect('/login');
+  const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+  if (profile?.role !== 'admin') redirect('/games');
+  const admin = createAdminClient();
   const [{ data: games }, { data: prompts }, { count: playerCount }, { count: matchCount }, { count: roomCount }] =
     await Promise.all([
       supabase.from('games').select('id, name, emoji, type, is_active').order('sort_order'),
       supabase.from('prompts').select('game_id, difficulty'),
       supabase.from('profiles').select('*', { count: 'exact', head: true }),
       supabase.from('match_history').select('*', { count: 'exact', head: true }),
-      supabase.from('rooms').select('*', { count: 'exact', head: true }),
+      admin.from('rooms').select('*', { count: 'exact', head: true }),
     ]);
 
   const counts = new Map<string, { easy: number; hard: number }>();

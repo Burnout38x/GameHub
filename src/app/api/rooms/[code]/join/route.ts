@@ -1,8 +1,10 @@
+import { withRoomLock } from '@/lib/server/room-lock';
+export const maxDuration = 30;
 import { NextResponse } from 'next/server';
 import { loadRoomContext, jsonError } from '@/lib/server/room-actions';
 
 /** POST /api/rooms/[code]/join */
-export async function POST(_req: Request, { params }: { params: { code: string } }) {
+async function handlePost(_req: Request, { params }: { params: { code: string } }) {
   const ctx = await loadRoomContext(params.code);
   if (ctx instanceof NextResponse) return ctx;
   const { admin, userId, room, me } = ctx;
@@ -26,4 +28,9 @@ export async function POST(_req: Request, { params }: { params: { code: string }
   });
   if (error && !error.message.includes('duplicate')) return jsonError(error.message, 500);
   return NextResponse.json({ ok: true });
+}
+
+export async function POST(req: Request, context: { params: Promise<{ code: string }> }) {
+  const params = await context.params;
+  return withRoomLock(params.code, () => handlePost(req as never, { params }));
 }

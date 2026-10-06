@@ -1,0 +1,67 @@
+{
+  "goal": "Understand all games for couples, friends, and family, fix game logic and room flows, and improve the overall look and feel with consistent UI across the app.",
+  "conditions": 8,
+  "mode": "rerun",
+  "blocked": false,
+  "problems": [],
+  "hedges": [],
+  "reruns": [
+    {
+      "n": "1",
+      "cmd": "node .forge/verify-evidence.mjs",
+      "status": "ok",
+      "exit": 0,
+      "output": "Evidence inventory: 18 online games, 8 local games, independent review, progress log, and screenshot artifacts present.\nRecorded browser evidence: 83 matrix checks, 8 local completion/replays, 13 theme/motion checks, 48 online checks; zero recorded errors, axe violations or overflow.\nUpgrade evidenc"
+    },
+    {
+      "n": "2",
+      "cmd": "npm test",
+      "status": "ok",
+      "exit": 0,
+      "output": "> gamehub@0.1.0 test\n> TSX_TSCONFIG_PATH=tsconfig.test.json node --import tsx --test tests/*.test.ts tests/*.test.tsx\n\n\u2714 game draw produces a playable link and never immediately repeats (97.71775ms)\n\u2714 theme control restores document preference and saves both choices (6.000083ms)\n\u2714 blocked theme stor"
+    },
+    {
+      "n": "3",
+      "cmd": "node .forge/verify-evidence.mjs",
+      "status": "ok",
+      "exit": 0,
+      "output": "Evidence inventory: 18 online games, 8 local games, independent review, progress log, and screenshot artifacts present.\nRecorded browser evidence: 83 matrix checks, 8 local completion/replays, 13 theme/motion checks, 48 online checks; zero recorded errors, axe violations or overflow.\nUpgrade evidenc"
+    },
+    {
+      "n": "4",
+      "cmd": "npm run build",
+      "status": "ok",
+      "exit": 0,
+      "output": "> gamehub@0.1.0 build\n> next build --webpack\n\n\u25b2 Next.js 16.4.0 (webpack)\n- Environments: .env.local\n\u2713 Running next.config.mjs took 9ms\n\n  Creating an optimized production build ...\n\u2713 Compiled successfully in 3.1s\n  Running TypeScript ...\n  Finished TypeScript in 1495ms ...\n  Collecting page data usi"
+    },
+    {
+      "n": "5",
+      "cmd": "node .forge/verify-evidence.mjs",
+      "status": "ok",
+      "exit": 0,
+      "output": "Evidence inventory: 18 online games, 8 local games, independent review, progress log, and screenshot artifacts present.\nRecorded browser evidence: 83 matrix checks, 8 local completion/replays, 13 theme/motion checks, 48 online checks; zero recorded errors, axe violations or overflow.\nUpgrade evidenc"
+    },
+    {
+      "n": "6",
+      "cmd": "npm test",
+      "status": "ok",
+      "exit": 0,
+      "output": "> gamehub@0.1.0 test\n> TSX_TSCONFIG_PATH=tsconfig.test.json node --import tsx --test tests/*.test.ts tests/*.test.tsx\n\n\u2714 game draw produces a playable link and never immediately repeats (96.520666ms)\n\u2714 theme control restores document preference and saves both choices (5.531667ms)\n\u2714 blocked theme sto"
+    },
+    {
+      "n": "7",
+      "cmd": "node .forge/verify-evidence.mjs",
+      "status": "ok",
+      "exit": 0,
+      "output": "Evidence inventory: 18 online games, 8 local games, independent review, progress log, and screenshot artifacts present.\nRecorded browser evidence: 83 matrix checks, 8 local completion/replays, 13 theme/motion checks, 48 online checks; zero recorded errors, axe violations or overflow.\nUpgrade evidenc"
+    },
+    {
+      "n": "8",
+      "cmd": "npm run lint",
+      "status": "ok",
+      "exit": 0,
+      "output": "> gamehub@0.1.0 lint\n> eslint src tests scripts *.mjs --max-warnings=0"
+    }
+  ],
+  "superseded": []
+}

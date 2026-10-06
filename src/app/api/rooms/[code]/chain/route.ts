@@ -1,11 +1,17 @@
+import { isCurrentRound } from '@/lib/server/multiplayer-rules';
+import { withRoomLock } from '@/lib/server/room-lock';
+export const maxDuration = 30;
 import { NextRequest, NextResponse } from 'next/server';
 import { loadRoomContext, jsonError, finishGame, nextTurnPlayer } from '@/lib/server/room-actions';
 import { deadlinePassed, roundDeadline } from '@/lib/game-utils';
-import { normalize } from '@/lib/local-games/logic';
+import { canChallengeTurn } from '@/lib/server/multiplayer-rules';
+import { normalize, isAssociationWord } from '@/lib/local-games/logic';
 
 interface ChainState {
   chain: { word: string; by: string | null; name: string | null }[];
   turnIndex: number;
+  challengedTurn?: number;
+  finalReview?: boolean;
   challenge: {
     word: string;
     prev: string;
@@ -25,7 +31,7 @@ interface ChainState {
  * (3+ players, vote by everyone not involved) · { vote } cast your challenge vote ·
  * { timeout: true } skip the turn once the room's timer deadline has passed.
  */
-export async function POST(req: NextRequest, { params }: { params: { code: string } }) {
+async function handlePost(req: NextRequest, { params }: { params: { code: string } }) {
   const loaded = await loadRoomContext(params.code);
   if (loaded instanceof NextResponse) return loaded;
   const ctx = loaded;
@@ -36,12 +42,21 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
   if (room.status !== 'playing') return jsonError('Game is not running', 409);
 
   const body = await req.json().catch(() => ({}));
+  if (!isCurrentRound(body.fromRound, room.current_round)) return jsonError('The round has changed. Refresh the room before acting.', 409);
   const state = room.round_state as unknown as ChainState;
 
   async function advanceTurn(update: Partial<ChainState>, scoreDelta?: { id: string; score: number }) {
     const turnIndex = state.turnIndex + 1;
     if (scoreDelta) {
       await admin.from('room_players').update({ score: scoreDelta.score }).eq('id', scoreDelta.id);
+    }
+    if (turnIndex >= room.total_rounds && update.chain && players.length >= 3) {
+      const { error } = await admin.from('rooms').update({
+        round_state: { ...state, ...update, turnIndex, challenge: null, finalReview: true, deadline: null },
+        turn_player_id: nextTurnPlayer(players, room.turn_player_id),
+      }).eq('id', room.id).eq('current_round', room.current_round);
+      if (error) return jsonError(error.message, 500);
+      return NextResponse.json({ ok: true, finalReview: true });
     }
     if (turnIndex >= room.total_rounds) {
       await admin
@@ -73,6 +88,13 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
       .eq('current_round', room.current_round);
     if (error) return jsonError(error.message, 500);
     return NextResponse.json({ ok: true });
+  }
+
+  if (body.accept === true) {
+    if (!state.finalReview || state.challenge) return jsonError('No final word to accept', 409);
+    if (room.turn_player_id !== userId) return jsonError('Waiting for the next player to review', 403);
+    await finishGame(ctx);
+    return NextResponse.json({ ok: true, finished: true });
   }
 
   // ----- Cast a vote in an active challenge -----
@@ -127,13 +149,17 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
       .eq('id', room.id)
       .eq('current_round', room.current_round);
     if (error) return jsonError(error.message, 500);
+    if (state.finalReview) {
+      await finishGame(ctx);
+      return NextResponse.json({ ok: true, succeeded, finished: true });
+    }
     return NextResponse.json({ ok: true, succeeded });
   }
 
   // ----- Start a challenge (turn player, before submitting their word) -----
   if (body.challenge === true) {
     if (room.turn_player_id !== userId) return jsonError('Not your turn', 403);
-    if (state.challenge) return jsonError('Challenge already in progress', 409);
+    if (!canChallengeTurn(state)) return jsonError('Only one challenge is allowed per turn', 409);
     if (players.length < 3) return jsonError('Challenges need at least 3 players', 409);
     if (state.chain.length < 2) return jsonError('Nothing to challenge yet', 409);
     const last = state.chain[state.chain.length - 1];
@@ -143,6 +169,7 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
       .update({
         round_state: {
           ...state,
+          challengedTurn: state.turnIndex,
           challenge: {
             word: last.word,
             prev: state.chain[state.chain.length - 2].word,
@@ -159,6 +186,8 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
     if (error) return jsonError(error.message, 500);
     return NextResponse.json({ ok: true });
   }
+
+  if (state.finalReview) return jsonError('Review the final word before finishing', 409);
 
   // ----- Timer expired: anyone may skip the stuck turn -----
   if (body.timeout === true) {
@@ -179,6 +208,7 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
   const word = normalize(String(body.word ?? ''));
   if (word.length < 2) return jsonError('Enter a real word with at least two characters');
   if (word.length > 28) return jsonError('Too long');
+  if (!isAssociationWord(String(body.word ?? ''))) return jsonError('Enter one word using letters');
   if (state.chain.some((c) => normalize(c.word) === word))
     return jsonError('That word has already been used');
 
@@ -189,4 +219,9 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
     },
     { id: me.id, score: me.score + 1 }
   );
+}
+
+export async function POST(req: Request, context: { params: Promise<{ code: string }> }) {
+  const params = await context.params;
+  return withRoomLock(params.code, () => handlePost(req as never, { params }));
 }

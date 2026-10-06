@@ -1,0 +1,28 @@
+PASS doctor-dash: create/join/start/play/score/finish/history
+PASS riddle-rush: create/join/start/play/score/finish/history
+PASS emoji-movie: create/join/start/play/score/finish/history
+PASS movie-trivia: create/join/start/play/score/finish/history
+PASS never-have-i-ever: create/join/start/play/score/finish/history
+PASS would-you-rather: create/join/start/play/score/finish/history
+PASS truth-or-dare: create/join/start/play/score/finish/history
+PASS two-minute-challenge: create/join/start/play/score/finish/history
+PASS memory-match: create/join/start/play/score/finish/history
+PASS number-guess: create/join/start/play/score/finish/history
+PASS mystery-card: create/join/start/play/score/finish/history
+PASS reverse-definition: create/join/start/play/score/finish/history
+PASS mental-math-duel: create/join/start/play/score/finish/history
+PASS know-your-partner: create/join/start/play/score/finish/history
+PASS who-remembers: create/join/start/play/score/finish/history
+PASS code-crackers: create/join/start/play/score/finish/history
+PASS rule-discoverer: create/join/start/play/score/finish/history
+PASS word-chain: create/join/start/play/score/finish/history
+PASS concurrent join enforces two-player capacity
+PASS host leave transfers ownership, excludes departed answers, finishes and rematches
+PASS concurrent challenge votes merge and repeat challenge is rejected
+PASS departing sole challenge voter cannot strand the game
+PASS legacy memory deck is preserved across every pair
+PASS distinct emoji memories require adjudication and do not auto-score
+PASS final Word Chain link is challengeable before results finalize
+PASS unrelated signed-in user cannot read private playing or finished room
+PASS a delayed prior-round answer cannot answer or score the next round
+Route integration complete: 18 games and 9 additional lifecycle/concurrency flows passed

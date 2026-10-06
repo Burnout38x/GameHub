@@ -1,3 +1,6 @@
+import { isCurrentRound } from '@/lib/server/multiplayer-rules';
+import { withRoomLock } from '@/lib/server/room-lock';
+export const maxDuration = 30;
 import { NextRequest, NextResponse } from 'next/server';
 import { loadRoomContext, jsonError, finishGame, nextTurnPlayer } from '@/lib/server/room-actions';
 import { buildRuleRound } from '@/lib/server/rule-round';
@@ -8,7 +11,7 @@ import { RULES, ruleAccepts } from '@/lib/local-games/rule-bank';
  * room_secrets. On your turn: test one example ({ test }) or identify the rule
  * ({ guessId }). Correct guess +5, wrong guess -1 and the turn passes.
  */
-export async function POST(req: NextRequest, { params }: { params: { code: string } }) {
+async function handlePost(req: NextRequest, { params }: { params: { code: string } }) {
   const ctx = await loadRoomContext(params.code);
   if (ctx instanceof NextResponse) return ctx;
   const { admin, userId, room, game, players, me } = ctx;
@@ -19,6 +22,7 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
   if (room.turn_player_id !== userId) return jsonError('Not your turn', 403);
 
   const body = await req.json().catch(() => ({}));
+  if (!isCurrentRound(body.fromRound, room.current_round)) return jsonError('The round has changed. Refresh the room before acting.', 409);
   const state = room.round_state as {
     kind: string;
     evidence: { value: string; accepted: boolean; system: boolean; by?: string }[];
@@ -95,8 +99,8 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
     return NextResponse.json({ ok: true, correct: true, finished: true });
   }
 
-  const next = buildRuleRound(state.usedRuleIds);
-  await admin.from('room_secrets').update({ secret: { ruleId: next.ruleId } }).eq('room_id', room.id);
+  const next = buildRuleRound(secretRow?.secret?.usedRuleIds ?? []);
+  await admin.from('room_secrets').update({ secret: { ruleId: next.ruleId, usedRuleIds: next.usedRuleIds } }).eq('room_id', room.id);
   const { error } = await admin
     .from('rooms')
     .update({
@@ -107,4 +111,9 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
     .eq('id', room.id);
   if (error) return jsonError(error.message, 500);
   return NextResponse.json({ ok: true, correct: true, points });
+}
+
+export async function POST(req: Request, context: { params: Promise<{ code: string }> }) {
+  const params = await context.params;
+  return withRoomLock(params.code, () => handlePost(req as never, { params }));
 }

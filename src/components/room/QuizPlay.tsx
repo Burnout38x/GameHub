@@ -41,11 +41,11 @@ export default function QuizPlay({ room, game, players, answers, prompt, userId,
   useEffect(() => {
     if (!deadline || revealed || !expired || timedOutRef.current === deadline) return;
     timedOutRef.current = deadline;
-    callRoomApi(room.code, 'advance', { fromRound: room.current_round })
-      .catch(() => {})
+    callRoomApi(room.code, 'advance', { fromRound: room.current_round, revealOnly: true })
+      .catch(() => { timedOutRef.current = null; setError("Connection interrupted. Retrying the round timer…"); })
       .finally(refresh);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [expired, deadline, revealed]);
+  }, [expired, deadline, revealed, now]);
 
   const canAnswer = !revealed && !myAnswer && (!turnBased || isMyTurn) && !expired;
 
@@ -54,7 +54,7 @@ export default function QuizPlay({ room, game, players, answers, prompt, userId,
     setBusy(true);
     setError('');
     try {
-      await callRoomApi(room.code, 'answer', { answer: option });
+      await callRoomApi(room.code, 'answer', { fromRound: room.current_round, answer: option });
       refresh();
     } catch (e: any) {
       setError(e.message);
@@ -75,7 +75,7 @@ export default function QuizPlay({ room, game, players, answers, prompt, userId,
     setShowHint(false);
   }
 
-  if (!prompt) return <div className="glass p-6 text-white/60">Loading question…</div>;
+  if (!prompt) return <div role="status" className="glass p-6 text-white/60">Loading question…</div>;
 
   return (
     <div className="flex flex-col gap-3">
@@ -99,7 +99,7 @@ export default function QuizPlay({ room, game, players, answers, prompt, userId,
           {content.question}
         </div>
         {game.config?.showHint && content.hint && !revealed && (
-          <button className="text-sm font-black text-amber-200" onClick={() => setShowHint(!showHint)}>
+          <button className="text-sm font-black text-amber-200" aria-expanded={showHint} onClick={() => setShowHint(!showHint)}>
             {showHint ? content.hint : 'Show hint 💡'}
           </button>
         )}
@@ -130,7 +130,7 @@ export default function QuizPlay({ room, game, players, answers, prompt, userId,
         })}
       </div>
 
-      {error && <p className="text-sm font-bold text-red-300">{error}</p>}
+      {error && <p role="alert" className="text-sm font-bold text-red-300">{error}</p>}
 
       {!revealed && !turnBased && myAnswer && (
         <div className="glass-sm p-4 text-sm text-white/70">
@@ -159,7 +159,7 @@ export default function QuizPlay({ room, game, players, answers, prompt, userId,
             <p className="mt-1 text-white/70">💡 {content.fact}</p>
           )}
           {!turnBased && (
-            <div className="mt-2 text-xs text-white/50">
+            <div className="mt-2 text-xs text-white/65">
               {answers.filter((a) => a.is_correct).length} of {players.length} got it right
             </div>
           )}

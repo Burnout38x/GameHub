@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 export const dynamic = 'force-dynamic';
 
 export default async function LeaderboardPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: players } = await supabase
     .from('profiles')
     .select('id, username, games_played, games_won, total_points, best_streak')

@@ -1,9 +1,12 @@
+import { withRoomLock } from '@/lib/server/room-lock';
+export const maxDuration = 30;
 import { NextResponse } from 'next/server';
 import { loadRoomContext, jsonError, nextTurnPlayer } from '@/lib/server/room-actions';
-import { isTurnBased } from '@/lib/game-utils';
+import { activeAnswers } from '@/lib/server/multiplayer-rules';
+import { isTurnBased, roundDeadline } from '@/lib/game-utils';
 
 /** POST /api/rooms/[code]/leave — leave the room; closes it if too few players remain. */
-export async function POST(_req: Request, { params }: { params: { code: string } }) {
+async function handlePost(_req: Request, { params }: { params: { code: string } }) {
   const ctx = await loadRoomContext(params.code);
   if (ctx instanceof NextResponse) return ctx;
   const { admin, userId, room, game, players, me } = ctx;
@@ -48,6 +51,13 @@ export async function POST(_req: Request, { params }: { params: { code: string }
   }
 
   const updates: Record<string, any> = {};
+  if (room.host_id === userId) updates.host_id = remaining[0].profile_id;
+  if (game.type === 'chain' && (room.round_state?.challenge || room.turn_player_id === userId)) {
+    updates.round_state = {
+      ...room.round_state, challenge: null,
+      ...(room.answer_seconds ? { deadline: roundDeadline(room.answer_seconds) } : {}),
+    };
+  }
   if (room.turn_player_id === userId) {
     updates.turn_player_id = nextTurnPlayer(players, userId);
   }
@@ -56,16 +66,21 @@ export async function POST(_req: Request, { params }: { params: { code: string }
     (game.type === 'quiz' || game.type === 'prompt') &&
     !isTurnBased(game.slug, game.type, room.mode)
   ) {
-    const { count } = await admin
+    const { data: answers } = await admin
       .from('round_answers')
-      .select('id', { count: 'exact', head: true })
+      .select('profile_id')
       .eq('room_id', room.id)
       .eq('round_index', room.current_round);
-    if ((count ?? 0) >= remaining.length) updates.round_phase = 'revealed';
+    if (activeAnswers(answers ?? [], remaining).length >= remaining.length) updates.round_phase = 'revealed';
   }
   if (Object.keys(updates).length > 0) {
     // current_round guard: a concurrent advance already set a fresh turn — let it win.
     await admin.from('rooms').update(updates).eq('id', room.id).eq('current_round', room.current_round);
   }
   return NextResponse.json({ ok: true });
+}
+
+export async function POST(req: Request, context: { params: Promise<{ code: string }> }) {
+  const params = await context.params;
+  return withRoomLock(params.code, () => handlePost(req as never, { params }));
 }

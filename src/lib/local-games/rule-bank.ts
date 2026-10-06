@@ -40,6 +40,8 @@ export function ruleAccepts(rule: HiddenRule, val: string): boolean {
   const raw = String(val).trim();
   const w = normalize(raw);
   const n = Number(raw);
+  if (rule.kind === 'number' && (!/^-?\d+$/.test(raw) || !Number.isSafeInteger(n) || Math.abs(n) > 1_000_000_000)) return false;
+  if (rule.kind === 'word' && !/^[a-z]+$/i.test(raw)) return false;
   switch (rule.id) {
     case 'even': return Number.isInteger(n) && n % 2 === 0;
     case 'm3': return Number.isInteger(n) && n % 3 === 0;
@@ -59,7 +61,7 @@ export function ruleAccepts(rule: HiddenRule, val: string): boolean {
       if (!Number.isInteger(n) || n < 1) return false;
       return Number.isInteger((Math.sqrt(8 * n + 1) - 1) / 2);
     }
-    case 'pow2': return Number.isInteger(n) && n > 0 && (n & (n - 1)) === 0;
+    case 'pow2': return Number.isInteger(n) && n > 0 && Number.isInteger(Math.log2(n));
     case 'three': return Number.isInteger(n) && Math.abs(n) >= 100 && Math.abs(n) <= 999;
     case 'hasE': return w.includes('e');
     case 'long6': return /^[a-z]+$/.test(w) && w.length >= 7;

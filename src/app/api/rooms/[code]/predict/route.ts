@@ -1,6 +1,9 @@
+import { isCurrentRound } from '@/lib/server/multiplayer-rules';
+import { withRoomLock } from '@/lib/server/room-lock';
+export const maxDuration = 30;
 import { NextRequest, NextResponse } from 'next/server';
 import { loadRoomContext, jsonError } from '@/lib/server/room-actions';
-import { levenshtein, normalize } from '@/lib/local-games/logic';
+import { memoryMatch } from '@/lib/local-games/logic';
 
 /**
  * POST /api/rooms/[code]/predict — the two 'predict' couple games.
@@ -8,10 +11,10 @@ import { levenshtein, normalize } from '@/lib/local-games/logic';
  * Know Your Partner (multiple choice): the round's turn player answers privately
  * (stored in room_secrets so the partner can't peek), then the partner guesses.
  *
- * Who Remembers It Better (free text): both answer the same question; close answers
- * auto-match, different answers go to the turn player to decide same/different.
+ * Who Remembers It Better (free text): both answer the same question; normalized exact answers
+ * auto-match, other answers go to the turn player to decide same/different.
  */
-export async function POST(req: NextRequest, { params }: { params: { code: string } }) {
+async function handlePost(req: NextRequest, { params }: { params: { code: string } }) {
   const ctx = await loadRoomContext(params.code);
   if (ctx instanceof NextResponse) return ctx;
   const { admin, userId, room, game, players, me } = ctx;
@@ -23,6 +26,7 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
   if (players.length !== 2) return jsonError('This game needs exactly 2 players', 409);
 
   const body = await req.json().catch(() => ({}));
+  if (!isCurrentRound(body.fromRound, room.current_round)) return jsonError('The round has changed. Refresh the room before acting.', 409);
   const partner = players.find((p) => p.profile_id !== userId)!;
   const state = room.round_state ?? {};
   const freeText = !!game.config?.freeText;
@@ -154,9 +158,8 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
     name: p.display_name,
     value: byId.get(p.profile_id) ?? '',
   }));
-  const [a, b] = players.map((p) => normalize(byId.get(p.profile_id) ?? ''));
-  const similarity = 1 - levenshtein(a, b) / Math.max(a.length, b.length, 1);
-  const auto = a === b || similarity >= 0.84;
+  const [a, b] = players.map((p) => byId.get(p.profile_id) ?? '');
+  const auto = memoryMatch(a, b) === 'exact';
 
   if (auto) {
     for (const p of players) {
@@ -182,4 +185,9 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
     .eq('current_round', room.current_round);
   if (error) return jsonError(error.message, 500);
   return NextResponse.json({ ok: true, decide: true });
+}
+
+export async function POST(req: Request, context: { params: Promise<{ code: string }> }) {
+  const params = await context.params;
+  return withRoomLock(params.code, () => handlePost(req as never, { params }));
 }

@@ -1,89 +1,31 @@
 import Link from 'next/link';
+import GamePicker from '@/components/GamePicker';
 import { createClient } from '@/lib/supabase/server';
 
 export default async function HomePage() {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const { data: games } = await supabase
-    .from('games')
-    .select('slug, name, description, emoji')
-    .eq('is_active', true)
-    .order('sort_order')
-    .limit(6);
-
-  return (
-    <div className="flex flex-col gap-8">
-      <section className="glass flex flex-col items-center gap-6 px-6 py-14 text-center sm:py-20">
-        <div className="pill">🌍 Long-distance game nights, solved</div>
-        <h1 className="max-w-2xl text-5xl font-black leading-[0.98] tracking-tighter sm:text-6xl">
-          Play Games <span className="text-indigo-300">With The People You Love</span>
-        </h1>
-        <p className="max-w-xl text-white/75 sm:text-lg">
-          Create a room, share a 6-letter code, and play trivia, riddles, emoji movies,
-          challenges and more — live, on your own phones, from anywhere in the world.
-        </p>
-        <div className="flex w-full max-w-md flex-col gap-3 sm:flex-row">
-          {user ? (
-            <>
-              <Link href="/rooms/new" className="btn">
-                ➕ Create Room
-              </Link>
-              <Link href="/rooms/join" className="btn-secondary">
-                ⇥ Join Room
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link href="/register" className="btn">
-                Get Started Free
-              </Link>
-              <Link href="/login" className="btn-secondary">
-                Log in
-              </Link>
-            </>
-          )}
+  const supabase = await createClient();
+  const { data: games } = await supabase.from('games').select('slug, name, description, emoji').eq('is_active', true).order('sort_order').limit(3);
+  return <div className="flex flex-col gap-10">
+    <section className="grid items-center gap-8 py-6 sm:py-10 lg:grid-cols-[1.2fr_1fr]">
+      <div>
+        <p className="eyebrow">A little friendly competition</p>
+        <h1 className="mt-4 max-w-xl text-5xl font-black leading-[1.06] tracking-tight sm:text-6xl">Good company.<br /><span className="text-[#f7bd78]">Great game nights.</span></h1>
+        <p className="mt-5 max-w-lg text-base leading-relaxed text-white/70 sm:text-lg">For your favorite person, your family, or the whole group chat. Find a game and make a little time for each other.</p>
+        <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+          <Link href="/games" className="btn sm:!w-auto">Find your next game →</Link>
+          <Link href="/rooms/join" className="btn-secondary sm:!w-auto">Join with a code</Link>
         </div>
-      </section>
-
-      <section>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-2xl font-black tracking-tight">Featured Games</h2>
-          <Link href={user ? '/games' : '/register'} className="text-sm font-bold text-indigo-300">
-            View all →
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {(games ?? []).map((g) => (
-            <div key={g.slug} className="glass flex flex-col gap-2 p-5">
-              <div className="text-4xl">{g.emoji}</div>
-              <div className="text-lg font-black">{g.name}</div>
-              <p className="text-sm leading-relaxed text-white/65">{g.description}</p>
-            </div>
-          ))}
-          {(games ?? []).length === 0 && (
-            <div className="glass col-span-full p-6 text-white/60">
-              No games yet — run <code className="text-indigo-300">supabase/schema.sql</code> and{' '}
-              <code className="text-indigo-300">node scripts/seed-prompts.mjs</code> to load them.
-            </div>
-          )}
-        </div>
-      </section>
-
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {[
-          ['1️⃣', 'Create or join', 'Pick a game, choose easy or hard, set the rounds, get a code.'],
-          ['2️⃣', 'Play live', 'Everyone answers on their own phone — scores sync in real time.'],
-          ['3️⃣', 'Climb the board', 'Wins, streaks and achievements are tracked forever.'],
-        ].map(([e, t, d]) => (
-          <div key={t} className="glass p-5">
-            <div className="text-2xl">{e}</div>
-            <div className="mt-2 font-black">{t}</div>
-            <p className="mt-1 text-sm text-white/65">{d}</p>
-          </div>
-        ))}
-      </section>
-    </div>
-  );
+        <p className="mt-5 text-sm text-white/55">Around one table or miles apart. Everyone’s invited.</p>
+      </div>
+      <GamePicker />
+    </section>
+    <section aria-labelledby="ways-to-play">
+      <h2 id="ways-to-play" className="text-2xl font-bold tracking-tight">Your people. Your way to play.</h2>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <Link href="/games#online" className="game-card group"><span className="text-sm font-semibold text-[#9cddd2]">Different devices</span><h3 className="text-xl font-bold">One room, everyone together ↗</h3><p className="text-sm leading-relaxed text-white/65">Create a room, share the code, and play live on your own phones. Sign in to keep your scores.</p></Link>
+        <Link href="/games#local" className="game-card group"><span className="text-sm font-semibold text-[#9cddd2]">One shared screen</span><h3 className="text-xl font-bold">Pass the phone. Bring the fun. ↗</h3><p className="text-sm leading-relaxed text-white/65">Gather 2–6 people for pass-and-play games. No account or room code needed.</p></Link>
+      </div>
+    </section>
+    {!!games?.length && <section><div className="mb-4 flex items-center justify-between gap-3"><h2 className="text-2xl font-bold tracking-tight">Start with a crowd favorite</h2><Link href="/games" className="nav-link !text-[#9cddd2]">All games →</Link></div><div className="grid gap-4 sm:grid-cols-3">{games.map(g => <Link href={`/rooms/new?game=${g.slug}`} key={g.slug} className="game-card"><span className="game-icon" aria-hidden="true">{g.emoji}</span><h3 className="text-lg font-bold">{g.name}</h3><p className="text-sm leading-relaxed text-white/65">{g.description}</p><span className="mt-auto text-sm font-bold text-[#f7bd78]">Create a room →</span></Link>)}</div></section>}
+  </div>;
 }

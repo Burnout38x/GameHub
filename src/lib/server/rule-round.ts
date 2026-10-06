@@ -17,6 +17,7 @@ export function buildRuleRound(usedIds: string[]) {
   ];
   return {
     ruleId: rule.id,
-    state: { kind: rule.kind, evidence, choices, usedRuleIds: [...usedIds, rule.id] },
+    usedRuleIds: [...usedIds, rule.id],
+    state: { kind: rule.kind, evidence, choices },
   };
 }

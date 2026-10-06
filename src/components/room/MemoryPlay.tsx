@@ -6,7 +6,7 @@ import { callRoomApi } from './RoomClient';
 export default function MemoryPlay({ room, players, userId, refresh }: RoomBundle) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const [peek, setPeek] = useState<{ a: number; b: number } | null>(null);
+  const [settledPair, setSettledPair] = useState<string | null>(null);
 
   const state = room.round_state as {
     theme: string;
@@ -18,14 +18,16 @@ export default function MemoryPlay({ room, players, userId, refresh }: RoomBundl
   const isMyTurn = room.turn_player_id === userId;
   const turnPlayer = players.find((p) => p.profile_id === room.turn_player_id);
 
-  // Briefly show a missed pair to everyone before it flips back.
+  // Derive visibility from the current pair; only the expiry changes local state.
+  // Equivalent polling snapshots keep the same identity and never restart the peek.
+  const pairKey = state?.lastPair && !state.lastPair.matched
+    ? `${state.moves}:${state.lastPair.a}:${state.lastPair.b}` : null;
+  const peek = pairKey && pairKey !== settledPair ? state.lastPair : null;
   useEffect(() => {
-    if (state?.lastPair && !state.lastPair.matched) {
-      setPeek({ a: state.lastPair.a, b: state.lastPair.b });
-      const t = setTimeout(() => setPeek(null), 1100);
-      return () => clearTimeout(t);
-    }
-  }, [state?.lastPair, state?.moves]);
+    if (!pairKey) return;
+    const timer = setTimeout(() => setSettledPair(pairKey), 1100);
+    return () => clearTimeout(timer);
+  }, [pairKey]);
 
   if (!state?.cards) return <div className="glass p-6 text-white/60">Setting up the board…</div>;
 
@@ -36,7 +38,7 @@ export default function MemoryPlay({ room, players, userId, refresh }: RoomBundl
     setBusy(true);
     setError('');
     try {
-      await callRoomApi(room.code, 'memory', { index });
+      await callRoomApi(room.code, 'memory', { fromRound: room.current_round, index });
       refresh();
     } catch (e: any) {
       setError(e.message);
@@ -46,7 +48,7 @@ export default function MemoryPlay({ room, players, userId, refresh }: RoomBundl
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="pill">
           {isMyTurn ? '🎯 Your turn — flip two cards' : `${turnPlayer?.display_name ?? '…'}'s turn`}
         </div>
@@ -60,8 +62,9 @@ export default function MemoryPlay({ room, players, userId, refresh }: RoomBundl
             <button
               key={i}
               onClick={() => flip(i)}
-              disabled={!isMyTurn || faceUp || busy || state.flipped.length >= 2}
-              className={`aspect-square rounded-2xl border text-3xl transition-all sm:text-4xl ${
+              aria-label={faceUp ? `${card.name ?? card.emoji}${card.matched ? ", matched" : ""}` : `Face-down card ${i + 1}`}
+              disabled={!isMyTurn || faceUp || busy || !!peek || state.flipped.length >= 2}
+              className={`aspect-square rounded-2xl border text-3xl transition-colors sm:text-4xl ${
                 card.matched
                   ? 'border-emerald-400/60 bg-emerald-400/[0.15]'
                   : faceUp
@@ -75,7 +78,7 @@ export default function MemoryPlay({ room, players, userId, refresh }: RoomBundl
         })}
       </div>
 
-      {error && <p className="text-sm font-bold text-red-300">{error}</p>}
+      {error && <p role="alert" className="text-sm font-bold text-red-300">{error}</p>}
       {state.lastPair && (
         <div className="glass-sm p-3 text-center text-sm text-white/70">
           {state.lastPair.matched ? 'Match found! Turn continues 🎉' : 'No match — turn passes.'}

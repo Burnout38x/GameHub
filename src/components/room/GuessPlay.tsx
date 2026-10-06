@@ -32,7 +32,7 @@ export default function GuessPlay({ room, players, userId, refresh }: RoomBundle
     setBusy(true);
     setError('');
     try {
-      await callRoomApi(room.code, 'guess', { value: Number(value) });
+      await callRoomApi(room.code, 'guess', { fromRound: room.current_round, value: Number(value) });
       setValue('');
       refresh();
     } catch (err: any) {
@@ -60,13 +60,19 @@ export default function GuessPlay({ room, players, userId, refresh }: RoomBundle
         <p className="text-sm text-white/60">Fewer guesses = more points (up to 10).</p>
 
         {isMyTurn ? (
-          <form onSubmit={submit} className="flex w-full max-w-xs gap-2">
+          <form onSubmit={submit} className="flex w-full max-w-xs flex-wrap gap-2">
+            <label htmlFor="number-guess" className="w-full text-left text-sm font-semibold">Your guess</label>
             <input
+              id="number-guess"
+              inputMode="numeric"
+              disabled={busy}
+              aria-invalid={!!error}
+              aria-describedby={error ? "guess-error" : undefined}
               type="number"
               min={lo}
               max={hi}
               required
-              className="input text-center text-xl font-black"
+              className="input min-w-0 flex-1 text-center text-xl font-black"
               value={value}
               onChange={(e) => setValue(e.target.value)}
               placeholder={`${lo}–${hi}`}
@@ -78,19 +84,19 @@ export default function GuessPlay({ room, players, userId, refresh }: RoomBundle
         ) : (
           <div className="pill">⏳ {turnPlayer?.display_name ?? '…'} is guessing…</div>
         )}
-        {error && <p className="text-sm font-bold text-red-300">{error}</p>}
+        {error && <p id="guess-error" role="alert" className="text-sm font-bold text-red-300">{error}</p>}
       </div>
 
       {state.guesses.length > 0 && (
         <div className="glass-sm p-4">
-          <div className="text-xs font-black uppercase tracking-wide text-white/50">This round</div>
+          <div className="text-xs font-black uppercase tracking-wide text-white/65">This round</div>
           <ul className="mt-2 flex flex-col gap-1 text-sm">
             {[...state.guesses].reverse().map((g, i) => (
               <li key={i} className="flex items-center justify-between">
                 <span className="text-white/70">
                   {g.name} guessed <strong className="text-white">{g.value}</strong>
                 </span>
-                <span className={g.dir === 'correct' ? 'font-black text-emerald-300' : 'text-white/50'}>
+                <span className={g.dir === 'correct' ? 'font-black text-emerald-300' : 'text-white/65'}>
                   {g.dir === 'correct' ? '✔ correct!' : g.dir === 'higher' ? '↑ higher' : '↓ lower'}
                 </span>
               </li>

@@ -1,15 +1,22 @@
+import { isCurrentRound } from '@/lib/server/multiplayer-rules';
+import { withRoomLock } from '@/lib/server/room-lock';
+export const maxDuration = 30;
 import { NextRequest, NextResponse } from 'next/server';
 import { loadRoomContext, jsonError } from '@/lib/server/room-actions';
+import { activeAnswers, allowedAnswers } from '@/lib/server/multiplayer-rules';
 import { isTurnBased, deadlinePassed } from '@/lib/game-utils';
 
 /** POST /api/rooms/[code]/answer — submit an answer for the current round (quiz + prompt games). */
-export async function POST(req: NextRequest, { params }: { params: { code: string } }) {
+async function handlePost(req: NextRequest, { params }: { params: { code: string } }) {
   const ctx = await loadRoomContext(params.code);
   if (ctx instanceof NextResponse) return ctx;
   const { admin, userId, room, game, players, me } = ctx;
 
   if (!me) return jsonError('You are not in this room', 403);
   if (room.status !== 'playing') return jsonError('Game is not running', 409);
+  const body = await req.json().catch(() => ({}));
+  if (!isCurrentRound(body.fromRound, room.current_round)) return jsonError('The round has changed. Refresh the room before acting.', 409);
+  const { answer } = body;
   if (room.round_phase !== 'answering') return jsonError('Round already revealed', 409);
   if (game.type !== 'quiz' && game.type !== 'prompt') return jsonError('Wrong endpoint for this game');
 
@@ -27,13 +34,15 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
     return jsonError('Time is up — round is over', 409);
   }
 
-  const { answer } = await req.json().catch(() => ({}));
+
   if (typeof answer !== 'string' || answer.length === 0 || answer.length > 200)
     return jsonError('Bad answer');
 
   const promptId = room.prompt_ids[room.current_round];
   const { data: prompt } = await admin.from('prompts').select('content').eq('id', promptId).single();
   if (!prompt) return jsonError('Prompt missing', 500);
+  if (!allowedAnswers(game.type, game.config ?? {}, prompt.content).includes(answer))
+    return jsonError('Pick one of the available options');
 
   // Scoring
   let isCorrect: boolean | null = null;
@@ -65,11 +74,12 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
   }
 
   // Reveal when everyone required has answered.
-  const { data: allAnswers } = await admin
+  const { data: storedAnswers } = await admin
     .from('round_answers')
     .select('profile_id, answer')
     .eq('room_id', room.id)
     .eq('round_index', room.current_round);
+  const allAnswers = activeAnswers(storedAnswers ?? [], players);
   const done = turnBased ? true : (allAnswers?.length ?? 0) >= players.length;
 
   if (done) {
@@ -83,8 +93,13 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
         }
       }
     }
-    await admin.from('rooms').update({ round_phase: 'revealed' }).eq('id', room.id);
+    await admin.from('rooms').update({ round_phase: 'revealed' }).eq('id', room.id).eq('current_round', room.current_round).eq('round_phase', 'answering');
   }
 
   return NextResponse.json({ ok: true, isCorrect, points });
+}
+
+export async function POST(req: Request, context: { params: Promise<{ code: string }> }) {
+  const params = await context.params;
+  return withRoomLock(params.code, () => handlePost(req as never, { params }));
 }

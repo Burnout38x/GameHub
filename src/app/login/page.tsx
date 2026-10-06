@@ -24,7 +24,8 @@ function LoginForm() {
       setBusy(false);
       return;
     }
-    router.push(params.get('next') || '/games');
+    const next = params.get('next');
+    router.push(next?.startsWith('/') && !next.startsWith('//') && !next.includes('\\') ? next : '/games');
     router.refresh();
   }
 

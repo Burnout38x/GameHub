@@ -20,7 +20,7 @@ export default function RulePlay({ room, players, userId, refresh }: RoomBundle)
     setBusy(true);
     setError('');
     try {
-      await callRoomApi(room.code, 'rule', body);
+      await callRoomApi(room.code, 'rule', { ...body, fromRound: room.current_round });
       setInput('');
       refresh();
     } catch (e: any) {
@@ -60,7 +60,10 @@ export default function RulePlay({ room, players, userId, refresh }: RoomBundle)
             if (input.trim()) act({ test: input });
           }}
         >
+          <label htmlFor="rule-example" className="text-left text-sm font-semibold">Test a word or number</label>
           <input
+            id="rule-example"
+            aria-describedby="rule-test-help"
             className="input"
             autoComplete="off"
             maxLength={30}
@@ -73,7 +76,8 @@ export default function RulePlay({ room, players, userId, refresh }: RoomBundle)
             Test example
           </button>
         </form>
-        {error && <div className="text-sm font-bold text-red-300">{error}</div>}
+        <p id="rule-test-help" className="text-sm text-white/65">An example uses your turn. Use the evidence to identify the rule below.</p>
+        {error && <div role="alert" className="text-sm font-bold text-red-300">{error}</div>}
       </div>
 
       <div className="glass p-5">

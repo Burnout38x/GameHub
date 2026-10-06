@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { LOCAL_GAMES } from '@/lib/local-games/catalog';
+import GameLibrary from '@/components/GameLibrary';
 import { createClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
@@ -10,88 +12,20 @@ const NOTICES: Record<string, string> = {
 };
 
 // Same-device games — no room/code needed, everyone plays on one screen.
-const LOCAL_GAMES = [
-  {
-    slug: 'mystery-card',
-    emoji: '🕵️',
-    name: 'Mystery Card',
-    description:
-      'A hidden card is described — race your friends to identify it before the timer ends. Race and turn-by-turn modes.',
-    meta: '2–6 players · 48 questions · timed',
-  },
-  {
-    slug: 'know-your-partner',
-    emoji: '💞',
-    name: 'Know Your Partner',
-    description:
-      'Answer privately, hand over the device, and see how accurately your partner can predict your choices.',
-    meta: 'Exactly 2 players · 72 questions · role switching',
-  },
-  {
-    slug: 'code-crackers',
-    emoji: '🔐',
-    name: 'Code Crackers',
-    description:
-      'Take turns testing secret digit codes — exact and misplaced clues tell you how close you are to cracking it.',
-    meta: '2–6 players · deduction · rounds',
-  },
-  {
-    slug: 'word-chain',
-    emoji: '🔗',
-    name: 'Word Association Chain',
-    description:
-      'Keep the chain alive under pressure — repeats are blocked and weak connections can be challenged to a vote.',
-    meta: '2–6 players · timed · challenge votes',
-  },
-  {
-    slug: 'reverse-definition',
-    emoji: '🧠',
-    name: 'Reverse Definition',
-    description:
-      'Buzz first and identify ordinary words from strange, indirect, and increasingly difficult descriptions.',
-    meta: '2–6 players · buzzer · 48 clues',
-  },
-  {
-    slug: 'mental-math-duel',
-    emoji: '⚡',
-    name: 'Mental Math Duel',
-    description:
-      'Same puzzle, two players — the first correct answer scores and wrong answers trigger a lockout.',
-    meta: 'Exactly 2 players · fast reaction · generated puzzles',
-  },
-  {
-    slug: 'rule-discoverer',
-    emoji: '🧩',
-    name: 'Rule Discoverer',
-    description:
-      'Test examples, study accepted and rejected results, then identify the hidden rule before your opponents.',
-    meta: '2–6 players · logic · 24 rules',
-  },
-  {
-    slug: 'who-remembers',
-    emoji: '📸',
-    name: 'Who Remembers It Better?',
-    description:
-      'Partners answer privately about shared memories — matches score, disagreements become discussion rounds.',
-    meta: 'Exactly 2 players · 60 prompts · private answers',
-  },
-];
 
 export default async function GamesPage({
   searchParams,
 }: {
-  searchParams?: { notice?: string };
+  searchParams?: Promise<{ notice?: string }>;
 }) {
-  const notice = searchParams?.notice ? NOTICES[searchParams.notice] : null;
-  const supabase = createClient();
+  const query = await searchParams;
+  const notice = query?.notice ? NOTICES[query.notice] : null;
+  const supabase = await createClient();
   const { data: games } = await supabase
     .from('games')
     .select('id, slug, name, description, emoji, type')
     .eq('is_active', true)
     .order('sort_order');
-  const { data: prompts } = await supabase.from('prompts').select('game_id');
-  const counts = new Map<string, number>();
-  for (const p of prompts ?? []) counts.set(p.game_id, (counts.get(p.game_id) ?? 0) + 1);
 
   return (
     <div className="flex flex-col gap-6">
@@ -103,9 +37,9 @@ export default async function GamesPage({
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-3xl font-black tracking-tight">Game Library</h1>
-          <p className="mt-1 text-white/60">Pick a game, create a room, share the code.</p>
+          <p className="mt-1 text-white/60">Find something for your people. Play on your own phones or share one screen.</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Link href="/rooms" className="btn-secondary !w-auto px-6 !py-3">
             Browse rooms →
           </Link>
@@ -115,72 +49,7 @@ export default async function GamesPage({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {(games ?? []).map((g) => (
-          <div key={g.id} className="glass flex flex-col gap-3 p-5">
-            <div className="flex items-start justify-between">
-              <div className="text-4xl">{g.emoji}</div>
-              <span className="pill !text-[11px] uppercase">
-                {g.type === 'quiz'
-                  ? 'Trivia'
-                  : g.type === 'prompt'
-                    ? 'Party'
-                    : g.type === 'memory'
-                      ? 'Board'
-                      : g.type === 'predict'
-                        ? 'Couple'
-                        : g.type === 'code'
-                          ? 'Deduction'
-                          : g.type === 'rule'
-                            ? 'Logic'
-                            : g.type === 'chain'
-                              ? 'Words'
-                              : 'Duel'}
-              </span>
-            </div>
-            <div>
-              <div className="text-lg font-black">{g.name}</div>
-              <p className="mt-1 text-sm leading-relaxed text-white/65">{g.description}</p>
-            </div>
-            <div className="mt-auto flex items-center justify-between pt-2">
-              <span className="text-xs font-bold text-white/45">
-                {g.type === 'quiz' || g.type === 'prompt' || g.type === 'predict'
-                  ? `${counts.get(g.id) ?? 0} prompts`
-                  : 'Built-in content'}
-              </span>
-              <Link
-                href={`/rooms/new?game=${g.slug}`}
-                className="rounded-xl px-4 py-2 text-sm font-black text-[#0a0918]"
-                style={{ background: 'linear-gradient(135deg,#a5b4fc,#f9a8d4)' }}
-              >
-                Play →
-              </Link>
-            </div>
-          </div>
-        ))}
-        {LOCAL_GAMES.map((g) => (
-          <div key={g.slug} className="glass flex flex-col gap-3 p-5">
-            <div className="flex items-start justify-between">
-              <div className="text-4xl">{g.emoji}</div>
-              <span className="pill !text-[11px] uppercase">Pass & Play</span>
-            </div>
-            <div>
-              <div className="text-lg font-black">{g.name}</div>
-              <p className="mt-1 text-sm leading-relaxed text-white/65">{g.description}</p>
-            </div>
-            <div className="mt-auto flex items-center justify-between pt-2">
-              <span className="text-xs font-bold text-white/45">{g.meta}</span>
-              <Link
-                href={`/games/local/${g.slug}`}
-                className="rounded-xl px-4 py-2 text-sm font-black text-[#0a0918]"
-                style={{ background: 'linear-gradient(135deg,#a5b4fc,#f9a8d4)' }}
-              >
-                Play →
-              </Link>
-            </div>
-          </div>
-        ))}
-      </div>
+      <GameLibrary online={games ?? []} local={LOCAL_GAMES} />
     </div>
   );
 }

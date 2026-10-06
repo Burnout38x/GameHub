@@ -1,23 +1,14 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import Link from 'next/link';
 import { shuffle } from '@/lib/game-utils';
 import { MYSTERY_QUESTIONS, type MysteryQuestion } from '@/lib/local-games/mystery-questions';
 
+import PlayersEditor from '@/components/local/PlayersEditor';
+import { sampleQuestions, rankPlayers, validateNames } from '@/lib/local-games/logic';
+
 type Phase = 'setup' | 'play' | 'result';
 type Mode = 'race' | 'turn';
-
-function pickQuestions(pool: MysteryQuestion[], count: number): MysteryQuestion[] {
-  const out: MysteryQuestion[] = [];
-  let bag = shuffle(pool);
-  while (out.length < count) {
-    if (!bag.length) bag = shuffle(pool);
-    const next = bag.pop()!;
-    if (out.length && out[out.length - 1].clue === next.clue) continue;
-    out.push({ ...next, options: shuffle(next.options) });
-  }
-  return out;
-}
 
 export default function MysteryCardPage() {
   const [phase, setPhase] = useState<Phase>('setup');
@@ -44,21 +35,6 @@ export default function MysteryCardPage() {
   const duration = Number(timerLen);
   const turnPlayer = players.length ? current % players.length : 0;
 
-  useEffect(() => {
-    if (phase !== 'play' || roundOver) return;
-    const id = setInterval(() => setTimeLeft((t) => t - 1), 1000);
-    return () => clearInterval(id);
-  }, [phase, current, roundOver]);
-
-  useEffect(() => {
-    if (phase === 'play' && !roundOver && timeLeft <= 0 && q) {
-      setRoundOver(true);
-      setStatus(`Time is up. The answer was ${q.answer}.`);
-      nextTimeout.current = setTimeout(advance, 1800);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeLeft, phase, roundOver]);
-
   useEffect(() => () => clearTimeout(nextTimeout.current ?? undefined), []);
 
   function switchMode(m: Mode) {
@@ -67,10 +43,9 @@ export default function MysteryCardPage() {
   }
 
   function start() {
-    const trimmed = names.map((n) => n.trim()).filter(Boolean);
-    if (trimmed.length < 2) return setError('Add at least two player names.');
-    if (new Set(trimmed.map((n) => n.toLowerCase())).size !== trimmed.length)
-      return setError('Each player needs a different name.');
+    const trimmed = names.map((n) => n.trim());
+    const validation = validateNames(trimmed);
+    if (validation) return setError(validation);
     setError('');
     let pool = MYSTERY_QUESTIONS.filter(
       (item) =>
@@ -81,7 +56,7 @@ export default function MysteryCardPage() {
     const count = Number(rounds) * (mode === 'turn' ? trimmed.length : 1);
     setPlayers(trimmed);
     setScores(trimmed.map(() => 0));
-    setQuestions(pickQuestions(pool, count));
+    setQuestions(sampleQuestions(pool, count).map((item) => ({ ...item, options: shuffle(item.options) })));
     setCurrent(0);
     setTimeLeft(Number(timerLen));
     setLocked([]);
@@ -92,18 +67,16 @@ export default function MysteryCardPage() {
   }
 
   function advance() {
-    setCurrent((c) => {
-      if (c + 1 >= questions.length) {
-        setPhase('result');
-        return c;
-      }
-      setTimeLeft(duration);
-      setLocked([]);
-      setRoundOver(false);
-      setPicked(null);
-      setStatus('');
-      return c + 1;
-    });
+    if (current + 1 >= questions.length) {
+      setPhase('result');
+      return;
+    }
+    setCurrent(current + 1);
+    setTimeLeft(duration);
+    setLocked([]);
+    setRoundOver(false);
+    setPicked(null);
+    setStatus('');
   }
 
   function submitRace(playerIndex: number, answer: string) {
@@ -148,6 +121,22 @@ export default function MysteryCardPage() {
     setPhase('setup');
   }
 
+  // The clock owns ticks; input edits and score updates must not restart it.
+  const onTick = useEffectEvent(() => {
+    if (timeLeft > 1) setTimeLeft(timeLeft - 1);
+    else if (q && !roundOver) {
+      setTimeLeft(0);
+      setRoundOver(true);
+      setStatus(`Time is up. The answer was ${q.answer}.`);
+      nextTimeout.current = setTimeout(advance, 1800);
+    }
+  });
+  useEffect(() => {
+    if (phase !== 'play' || roundOver) return;
+    const timer = setInterval(() => onTick(), 1000);
+    return () => clearInterval(timer);
+  }, [phase, current, roundOver]);
+
   if (phase === 'setup') {
     return (
       <div className="mx-auto mt-6 w-full max-w-xl">
@@ -165,6 +154,7 @@ export default function MysteryCardPage() {
                 key={m}
                 type="button"
                 className={`option-btn text-center ${mode === m ? 'border-indigo-300/70 bg-indigo-400/[0.15]' : ''}`}
+                aria-pressed={mode === m}
                 onClick={() => switchMode(m)}
               >
                 {m === 'race' ? '⚡ Everyone at once' : '🔄 Player by player'}
@@ -173,33 +163,7 @@ export default function MysteryCardPage() {
           </div>
 
           <span className="field-label">Players ({names.length}/6)</span>
-          <div className="flex flex-col gap-2">
-            {names.map((n, i) => (
-              <div key={i} className="flex gap-2">
-                <input
-                  className="input"
-                  maxLength={18}
-                  value={n}
-                  placeholder={`Player ${i + 1}`}
-                  onChange={(e) => setNames(names.map((v, j) => (j === i ? e.target.value : v)))}
-                />
-                {names.length > 2 && (
-                  <button
-                    type="button"
-                    className="btn-danger !w-auto px-4"
-                    onClick={() => setNames(names.filter((_, j) => j !== i))}
-                  >
-                    ✕
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-          {names.length < 6 && (
-            <button type="button" className="btn-secondary mt-2 !py-3" onClick={() => setNames([...names, ''])}>
-              + Add player
-            </button>
-          )}
+          <PlayersEditor names={names} onChange={setNames} />
 
           <label className="field-label" htmlFor="difficulty">Difficulty</label>
           <select id="difficulty" className="input" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
@@ -241,7 +205,7 @@ export default function MysteryCardPage() {
             </div>
           )}
 
-          {error && <p className="mt-3 text-sm font-bold text-red-300">{error}</p>}
+          {error && <p role="alert" className="mt-3 text-sm font-bold text-red-300">{error}</p>}
           <div className="mt-6 flex flex-col gap-2">
             <button className="btn" onClick={start}>Start game</button>
             <Link href="/games" className="btn-secondary text-center">Back to games</Link>
@@ -252,18 +216,17 @@ export default function MysteryCardPage() {
   }
 
   if (phase === 'result') {
-    const ranked = players
-      .map((name, i) => ({ name, score: scores[i] }))
-      .sort((a, b) => b.score - a.score);
+    const ranked = rankPlayers(players, scores);
     return (
       <div className="mx-auto mt-6 w-full max-w-xl">
         <div className="glass p-7 text-center">
           <div className="text-5xl">🎉</div>
           <h1 className="mt-2 text-3xl font-black tracking-tight">Game complete</h1>
           <div className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {ranked.map((r, i) => (
+            {ranked.map((r) => (
               <div key={r.name} className="glass-sm px-4 py-4">
-                <div className="text-3xl">{i === 0 ? '🏆' : `#${i + 1}`}</div>
+                <div className="text-3xl">{r.rank === 1 ? '🏆' : `#${r.rank}`}
+                {r.rank === 1 && ranked.filter((p) => p.rank === 1).length > 1 && <div className="text-sm">Joint winner</div>}</div>
                 <div className="mt-1 font-black">{r.name}</div>
                 <div className="text-sm text-white/60">{r.score} points</div>
               </div>
@@ -292,8 +255,8 @@ export default function MysteryCardPage() {
           </div>
           <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
             <div
-              className="h-full rounded-full transition-all"
-              style={{ width: `${(current / questions.length) * 100}%`, background: 'linear-gradient(90deg,#a5b4fc,#f9a8d4)' }}
+              className="progress-fill h-full w-full origin-left rounded-full"
+              style={{ transform: `scaleX(${(current / questions.length)})`, background: 'linear-gradient(90deg,var(--accent-cool),var(--accent))' }}
             />
           </div>
         </div>
@@ -379,7 +342,7 @@ export default function MysteryCardPage() {
         </div>
       )}
 
-      {status && <div className="glass-sm p-4 text-center text-sm font-bold text-white/80">{status}</div>}
+      {status && <div role="status" className="glass-sm p-4 text-center text-sm font-bold text-white/80">{status}</div>}
 
       <button className="btn-danger" onClick={quit}>End game</button>
     </div>

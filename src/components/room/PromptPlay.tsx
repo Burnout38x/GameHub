@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { RoomBundle } from './RoomClient';
 import { callRoomApi } from './RoomClient';
 import { isTurnBased } from '@/lib/game-utils';
@@ -22,38 +22,34 @@ export default function PromptPlay({ room, game, players, answers, prompt, userI
   const canAnswer = !revealed && !myAnswer && (!turnBased || isMyTurn);
   const choices: string[] = cfg.optionsFromContent ? (content.choices ?? []) : (cfg.choices ?? []);
 
-  // Optional local timer (2-Minute Challenge)
+  // The active player controls one shared deadline, preserved across reloads.
   const timerLength = Number(cfg.timerSeconds) || 0;
-  const [timeLeft, setTimeLeft] = useState(timerLength);
-  const [running, setRunning] = useState(false);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const deadline = room.round_state?.challengeDeadline as string | null;
+  const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
-    setTimeLeft(timerLength);
-    setRunning(false);
-    if (intervalRef.current) clearInterval(intervalRef.current);
-  }, [room.current_round, timerLength]);
-  useEffect(() => {
-    if (!running) return;
-    intervalRef.current = setInterval(() => {
-      setTimeLeft((t) => {
-        if (t <= 1) {
-          setRunning(false);
-          return 0;
-        }
-        return t - 1;
-      });
-    }, 1000);
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [running]);
+    if (!deadline || revealed) return;
+    const timer = setInterval(() => setNow(Date.now()), 250);
+    return () => clearInterval(timer);
+  }, [deadline, revealed]);
+  const timeLeft = deadline ? Math.max(0, Math.ceil((Date.parse(deadline) - now) / 1000)) : timerLength;
+  const running = !!deadline && timeLeft > 0;
+  async function controlTimer(action: 'start' | 'reset') {
+    setBusy(true);
+    setError('');
+    try {
+      await callRoomApi(room.code, 'timer', { action, fromRound: room.current_round });
+      refresh();
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Could not update the timer.');
+    } finally { setBusy(false); }
+  }
 
   async function submit(choice: string) {
     if (!canAnswer || busy) return;
     setBusy(true);
     setError('');
     try {
-      await callRoomApi(room.code, 'answer', { answer: choice });
+      await callRoomApi(room.code, 'answer', { fromRound: room.current_round, answer: choice });
       refresh();
     } catch (e: any) {
       setError(e.message);
@@ -99,15 +95,13 @@ export default function PromptPlay({ room, game, players, answers, prompt, userI
         )}
         {timerLength > 0 && !revealed && (!turnBased || isMyTurn) && (
           <div className="flex w-full max-w-xs gap-2">
-            <button className="btn-secondary !py-2.5 text-sm" onClick={() => setRunning(true)} disabled={running || timeLeft === 0}>
+            <button className="btn-secondary !py-2.5 text-sm" onClick={() => controlTimer('start')} disabled={busy || running || timeLeft === 0}>
               ▶ Start
             </button>
             <button
               className="btn-secondary !py-2.5 text-sm"
-              onClick={() => {
-                setRunning(false);
-                setTimeLeft(timerLength);
-              }}
+              disabled={busy}
+              onClick={() => controlTimer('reset')}
             >
               ↺ Reset
             </button>
@@ -131,7 +125,7 @@ export default function PromptPlay({ room, game, players, answers, prompt, userI
         })}
       </div>
 
-      {error && <p className="text-sm font-bold text-red-300">{error}</p>}
+      {error && <p role="alert" className="text-sm font-bold text-red-300">{error}</p>}
 
       {!revealed && !turnBased && myAnswer && (
         <div className="glass-sm p-4 text-sm text-white/70">

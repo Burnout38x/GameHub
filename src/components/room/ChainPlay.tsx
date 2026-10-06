@@ -17,7 +17,7 @@ export default function ChainPlay({ room, players, userId, refresh }: RoomBundle
   const lastWord = chain[chain.length - 1];
 
   // Countdown to the server deadline (timed rooms only, paused during votes).
-  const deadline = room.answer_seconds && !challenge ? state.deadline : null;
+  const deadline = room.answer_seconds && !challenge && !state.finalReview ? state.deadline : null;
   const [now, setNow] = useState(() => Date.now());
   const timedOutRef = useRef<string | null>(null);
   useEffect(() => {
@@ -29,15 +29,15 @@ export default function ChainPlay({ room, players, userId, refresh }: RoomBundle
   useEffect(() => {
     if (!deadline || secondsLeft !== 0 || timedOutRef.current === deadline) return;
     timedOutRef.current = deadline;
-    callRoomApi(room.code, 'chain', { timeout: true }).catch(() => {}).finally(refresh);
+    callRoomApi(room.code, 'chain', { fromRound: room.current_round, timeout: true }).catch(() => { timedOutRef.current = null; setError("Connection interrupted. Retrying the turn timer…"); }).finally(refresh);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [secondsLeft, deadline]);
+  }, [secondsLeft, deadline, now]);
 
   async function act(body: Record<string, any>) {
     setBusy(true);
     setError('');
     try {
-      await callRoomApi(room.code, 'chain', body);
+      await callRoomApi(room.code, 'chain', { ...body, fromRound: room.current_round });
       setWord('');
       refresh();
     } catch (e: any) {
@@ -47,7 +47,7 @@ export default function ChainPlay({ room, players, userId, refresh }: RoomBundle
   }
 
   const canChallenge =
-    isMyTurn && !challenge && players.length >= 3 && chain.length >= 2 && lastWord?.by && lastWord.by !== userId;
+    isMyTurn && !challenge && state.challengedTurn !== state.turnIndex && players.length >= 3 && chain.length >= 2 && lastWord?.by && lastWord.by !== userId;
 
   if (challenge) {
     const involved = userId === challenge.submitterId || userId === challenge.challengerId;
@@ -87,7 +87,7 @@ export default function ChainPlay({ room, players, userId, refresh }: RoomBundle
               </button>
             </div>
           )}
-          {error && <p className="mt-3 text-sm font-bold text-red-300">{error}</p>}
+          {error && <p role="alert" className="mt-3 text-sm font-bold text-red-300">{error}</p>}
         </div>
       </div>
     );
@@ -120,7 +120,7 @@ export default function ChainPlay({ room, players, userId, refresh }: RoomBundle
       <div className="glass flex flex-col items-center gap-4 p-6 text-center">
         <div className="pill">Previous word</div>
         <div className="text-2xl font-black tracking-tight">{lastWord?.word}</div>
-        <form
+        {state.finalReview ? <div className="w-full"><p className="text-sm text-white/70">Last word! {isMyTurn ? "Accept this link or challenge it before the results." : `Waiting for ${turnPlayer?.display_name ?? "the next player"} to review the final link.`}</p>{isMyTurn && <button className="btn mt-4" disabled={busy} onClick={() => act({ accept: true })}>Accept & see results</button>}</div> : <form
           className="flex w-full max-w-sm flex-col gap-2"
           onSubmit={(e) => {
             e.preventDefault();
@@ -129,6 +129,7 @@ export default function ChainPlay({ room, players, userId, refresh }: RoomBundle
         >
           <input
             className="input"
+            aria-label="Your connected word"
             maxLength={28}
             autoComplete="off"
             placeholder="Type a connected word"
@@ -139,13 +140,13 @@ export default function ChainPlay({ room, players, userId, refresh }: RoomBundle
           <button type="submit" className="btn !py-3" disabled={!isMyTurn || busy || !word.trim()}>
             Submit word (+1)
           </button>
-        </form>
+        </form>}
         {canChallenge && (
           <button className="btn-danger !w-auto px-4 !py-2 text-sm" disabled={busy} onClick={() => act({ challenge: true })}>
             ⚖️ Challenge “{lastWord?.word}” instead
           </button>
         )}
-        {error && <div className="text-sm font-bold text-red-300">{error}</div>}
+        {error && <div role="alert" className="text-sm font-bold text-red-300">{error}</div>}
       </div>
 
       <div className="glass p-5">

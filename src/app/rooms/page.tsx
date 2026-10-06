@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,13 +45,13 @@ function RoomCard({ room, userId }: { room: BrowserRoom; userId: string }) {
       </div>
       <div className="mt-auto flex items-center justify-between pt-2">
         <span className="text-xs font-bold text-white/45">
-          {room.room_players.length}/10 players
+          {room.room_players.length}/{room.games?.type === 'predict' ? 2 : 10} players
         </span>
         {mine ? (
           <Link
             href={`/room/${room.code}`}
             className="rounded-xl px-4 py-2 text-sm font-black text-[#0a0918]"
-            style={{ background: 'linear-gradient(135deg,#a5b4fc,#f9a8d4)' }}
+            style={{ background: 'var(--accent)' }}
           >
             Return →
           </Link>
@@ -60,7 +61,7 @@ function RoomCard({ room, userId }: { room: BrowserRoom; userId: string }) {
           <Link
             href={`/room/${room.code}`}
             className="rounded-xl px-4 py-2 text-sm font-black text-[#0a0918]"
-            style={{ background: 'linear-gradient(135deg,#a5b4fc,#f9a8d4)' }}
+            style={{ background: 'var(--accent)' }}
           >
             Join →
           </Link>
@@ -84,22 +85,33 @@ function Section({ title, rooms, userId }: { title: string; rooms: BrowserRoom[]
   );
 }
 
-export default async function RoomsPage() {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect('/login?next=/rooms');
-
+// Request-time freshness belongs to the server query, not rendered UI calculations.
+async function loadRoomBrowser(userId: string) {
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-  const { data } = await supabase
+  const admin = createAdminClient();
+  const { data: memberships, error: membershipError } = await admin.from('room_players').select('room_id').eq('profile_id', userId);
+  const ownIds = (memberships ?? []).map(p => p.room_id);
+  const { data, error } = await admin
     .from('rooms')
     .select(
       'id, code, status, difficulty, mode, total_rounds, host_id, is_public, created_at, games(name, emoji, type), room_players(profile_id, display_name)'
     )
     .in('status', ['lobby', 'playing'])
+    .or(ownIds.length ? `is_public.eq.true,id.in.(${ownIds.join(',')})` : 'is_public.eq.true')
     .gte('created_at', since)
     .order('created_at', { ascending: false });
+
+  return { data, error, membershipError };
+}
+
+export default async function RoomsPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect('/login?next=/rooms');
+
+  const { data, error, membershipError } = await loadRoomBrowser(user.id);
 
   const rooms = (data ?? []) as unknown as BrowserRoom[];
   const mine = rooms.filter((r) => r.room_players.some((p) => p.profile_id === user.id));
@@ -107,7 +119,7 @@ export default async function RoomsPage() {
     (r) =>
       r.is_public &&
       r.status === 'lobby' &&
-      r.room_players.length < 10 &&
+      r.room_players.length < (r.games?.type === 'predict' ? 2 : 10) &&
       !r.room_players.some((p) => p.profile_id === user.id)
   );
   const liveNow = rooms.filter(
@@ -123,25 +135,26 @@ export default async function RoomsPage() {
             Hop into a public room, or use a code for private ones.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Link href="/rooms/join" className="btn-secondary !w-auto px-6 !py-3">
             Have a code? Join →
           </Link>
           <Link
             href="/rooms/new"
             className="rounded-2xl px-6 py-3 font-extrabold text-[#0a0918]"
-            style={{ background: 'linear-gradient(135deg,#a5b4fc,#f9a8d4)' }}
+            style={{ background: 'var(--accent)' }}
           >
             Create room
           </Link>
         </div>
       </div>
 
+      {(error || membershipError) && <p role="alert" className="glass-sm p-4 text-red-200">Rooms could not be loaded. Refresh the page to try again.</p>}
       <Section title="Your rooms" rooms={mine} userId={user.id} />
       <Section title="Open lobbies" rooms={openLobbies} userId={user.id} />
       <Section title="Live now" rooms={liveNow} userId={user.id} />
 
-      {mine.length === 0 && openLobbies.length === 0 && liveNow.length === 0 && (
+      {!error && !membershipError && mine.length === 0 && openLobbies.length === 0 && liveNow.length === 0 && (
         <div className="glass p-8 text-center text-white/60">
           <div className="text-4xl">🌍</div>
           <p className="mt-3">No public rooms right now — create one and let people join!</p>

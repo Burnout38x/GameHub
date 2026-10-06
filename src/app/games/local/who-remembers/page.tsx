@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { shuffle } from '@/lib/game-utils';
-import { levenshtein, normalize } from '@/lib/local-games/logic';
+import { memoryMatch } from '@/lib/local-games/logic';
 import { MEMORY_CATEGORIES, MEMORY_PROMPTS, type MemoryPrompt } from '@/lib/local-games/who-remembers-bank';
 
 type Phase = 'setup' | 'answer' | 'pass' | 'compare' | 'result';
@@ -25,6 +25,7 @@ export default function WhoRemembersPage() {
   const [status, setStatus] = useState('');
   const [passText, setPassText] = useState({ title: '', text: '' });
   const [autoMatch, setAutoMatch] = useState(false);
+  const [suggestedMatch, setSuggestedMatch] = useState(false);
   const [matches, setMatches] = useState(0);
   const [disagreements, setDisagreements] = useState(0);
   const autoTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -86,12 +87,10 @@ export default function WhoRemembersPage() {
       const both = [answers[0], a];
       setAnswers(both);
       setInput('');
-      const na = normalize(both[0]);
-      const nb = normalize(both[1]);
-      const max = Math.max(na.length, nb.length, 1);
-      const similarity = 1 - levenshtein(na, nb) / max;
-      const auto = na === nb || similarity >= 0.84;
+      const match = memoryMatch(both[0], both[1]);
+      const auto = match === 'exact';
       setAutoMatch(auto);
+      setSuggestedMatch(match === 'similar');
       setPhase('compare');
       if (auto) autoTimeout.current = setTimeout(() => record(true), 1500);
     }
@@ -164,11 +163,11 @@ export default function WhoRemembersPage() {
           />
 
           <div className="glass-sm mt-4 p-4 text-sm leading-relaxed text-white/70">
-            Close spelling differences are automatically treated as matches. When answers differ,
+            Identical answers match automatically. Close spelling differences are suggested for review. When answers differ,
             you decide together whether they mean the same thing.
           </div>
 
-          {error && <p className="mt-3 text-sm font-bold text-red-300">{error}</p>}
+          {error && <p role="alert" className="mt-3 text-sm font-bold text-red-300">{error}</p>}
           <div className="mt-6 flex flex-col gap-2">
             <button className="btn" onClick={start}>Start game</button>
             <Link href="/games" className="btn-secondary text-center">Back to games</Link>
@@ -210,7 +209,7 @@ export default function WhoRemembersPage() {
           <p className="mt-4 text-sm font-bold text-white/75">
             {autoMatch
               ? 'Automatic match — both partners earn a point. ✅'
-              : 'The answers differ. Decide whether they mean the same thing.'}
+              : suggestedMatch ? 'These answers look similar. Do they mean the same thing?' : 'The answers differ. Decide whether they mean the same thing.'}
           </p>
           {!autoMatch && (
             <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -279,8 +278,8 @@ export default function WhoRemembersPage() {
         </div>
         <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
           <div
-            className="h-full rounded-full transition-all"
-            style={{ width: `${(index / Math.max(total, 1)) * 100}%`, background: 'linear-gradient(90deg,#a5b4fc,#f9a8d4)' }}
+            className="progress-fill h-full w-full origin-left rounded-full"
+            style={{ transform: `scaleX(${(index / Math.max(total, 1))})`, background: 'linear-gradient(90deg,var(--accent-cool),var(--accent))' }}
           />
         </div>
       </div>
@@ -292,12 +291,13 @@ export default function WhoRemembersPage() {
           ref={inputRef}
           className="input min-h-[96px] max-w-lg"
           maxLength={180}
+          aria-label="Your private answer"
           placeholder="Type your private answer"
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
         <button className="btn w-full max-w-lg !py-3" onClick={save}>Save private answer</button>
-        {status && <div className="text-sm font-bold text-white/80">{status}</div>}
+        {status && <div role="status" className="text-sm font-bold text-white/80">{status}</div>}
       </div>
 
       <button className="btn-danger" onClick={quit}>End game</button>

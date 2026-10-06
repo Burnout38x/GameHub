@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import Link from 'next/link';
 import { makeProblem, type MathProblem } from '@/lib/local-games/math-gen';
 
@@ -30,19 +30,6 @@ export default function MentalMathDuelPage() {
   const duration = Number(timerLen);
   const rounds = Number(roundCount);
 
-  useEffect(() => {
-    if (phase !== 'play' || done) return;
-    const id = setInterval(() => setTimeLeft((t) => t - 1), 1000);
-    return () => clearInterval(id);
-  }, [phase, round, done]);
-
-  useEffect(() => {
-    if (phase === 'play' && !done && timeLeft <= 0 && problem) {
-      finishRound(`Time is up. The answer was ${problem.answer}.`);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeLeft, phase, done]);
-
   useEffect(
     () => () => {
       clearTimeout(nextTimeout.current ?? undefined);
@@ -70,6 +57,8 @@ export default function MentalMathDuelPage() {
   }
 
   function beginRound(r: number) {
+    lockTimeouts.current.forEach(clearTimeout);
+    lockTimeouts.current = [];
     if (r >= rounds) {
       setPhase('result');
       return;
@@ -90,7 +79,7 @@ export default function MentalMathDuelPage() {
   }
 
   function answer(player: number, value: number) {
-    if (done || locked[player] || !problem) return;
+    if (doneRef.current || locked[player] || !problem) return;
     if (value === problem.answer) {
       markDone(true);
       const pts = 100 + timeLeft * 5;
@@ -116,8 +105,25 @@ export default function MentalMathDuelPage() {
   function quit() {
     if (!confirm('End this duel?')) return;
     clearTimeout(nextTimeout.current ?? undefined);
+    lockTimeouts.current.forEach(clearTimeout);
+    lockTimeouts.current = [];
+    markDone(true);
     setPhase('setup');
   }
+
+  // The clock owns ticks; input edits and score updates must not restart it.
+  const onTick = useEffectEvent(() => {
+    if (timeLeft > 1) setTimeLeft(timeLeft - 1);
+    else if (problem && !doneRef.current) {
+      setTimeLeft(0);
+      finishRound(`Time is up. The answer was ${problem.answer}.`);
+    }
+  });
+  useEffect(() => {
+    if (phase !== 'play' || done) return;
+    const timer = setInterval(() => onTick(), 1000);
+    return () => clearInterval(timer);
+  }, [phase, round, done]);
 
   if (phase === 'setup') {
     return (
@@ -159,7 +165,7 @@ export default function MentalMathDuelPage() {
             {['10', '15', '20'].map((t) => <option key={t} value={t}>{t}</option>)}
           </select>
 
-          {error && <p className="mt-3 text-sm font-bold text-red-300">{error}</p>}
+          {error && <p role="alert" className="mt-3 text-sm font-bold text-red-300">{error}</p>}
           <div className="mt-6 flex flex-col gap-2">
             <button className="btn" onClick={start}>Start duel</button>
             <Link href="/games" className="btn-secondary text-center">Back to games</Link>
@@ -206,8 +212,8 @@ export default function MentalMathDuelPage() {
           </div>
           <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
             <div
-              className="h-full rounded-full transition-all"
-              style={{ width: `${(round / rounds) * 100}%`, background: 'linear-gradient(90deg,#a5b4fc,#f9a8d4)' }}
+              className="progress-fill h-full w-full origin-left rounded-full"
+              style={{ transform: `scaleX(${(round / rounds)})`, background: 'linear-gradient(90deg,var(--accent-cool),var(--accent))' }}
             />
           </div>
         </div>
@@ -255,7 +261,7 @@ export default function MentalMathDuelPage() {
         ))}
       </div>
 
-      {status && <div className="glass-sm p-4 text-center text-sm font-bold text-white/80">{status}</div>}
+      {status && <div role="status" className="glass-sm p-4 text-center text-sm font-bold text-white/80">{status}</div>}
 
       <button className="btn-danger" onClick={quit}>End duel</button>
     </div>

@@ -38,7 +38,7 @@ export default function CodePlay({ room, players, userId, refresh }: RoomBundle)
     setBusy(true);
     setError('');
     try {
-      await callRoomApi(room.code, 'crack', { guess: digits.join('') });
+      await callRoomApi(room.code, 'crack', { fromRound: room.current_round, guess: digits.join('') });
       setDigits([]);
       refresh();
     } catch (e: any) {
@@ -67,7 +67,8 @@ export default function CodePlay({ room, players, userId, refresh }: RoomBundle)
       )}
 
       <div className="glass flex flex-col items-center gap-4 p-6 text-center">
-        <div className="flex flex-wrap justify-center gap-2">
+        <p className="text-sm text-white/65">Enter {length} different digits. Zero can come first.</p>
+        <div role="group" aria-label={`Your code guess: ${digits.length ? digits.join(" ") : "empty"}`} className="flex flex-wrap justify-center gap-2">
           {Array.from({ length }, (_, i) => (
             <div
               key={i}
@@ -83,6 +84,7 @@ export default function CodePlay({ room, players, userId, refresh }: RoomBundle)
               key={n}
               className="rounded-xl border border-white/[0.14] bg-white/10 py-3 font-black hover:border-indigo-300/60 disabled:opacity-40"
               disabled={!isMyTurn || busy}
+              aria-label={`Add digit ${n}`}
               onClick={() => press(n)}
             >
               {n}
@@ -97,8 +99,8 @@ export default function CodePlay({ room, players, userId, refresh }: RoomBundle)
             Submit guess
           </button>
         </div>
-        {error && <div className="text-sm font-bold text-red-300">{error}</div>}
-        <div className="text-xs text-white/50">
+        {error && <div role="alert" className="text-sm font-bold text-red-300">{error}</div>}
+        <div className="text-xs text-white/65">
           Exact = right digit, right spot · Misplaced = right digit, wrong spot
         </div>
       </div>

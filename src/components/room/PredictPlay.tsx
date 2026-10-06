@@ -24,7 +24,7 @@ export default function PredictPlay({ room, game, players, answers, prompt, user
     setBusy(true);
     setError('');
     try {
-      await callRoomApi(room.code, 'predict', body);
+      await callRoomApi(room.code, 'predict', { ...body, fromRound: room.current_round });
       setText('');
       refresh();
     } catch (e: any) {
@@ -71,7 +71,10 @@ export default function PredictPlay({ room, game, players, answers, prompt, user
             </div>
           ) : (
             <div className="glass-sm flex flex-col gap-2 p-4">
+              <label htmlFor="private-memory" className="text-sm font-semibold">Your private answer</label>
               <textarea
+                id="private-memory"
+                disabled={busy}
                 className="input min-h-[90px]"
                 maxLength={180}
                 placeholder="Type your private answer"
@@ -136,7 +139,7 @@ export default function PredictPlay({ room, game, players, answers, prompt, user
           </div>
         )}
 
-        {error && <p className="text-sm font-bold text-red-300">{error}</p>}
+        {error && <p role="alert" className="text-sm font-bold text-red-300">{error}</p>}
         {advanceButton}
       </div>
     );
@@ -204,7 +207,7 @@ export default function PredictPlay({ room, game, players, answers, prompt, user
         </div>
       )}
 
-      {error && <p className="text-sm font-bold text-red-300">{error}</p>}
+      {error && <p role="alert" className="text-sm font-bold text-red-300">{error}</p>}
       {advanceButton}
     </div>
   );

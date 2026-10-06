@@ -1,7 +1,8 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import Link from 'next/link';
-import { normalize, validateNames } from '@/lib/local-games/logic';
+import { isAssociationWord, normalize, resolveWordChallenge, validateNames } from '@/lib/local-games/logic';
+import { rankPlayers } from '@/lib/local-games/logic';
 import PlayersEditor from '@/components/local/PlayersEditor';
 
 type Phase = 'setup' | 'play' | 'vote' | 'result';
@@ -24,6 +25,8 @@ export default function WordChainPage() {
   const [status, setStatus] = useState('');
   const [paused, setPaused] = useState(false);
   const [canChallenge, setCanChallenge] = useState(false);
+  const [lastAward, setLastAward] = useState(0);
+  const [finalReview, setFinalReview] = useState(false);
   const [lastSubmitter, setLastSubmitter] = useState<number | null>(null);
   const [challenger, setChallenger] = useState(0);
   const [voters, setVoters] = useState<number[]>([]);
@@ -36,29 +39,13 @@ export default function WordChainPage() {
   const turns = Number(turnCount);
 
   useEffect(() => {
-    if (phase !== 'play' || paused) return;
-    const id = setInterval(() => setTimeLeft((t) => t - 1), 1000);
-    return () => clearInterval(id);
-  }, [phase, turn, paused]);
-
-  useEffect(() => {
-    if (phase !== 'play' || paused || timeLeft > 0) return;
-    setPaused(true);
-    setScores((s) => s.map((v, i) => (i === current ? Math.max(0, v - 5) : v)));
-    setStatus(`Time is up. ${players[current]} loses 5 points.`);
-    setCanChallenge(false);
-    nextTimeout.current = setTimeout(nextTurn, 1000);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeLeft, phase, paused]);
-
-  useEffect(() => {
     if (phase === 'play' && !paused) inputRef.current?.focus();
   }, [phase, turn, paused]);
 
   useEffect(() => () => clearTimeout(nextTimeout.current ?? undefined), []);
 
   function start() {
-    const trimmed = names.map((n) => n.trim()).filter(Boolean);
+    const trimmed = names.map((n) => n.trim());
     const err = validateNames(trimmed, 2);
     if (err) return setError(err);
     setError('');
@@ -67,6 +54,8 @@ export default function WordChainPage() {
     setTurnState({ turn: 0, current: 0 });
     setChain([STARTERS[Math.floor(Math.random() * STARTERS.length)]]);
     setCanChallenge(false);
+    setFinalReview(false);
+    setLastAward(0);
     setLastSubmitter(null);
     setWord('');
     setStatus('');
@@ -75,30 +64,33 @@ export default function WordChainPage() {
     setPhase('play');
   }
 
-  function nextTurn() {
-    setTurnState((s) => ({ turn: s.turn + 1, current: (s.current + 1) % players.length }));
+  function nextTurn(reviewLast: boolean) {
+    setTurnState((state) => ({ turn: state.turn + 1, current: (state.current + 1) % players.length }));
     setWord('');
     setStatus('');
     setTimeLeft(duration);
-    setPaused(false);
+    if (turn + 1 >= turns) {
+      if (reviewLast && players.length >= 3) {
+        setFinalReview(true);
+        setPaused(true);
+      } else setPhase('result');
+    } else setPaused(false);
   }
-
-  useEffect(() => {
-    if (phase === 'play' && turn >= turns) setPhase('result');
-  }, [phase, turn, turns]);
 
   function submit(e?: React.FormEvent) {
     e?.preventDefault();
     if (paused) return;
+    if (!isAssociationWord(word)) return setStatus('Enter one word with at least two letters.');
     const w = normalize(word);
     if (w.length < 2) return setStatus('Enter a real word with at least two characters.');
     if (chain.map(normalize).includes(w)) return setStatus('That word has already been used.');
     setPaused(true);
     setChain([...chain, w]);
     setScores((s) => s.map((v, i) => (i === current ? v + 10 + timeLeft : v)));
+    setLastAward(10 + timeLeft);
     setLastSubmitter(current);
     setCanChallenge(true);
-    nextTimeout.current = setTimeout(nextTurn, 400);
+    nextTimeout.current = setTimeout(() => nextTurn(true), 400);
   }
 
   function beginChallenge() {
@@ -117,33 +109,19 @@ export default function WordChainPage() {
       setVotes(nowVotes);
       return;
     }
-    const weak = nowVotes.filter((v) => v === 'weak').length;
-    const strong = nowVotes.length - weak;
-    if (weak > strong) {
+    const result = resolveWordChallenge(scores, lastSubmitter!, challenger, lastAward, nowVotes);
+    setScores(result.scores);
+    if (result.succeeded) {
       const removed = chain[chain.length - 1];
       setChain(chain.slice(0, -1));
-      setScores((s) =>
-        s.map((v, i) => {
-          if (i === lastSubmitter) return Math.max(0, v - 10);
-          if (i === challenger) return v + 10;
-          return v;
-        })
-      );
       setVoteStatus(`Challenge succeeds. “${removed}” is removed.`);
     } else {
-      setScores((s) =>
-        s.map((v, i) => {
-          if (i === challenger) return Math.max(0, v - 10);
-          if (i === lastSubmitter) return v + 5;
-          return v;
-        })
-      );
       setVoteStatus('Challenge fails. The connection stays.');
     }
     setVotes(nowVotes);
     setCanChallenge(false);
     nextTimeout.current = setTimeout(() => {
-      setPhase('play');
+      setPhase(finalReview ? 'result' : 'play');
       setWord('');
       setStatus('');
       setTimeLeft(duration);
@@ -156,6 +134,24 @@ export default function WordChainPage() {
     clearTimeout(nextTimeout.current ?? undefined);
     setPhase('setup');
   }
+
+  // The clock owns ticks; input edits and score updates must not restart it.
+  const onTick = useEffectEvent(() => {
+    if (timeLeft > 1) setTimeLeft(timeLeft - 1);
+    else {
+      setTimeLeft(0);
+      setPaused(true);
+      setScores((scores) => scores.map((score, i) => i === current ? Math.max(0, score - 5) : score));
+      setStatus(`Time is up. ${players[current]} loses 5 points.`);
+      setCanChallenge(false);
+      nextTimeout.current = setTimeout(() => nextTurn(false), 1000);
+    }
+  });
+  useEffect(() => {
+    if (phase !== 'play' || paused) return;
+    const timer = setInterval(() => onTick(), 1000);
+    return () => clearInterval(timer);
+  }, [phase, turn, paused]);
 
   if (phase === 'setup') {
     return (
@@ -183,10 +179,10 @@ export default function WordChainPage() {
 
           <div className="glass-sm mt-4 p-4 text-sm leading-relaxed text-white/70">
             A challenge opens a vote (3+ players). If most non-involved players vote “weak”, the
-            word is removed and the challenger scores. Otherwise the challenger loses points.
+            word and its points are removed and the challenger scores 10. Otherwise the challenger loses points.
           </div>
 
-          {error && <p className="mt-3 text-sm font-bold text-red-300">{error}</p>}
+          {error && <p role="alert" className="mt-3 text-sm font-bold text-red-300">{error}</p>}
           <div className="mt-6 flex flex-col gap-2">
             <button className="btn" onClick={start}>Start game</button>
             <Link href="/games" className="btn-secondary text-center">Back to games</Link>
@@ -229,16 +225,17 @@ export default function WordChainPage() {
   }
 
   if (phase === 'result') {
-    const ranked = players.map((name, i) => ({ name, score: scores[i] })).sort((a, b) => b.score - a.score);
+    const ranked = rankPlayers(players, scores);
     return (
       <div className="mx-auto mt-6 w-full max-w-xl">
         <div className="glass p-7 text-center">
           <div className="text-5xl">🔗</div>
           <h1 className="mt-2 text-3xl font-black tracking-tight">Chain complete</h1>
           <div className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {ranked.map((r, i) => (
+            {ranked.map((r) => (
               <div key={r.name} className="glass-sm px-4 py-4">
-                <div className="text-3xl">{i === 0 ? '🏆' : `#${i + 1}`}</div>
+                <div className="text-3xl">{r.rank === 1 ? '🏆' : `#${r.rank}`}
+                {r.rank === 1 && ranked.filter((p) => p.rank === 1).length > 1 && <div className="text-sm">Joint winner</div>}</div>
                 <div className="mt-1 font-black">{r.name}</div>
                 <div className="text-sm text-white/60">{r.score} points</div>
               </div>
@@ -264,8 +261,8 @@ export default function WordChainPage() {
           </div>
           <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
             <div
-              className="h-full rounded-full transition-all"
-              style={{ width: `${(turn / turns) * 100}%`, background: 'linear-gradient(90deg,#a5b4fc,#f9a8d4)' }}
+              className="progress-fill h-full w-full origin-left rounded-full"
+              style={{ transform: `scaleX(${(turn / turns)})`, background: 'linear-gradient(90deg,var(--accent-cool),var(--accent))' }}
             />
           </div>
         </div>
@@ -296,6 +293,7 @@ export default function WordChainPage() {
             className="input"
             maxLength={28}
             autoComplete="off"
+            aria-label="Your connected word"
             placeholder="Type a connected word"
             value={word}
             disabled={paused}
@@ -303,7 +301,7 @@ export default function WordChainPage() {
           />
           <button className="btn !py-3" disabled={paused}>Submit word</button>
         </form>
-        {status && <div className="text-sm font-bold text-white/80">{status}</div>}
+        {status && <div role="status" className="text-sm font-bold text-white/80">{status}</div>}
       </div>
 
       <div className="glass p-5">
@@ -322,6 +320,12 @@ export default function WordChainPage() {
         </div>
       </div>
 
+      {finalReview && (
+        <div className="glass p-4 text-center">
+          <p className="mb-3 text-sm text-white/70">Final word: challenge it above or accept the chain to see the results.</p>
+          <button className="btn" onClick={() => setPhase('result')}>Accept word & see results</button>
+        </div>
+      )}
       <button className="btn-danger" onClick={quit}>End game</button>
     </div>
   );

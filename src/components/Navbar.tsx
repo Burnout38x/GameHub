@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import NavLinks from './NavLinks';
 
 export default async function Navbar() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -18,8 +18,8 @@ export default async function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0a0918]/80 backdrop-blur-xl">
-      <nav className="mx-auto flex w-full max-w-5xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#10151b]/95 backdrop-blur-xl">
+      <nav className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
         <NavLinks
           signedIn={!!user}
           username={profile?.username ?? null}

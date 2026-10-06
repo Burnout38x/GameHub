@@ -49,25 +49,31 @@ export default function EndScreen({ room, game, players, userId }: RoomBundle) {
 
   return (
     <div className="mx-auto mt-8 flex w-full max-w-xl flex-col gap-4 text-center">
-      <div className="glass flex flex-col items-center gap-5 p-8">
-        <div className="pill">🏁 Game Complete</div>
-        <h1 className="text-4xl font-black leading-tight tracking-tight">{title}</h1>
+      <div className="result-enter glass flex min-w-0 flex-col items-center gap-5 p-5 sm:p-8">
+        <div aria-hidden="true" className="grid h-24 w-24 place-items-center rounded-[2rem] border border-white/15 text-5xl shadow-lg" style={{ background: 'linear-gradient(135deg, var(--surface), var(--surface-end))', boxShadow: 'inset 0 0 0 5px var(--surface), 0 10px 28px #00000015' }}>{solo ? '⭐' : winners.length > 1 ? '🤝' : '🏆'}</div>
+        <div className="pill">{game.emoji} {game.name} · Complete</div>
+        <h1 className="min-w-0 max-w-full text-3xl font-black sm:text-4xl leading-tight tracking-tight [overflow-wrap:anywhere]">{title}</h1>
         {!solo && (
-          <p className="text-white/60">{iWon ? 'You took the crown 👑' : 'Better luck next round!'}</p>
+          <p className="max-w-sm text-sm text-white/70">{iWon ? 'You took the crown 👑' : 'Better luck next round!'}</p>
         )}
-        <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
-          {sorted.map((p, i) => (
-            <div key={p.id} className="glass-sm p-5">
-              <div className="text-sm text-white/60">
-                {i === 0 && !solo ? '🥇 ' : i === 1 ? '🥈 ' : i === 2 ? '🥉 ' : ''}
-                {p.display_name}
-                {p.profile_id === userId ? ' (you)' : ''}
-              </div>
-              <div className="mt-1 text-4xl font-black">{p.score}</div>
-            </div>
-          ))}
-        </div>
-        {error && <p className="text-sm font-bold text-red-300">{error}</p>}
+        <section className="w-full min-w-0" aria-labelledby="final-scores-title">
+          <h2 id="final-scores-title" className="mb-3 text-left text-sm font-bold text-white/70">Final scores</h2>
+          <ol className="grid w-full gap-2.5">
+            {sorted.map((p) => {
+              const rank = sorted.findIndex(other => other.score === p.score) + 1;
+              const winner = room.winner_ids.includes(p.profile_id);
+              return <li key={p.id} className="glass-sm flex min-w-0 items-center gap-3 !rounded-2xl p-4 text-left" style={winner ? { borderColor: 'var(--accent-cool)' } : undefined}>
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white/10 text-xl" aria-label={solo ? 'Player' : `Rank ${rank}`}>{solo ? '⭐' : ['🥇', '🥈', '🥉'][rank - 1] ?? `#${rank}`}</span>
+                <div className="min-w-0 flex-1">
+                  <p className="font-bold [overflow-wrap:anywhere]">{p.display_name}{p.profile_id === userId ? ' (you)' : ''}</p>
+                  {winner && !solo && <p className="mt-0.5 text-xs font-semibold" style={{ color: 'var(--accent-cool)' }}>{winners.length > 1 ? 'Joint winner' : 'Winner'}</p>}
+                </div>
+                <div className="shrink-0 text-right"><strong className="text-3xl font-black tabular-nums">{p.score}</strong><span className="ml-1 text-xs text-white/65">pts</span></div>
+              </li>;
+            })}
+          </ol>
+        </section>
+        {error && <p role="alert" className="text-sm font-bold text-red-300">{error}</p>}
         {room.round_state?.nextRoomCode && !isHost && (
           <Link href={`/room/${room.round_state.nextRoomCode}`} className="btn">
             🔁 Host started a rematch — join it!

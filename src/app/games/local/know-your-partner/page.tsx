@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { shuffle } from '@/lib/game-utils';
 import {
@@ -27,11 +27,13 @@ export default function KnowYourPartnerPage() {
   const [qPhase, setQPhase] = useState<'answer' | 'guess'>('answer');
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
+  const [guesses, setGuesses] = useState<string[]>([]);
   const [roundScores, setRoundScores] = useState([0, 0]);
   const [waiting, setWaiting] = useState(false);
   const [pickedGuess, setPickedGuess] = useState<string | null>(null);
   const [feedback, setFeedback] = useState('');
   const waitTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => clearTimeout(waitTimeout.current ?? undefined), []);
 
   const guesser = 1 - answerer;
   const perRound = Number(count);
@@ -63,6 +65,7 @@ export default function KnowYourPartnerPage() {
     setQPhase('answer');
     setIndex(0);
     setAnswers([]);
+    setGuesses([]);
     setRoundScores([0, 0]);
     setWaiting(false);
     setPickedGuess(null);
@@ -96,6 +99,11 @@ export default function KnowYourPartnerPage() {
       }
       return;
     }
+    setGuesses((previous) => {
+      const next = [...previous];
+      next[index] = answer;
+      return next;
+    });
     const correct = answers[index];
     const isCorrect = answer === correct;
     if (isCorrect) setRoundScores((s) => s.map((v, i) => (i === guesser ? v + 1 : v)));
@@ -119,6 +127,7 @@ export default function KnowYourPartnerPage() {
     setQPhase('answer');
     setIndex(0);
     setAnswers([]);
+    setGuesses([]);
     setPhase('question');
   }
 
@@ -171,6 +180,7 @@ export default function KnowYourPartnerPage() {
                 key={c.id}
                 type="button"
                 className={`option-btn !p-3 text-center text-sm ${cats.includes(c.id) ? 'border-indigo-300/70 bg-indigo-400/[0.15]' : 'opacity-70'}`}
+                aria-pressed={cats.includes(c.id)}
                 onClick={() => toggleCat(c.id)}
               >
                 {cats.includes(c.id) ? '✓ ' : ''}{c.label}
@@ -182,7 +192,7 @@ export default function KnowYourPartnerPage() {
             The screen hides private answers before the device is handed to the guessing partner.
           </div>
 
-          {error && <p className="mt-3 text-sm font-bold text-red-300">{error}</p>}
+          {error && <p role="alert" className="mt-3 text-sm font-bold text-red-300">{error}</p>}
           <div className="mt-6 flex flex-col gap-2">
             <button className="btn" onClick={start}>Start game</button>
             <Link href="/games" className="btn-secondary text-center">Back to games</Link>
@@ -239,6 +249,15 @@ export default function KnowYourPartnerPage() {
               </div>
               <div className="mt-1 text-xs text-white/60">Accuracy</div>
             </div>
+          </div>
+          <div className="mt-5 space-y-3 text-left">
+            {roundQuestions.map((question, i) => (
+              <div key={i} className="glass-sm p-4">
+                <p className="font-bold">{question.text}</p>
+                <p className="mt-2 text-sm text-white/70">{players[answerer]} answered: {answers[i]}</p>
+                <p className="mt-1 text-sm text-white/70">{players[guesser]} guessed: {guesses[i]} {answers[i] === guesses[i] ? '✓ Match' : '— Different answer'}</p>
+              </div>
+            ))}
           </div>
           <button className="btn mt-6" onClick={switchRoles}>
             {round === 1 ? 'Switch roles' : 'See final result'}
@@ -309,8 +328,8 @@ export default function KnowYourPartnerPage() {
         </div>
         <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
           <div
-            className="h-full rounded-full transition-all"
-            style={{ width: `${(index / perRound) * 100}%`, background: 'linear-gradient(90deg,#a5b4fc,#f9a8d4)' }}
+            className="progress-fill h-full w-full origin-left rounded-full"
+            style={{ transform: `scaleX(${(index / perRound)})`, background: 'linear-gradient(90deg,var(--accent-cool),var(--accent))' }}
           />
         </div>
       </div>

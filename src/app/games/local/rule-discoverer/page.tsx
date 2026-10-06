@@ -1,9 +1,10 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { shuffle } from '@/lib/game-utils';
 import { validateNames } from '@/lib/local-games/logic';
 import { RULES, ruleAccepts, type HiddenRule } from '@/lib/local-games/rule-bank';
+import { rankPlayers } from '@/lib/local-games/logic';
 import PlayersEditor from '@/components/local/PlayersEditor';
 
 type Phase = 'setup' | 'play' | 'guess' | 'result';
@@ -34,6 +35,7 @@ export default function RuleDiscovererPage() {
   const [guessStatus, setGuessStatus] = useState('');
   const usedRef = useRef<Set<string>>(new Set());
   const nextTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => clearTimeout(nextTimeout.current ?? undefined), []);
 
   const rounds = Number(roundCount);
 
@@ -44,7 +46,7 @@ export default function RuleDiscovererPage() {
       usedRef.current.clear();
       available = pool;
     }
-    const chosen = available[Math.floor(Math.random() * available.length)];
+    const chosen = shuffle(available)[available.length - 1];
     usedRef.current.add(chosen.id);
     return chosen;
   }
@@ -62,7 +64,7 @@ export default function RuleDiscovererPage() {
   }
 
   function start() {
-    const trimmed = names.map((n) => n.trim()).filter(Boolean);
+    const trimmed = names.map((n) => n.trim());
     const err = validateNames(trimmed, 2);
     if (err) return setError(err);
     setError('');
@@ -159,11 +161,11 @@ export default function RuleDiscovererPage() {
           </select>
 
           <div className="glass-sm mt-4 p-4 text-sm leading-relaxed text-white/70">
-            On your turn, either test one example or guess the hidden rule. A wrong rule guess
+            On your turn, either test one example or guess the hidden rule. Number examples must be whole numbers from −1 billion to 1 billion; word examples use letters A–Z. A wrong rule guess
             costs 10 points and passes the turn.
           </div>
 
-          {error && <p className="mt-3 text-sm font-bold text-red-300">{error}</p>}
+          {error && <p role="alert" className="mt-3 text-sm font-bold text-red-300">{error}</p>}
           <div className="mt-6 flex flex-col gap-2">
             <button className="btn" onClick={start}>Start game</button>
             <Link href="/games" className="btn-secondary text-center">Back to games</Link>
@@ -202,16 +204,17 @@ export default function RuleDiscovererPage() {
   }
 
   if (phase === 'result') {
-    const ranked = players.map((name, i) => ({ name, score: scores[i] })).sort((a, b) => b.score - a.score);
+    const ranked = rankPlayers(players, scores);
     return (
       <div className="mx-auto mt-6 w-full max-w-xl">
         <div className="glass p-7 text-center">
           <div className="text-5xl">🧩</div>
           <h1 className="mt-2 text-3xl font-black tracking-tight">Rules discovered</h1>
           <div className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {ranked.map((r, i) => (
+            {ranked.map((r) => (
               <div key={r.name} className="glass-sm px-4 py-4">
-                <div className="text-3xl">{i === 0 ? '🏆' : `#${i + 1}`}</div>
+                <div className="text-3xl">{r.rank === 1 ? '🏆' : `#${r.rank}`}
+                {r.rank === 1 && ranked.filter((p) => p.rank === 1).length > 1 && <div className="text-sm">Joint winner</div>}</div>
                 <div className="mt-1 font-black">{r.name}</div>
                 <div className="text-sm text-white/60">{r.score} points</div>
               </div>
@@ -235,8 +238,8 @@ export default function RuleDiscovererPage() {
         </div>
         <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
           <div
-            className="h-full rounded-full transition-all"
-            style={{ width: `${((round - 1) / rounds) * 100}%`, background: 'linear-gradient(90deg,#a5b4fc,#f9a8d4)' }}
+            className="progress-fill h-full w-full origin-left rounded-full"
+            style={{ transform: `scaleX(${((round - 1) / rounds)})`, background: 'linear-gradient(90deg,var(--accent-cool),var(--accent))' }}
           />
         </div>
       </div>
@@ -257,6 +260,7 @@ export default function RuleDiscovererPage() {
           <input
             className="input"
             autoComplete="off"
+            aria-label="Example to test against the rule"
             placeholder="Enter a word or number to test"
             value={input}
             disabled={busy}
@@ -267,7 +271,7 @@ export default function RuleDiscovererPage() {
         <button className="btn !py-3 w-full max-w-sm" disabled={busy} onClick={openGuess}>
           💡 Guess the rule
         </button>
-        {status && <div className="text-sm font-bold text-white/80">{status}</div>}
+        {status && <div role="status" className="text-sm font-bold text-white/80">{status}</div>}
       </div>
 
       <div className="glass p-5">

@@ -15,23 +15,26 @@ export default function LeaveButton({
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
 
   async function leave() {
     if (status === 'playing' && !confirm("Leave the game? You can't rejoin once it started.")) return;
     if (status === 'lobby' && isHost && !confirm('Close the room for everyone?')) return;
     setBusy(true);
+    setError('');
     try {
       await callRoomApi(code, 'leave');
       router.push('/games');
       router.refresh();
-    } catch {
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Could not leave the room. Please try again.');
       setBusy(false);
     }
   }
 
   return (
-    <button className="btn-danger" disabled={busy} onClick={leave}>
-      {status === 'lobby' && isHost ? 'Close room ✖' : 'Leave room 🚪'}
-    </button>
+    <div>{error && <p role="alert" className="mb-3 text-sm text-red-300">{error}</p>}<button className="btn-danger" disabled={busy} onClick={leave}>
+      {busy ? 'Leaving…' : status === 'lobby' && isHost ? 'Close room ✖' : 'Leave room 🚪'}
+    </button></div>
   );
 }

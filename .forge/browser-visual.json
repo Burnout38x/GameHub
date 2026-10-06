@@ -1,0 +1,94 @@
+{
+  "results": [
+    {
+      "label": "final-dark-375-home",
+      "violations": [],
+      "overflow": false
+    },
+    {
+      "label": "final-dark-375-games",
+      "violations": [],
+      "overflow": false
+    },
+    {
+      "label": "final-dark-768-home",
+      "violations": [],
+      "overflow": false
+    },
+    {
+      "label": "final-dark-768-games",
+      "violations": [],
+      "overflow": false
+    },
+    {
+      "label": "final-dark-1440-home",
+      "violations": [],
+      "overflow": false
+    },
+    {
+      "label": "final-dark-1440-games",
+      "violations": [],
+      "overflow": false
+    },
+    {
+      "label": "final-light-375-home",
+      "violations": [],
+      "overflow": false
+    },
+    {
+      "label": "final-light-375-games",
+      "violations": [],
+      "overflow": false
+    },
+    {
+      "label": "final-light-768-home",
+      "violations": [],
+      "overflow": false
+    },
+    {
+      "label": "final-light-768-games",
+      "violations": [],
+      "overflow": false
+    },
+    {
+      "label": "final-light-1440-home",
+      "violations": [],
+      "overflow": false
+    },
+    {
+      "label": "final-light-1440-games",
+      "violations": [],
+      "overflow": false
+    },
+    {
+      "label": "reduced-motion-game-picker",
+      "animations": [
+        {
+          "duration": 0.01,
+          "iterations": 1
+        },
+        {
+          "duration": 0.01,
+          "iterations": 1
+        },
+        {
+          "duration": 0.01,
+          "iterations": 1
+        },
+        {
+          "duration": 0.01,
+          "iterations": 1
+        },
+        {
+          "duration": 0.01,
+          "iterations": 1
+        },
+        {
+          "duration": 0.01,
+          "iterations": 1
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

@@ -1,9 +1,10 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import Link from 'next/link';
 import { shuffle } from '@/lib/game-utils';
-import { validateNames } from '@/lib/local-games/logic';
+import { sampleQuestions, validateNames } from '@/lib/local-games/logic';
 import { REVERSE_CLUES, type ReverseClue } from '@/lib/local-games/reverse-definition-bank';
+import { rankPlayers } from '@/lib/local-games/logic';
 import PlayersEditor from '@/components/local/PlayersEditor';
 
 type Phase = 'setup' | 'play' | 'result';
@@ -32,28 +33,17 @@ export default function ReverseDefinitionPage() {
   const duration = Number(timerLen);
   const q = questions[index];
 
-  useEffect(() => {
-    if (phase !== 'play' || active === null || done) return;
-    const id = setInterval(() => setTimeLeft((t) => t - 1), 1000);
-    return () => clearInterval(id);
-  }, [phase, active, done]);
-
-  useEffect(() => {
-    if (phase === 'play' && active !== null && !done && timeLeft <= 0) miss('Time is up.');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeLeft, phase, active, done]);
-
   useEffect(() => () => clearTimeout(nextTimeout.current ?? undefined), []);
 
   function start() {
-    const trimmed = names.map((n) => n.trim()).filter(Boolean);
+    const trimmed = names.map((n) => n.trim());
     const err = validateNames(trimmed, 2);
     if (err) return setError(err);
     setError('');
     const pool = REVERSE_CLUES.filter((c) => difficulty === 'mixed' || c.difficulty === difficulty);
     setPlayers(trimmed);
     setScores(trimmed.map(() => 0));
-    setQuestions(shuffle(pool).slice(0, Number(questionCount)));
+    setQuestions(sampleQuestions(pool, Number(questionCount)));
     setIndex(0);
     resetRound();
     setPhase('play');
@@ -69,13 +59,11 @@ export default function ReverseDefinitionPage() {
   }
 
   function next() {
-    setIndex((i) => {
-      if (i + 1 >= questions.length) {
-        setPhase('result');
-        return i;
-      }
-      return i + 1;
-    });
+    if (index + 1 >= questions.length) {
+      setPhase('result');
+      return;
+    }
+    setIndex(index + 1);
     resetRound();
   }
 
@@ -124,6 +112,20 @@ export default function ReverseDefinitionPage() {
     setPhase('setup');
   }
 
+  // The clock owns ticks; input edits and score updates must not restart it.
+  const onTick = useEffectEvent(() => {
+    if (timeLeft > 1) setTimeLeft(timeLeft - 1);
+    else if (active !== null && !done) {
+      setTimeLeft(0);
+      miss('Time is up.');
+    }
+  });
+  useEffect(() => {
+    if (phase !== 'play' || active === null || done) return;
+    const timer = setInterval(() => onTick(), 1000);
+    return () => clearInterval(timer);
+  }, [phase, active, done]);
+
   if (phase === 'setup') {
     return (
       <div className="mx-auto mt-6 w-full max-w-xl">
@@ -148,6 +150,7 @@ export default function ReverseDefinitionPage() {
           </select>
 
           <label className="field-label" htmlFor="count">Questions</label>
+          <p className="text-sm text-white/60">Longer games reshuffle the selected difficulty after all clues have been played.</p>
           <select id="count" className="input" value={questionCount} onChange={(e) => setQuestionCount(e.target.value)}>
             {['10', '15', '20'].map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
@@ -157,7 +160,7 @@ export default function ReverseDefinitionPage() {
             {['5', '8', '12'].map((t) => <option key={t} value={t}>{t} seconds</option>)}
           </select>
 
-          {error && <p className="mt-3 text-sm font-bold text-red-300">{error}</p>}
+          {error && <p role="alert" className="mt-3 text-sm font-bold text-red-300">{error}</p>}
           <div className="mt-6 flex flex-col gap-2">
             <button className="btn" onClick={start}>Start game</button>
             <Link href="/games" className="btn-secondary text-center">Back to games</Link>
@@ -168,16 +171,17 @@ export default function ReverseDefinitionPage() {
   }
 
   if (phase === 'result') {
-    const ranked = players.map((name, i) => ({ name, score: scores[i] })).sort((a, b) => b.score - a.score);
+    const ranked = rankPlayers(players, scores);
     return (
       <div className="mx-auto mt-6 w-full max-w-xl">
         <div className="glass p-7 text-center">
           <div className="text-5xl">🧠</div>
           <h1 className="mt-2 text-3xl font-black tracking-tight">Definitions decoded</h1>
           <div className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {ranked.map((r, i) => (
+            {ranked.map((r) => (
               <div key={r.name} className="glass-sm px-4 py-4">
-                <div className="text-3xl">{i === 0 ? '🏆' : `#${i + 1}`}</div>
+                <div className="text-3xl">{r.rank === 1 ? '🏆' : `#${r.rank}`}
+                {r.rank === 1 && ranked.filter((p) => p.rank === 1).length > 1 && <div className="text-sm">Joint winner</div>}</div>
                 <div className="mt-1 font-black">{r.name}</div>
                 <div className="text-sm text-white/60">{r.score} points</div>
               </div>
@@ -202,8 +206,8 @@ export default function ReverseDefinitionPage() {
           </div>
           <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
             <div
-              className="h-full rounded-full transition-all"
-              style={{ width: `${(index / questions.length) * 100}%`, background: 'linear-gradient(90deg,#a5b4fc,#f9a8d4)' }}
+              className="progress-fill h-full w-full origin-left rounded-full"
+              style={{ transform: `scaleX(${(index / questions.length)})`, background: 'linear-gradient(90deg,var(--accent-cool),var(--accent))' }}
             />
           </div>
         </div>
@@ -260,7 +264,7 @@ export default function ReverseDefinitionPage() {
         </div>
       )}
 
-      {status && <div className="glass-sm p-4 text-center text-sm font-bold text-white/80">{status}</div>}
+      {status && <div role="status" className="glass-sm p-4 text-center text-sm font-bold text-white/80">{status}</div>}
 
       <button className="btn-danger" onClick={quit}>End game</button>
     </div>

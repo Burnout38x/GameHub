@@ -1,10 +1,13 @@
+import { isCurrentRound } from '@/lib/server/multiplayer-rules';
+import { withRoomLock } from '@/lib/server/room-lock';
+export const maxDuration = 30;
 import { NextRequest, NextResponse } from 'next/server';
 import { loadRoomContext, jsonError, finishGame, nextTurnPlayer } from '@/lib/server/room-actions';
 import { shuffle } from '@/lib/game-utils';
 import { codeFeedback } from '@/lib/local-games/logic';
 
 /** POST /api/rooms/[code]/crack — Code Crackers. The secret code lives server-side only. */
-export async function POST(req: NextRequest, { params }: { params: { code: string } }) {
+async function handlePost(req: NextRequest, { params }: { params: { code: string } }) {
   const ctx = await loadRoomContext(params.code);
   if (ctx instanceof NextResponse) return ctx;
   const { admin, userId, room, game, players, me } = ctx;
@@ -12,9 +15,12 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
   if (!me) return jsonError('You are not in this room', 403);
   if (game.type !== 'code') return jsonError('Wrong endpoint');
   if (room.status !== 'playing') return jsonError('Game is not running', 409);
+  const body = await req.json().catch(() => ({}));
+  if (!isCurrentRound(body.fromRound, room.current_round)) return jsonError('The round has changed. Refresh the room before acting.', 409);
+  const { guess } = body;
   if (room.turn_player_id !== userId) return jsonError('Not your turn', 403);
 
-  const { guess } = await req.json().catch(() => ({}));
+
   const state = room.round_state as {
     length: number;
     guesses: { by: string; name: string; guess: string; exact: number; misplaced: number }[];
@@ -94,4 +100,9 @@ export async function POST(req: NextRequest, { params }: { params: { code: strin
     .eq('id', room.id);
   if (error) return jsonError(error.message, 500);
   return NextResponse.json({ ok: true, ...result, points });
+}
+
+export async function POST(req: Request, context: { params: Promise<{ code: string }> }) {
+  const params = await context.params;
+  return withRoomLock(params.code, () => handlePost(req as never, { params }));
 }

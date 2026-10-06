@@ -1,10 +1,12 @@
+import { withRoomLock } from '@/lib/server/room-lock';
+export const maxDuration = 30;
 import { NextResponse } from 'next/server';
 import { loadRoomContext, jsonError } from '@/lib/server/room-actions';
 import { shuffle, spotlightRoundCount, roundDeadline } from '@/lib/game-utils';
 import { buildRuleRound } from '@/lib/server/rule-round';
 
 /** POST /api/rooms/[code]/start — host starts the game. */
-export async function POST(_req: Request, { params }: { params: { code: string } }) {
+async function handlePost(_req: Request, { params }: { params: { code: string } }) {
   const ctx = await loadRoomContext(params.code);
   if (ctx instanceof NextResponse) return ctx;
   const { admin, userId, room, game, players } = ctx;
@@ -45,6 +47,7 @@ export async function POST(_req: Request, { params }: { params: { code: string }
     const themeNames = Object.keys(themes);
     if (themeNames.length === 0) return jsonError('Memory game has no themes configured', 409);
     const theme = themeNames[Math.floor(Math.random() * themeNames.length)];
+    if (!Array.isArray(themes[theme]) || themes[theme].length < 1) return jsonError('Memory theme needs at least one pair', 409);
     const pairCount = Math.min(Math.max(room.total_rounds, 4), 20, themes[theme].length);
     const chosen = shuffle(themes[theme]).slice(0, pairCount);
     const cards = shuffle(
@@ -53,8 +56,10 @@ export async function POST(_req: Request, { params }: { params: { code: string }
         { emoji, name, matched: false },
       ])
     );
+    const { error: deckError } = await admin.from('room_secrets').upsert({ room_id: room.id, secret: { cards } });
+    if (deckError) return jsonError('Could not prepare the memory board', 500);
     update.total_rounds = pairCount;
-    update.round_state = { theme, cards, flipped: [], lastPair: null, moves: 0, matched: 0 };
+    update.round_state = { theme, cards: cards.map(() => ({ matched: false })), flipped: [], lastPair: null, moves: 0, matched: 0 };
   } else if (game.type === 'guess') {
     const min = game.config?.min ?? 1;
     const max = game.config?.max ?? 100;
@@ -77,12 +82,13 @@ export async function POST(_req: Request, { params }: { params: { code: string }
     };
     await admin.from('room_secrets').upsert({ room_id: room.id, secret: { code: digits } });
   } else if (game.type === 'rule') {
-    const { ruleId, state } = buildRuleRound([]);
+    const { ruleId, state, usedRuleIds } = buildRuleRound([]);
     update.total_rounds = Math.min(room.total_rounds, 5);
     update.round_state = { ...state, ruleRound: 0 };
-    await admin.from('room_secrets').upsert({ room_id: room.id, secret: { ruleId } });
+    await admin.from('room_secrets').upsert({ room_id: room.id, secret: { ruleId, usedRuleIds } });
   } else if (game.type === 'chain') {
     const starters: string[] = game.config?.starters ?? ['ocean', 'music', 'fire', 'dream', 'travel'];
+    if (!starters.length) return jsonError('Word Chain needs a starter word', 409);
     update.total_rounds = Math.min(room.total_rounds, 60);
     update.round_state = {
       chain: [{ word: starters[Math.floor(Math.random() * starters.length)], by: null, name: null }],
@@ -92,7 +98,12 @@ export async function POST(_req: Request, { params }: { params: { code: string }
     };
   }
 
-  const { error } = await admin.from('rooms').update(update).eq('id', room.id);
+  const { error } = await admin.from('rooms').update(update).eq('id', room.id).eq('status', 'lobby');
   if (error) return jsonError(error.message, 500);
   return NextResponse.json({ ok: true });
+}
+
+export async function POST(req: Request, context: { params: Promise<{ code: string }> }) {
+  const params = await context.params;
+  return withRoomLock(params.code, () => handlePost(req as never, { params }));
 }

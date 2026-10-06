@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/client';
 import type { Game, Prompt } from '@/lib/types';
 
 export default function AdminPromptsPage() {
-  const supabase = createClient();
+  const [supabase] = useState(createClient);
   const [games, setGames] = useState<Game[]>([]);
   const [gameId, setGameId] = useState('');
   const [difficulty, setDifficulty] = useState<'all' | 'easy' | 'hard'>('all');
@@ -37,28 +37,37 @@ export default function AdminPromptsPage() {
   }
 
   useEffect(() => {
+    let active = true;
     supabase
       .from('games')
       .select('*')
       .in('type', ['quiz', 'prompt'])
       .order('sort_order')
       .then(({ data }) => {
+        if (!active) return;
         setGames((data as Game[]) ?? []);
         if (data?.[0]) setGameId(data[0].id);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    return () => { active = false; };
+  }, [supabase]);
 
   const load = useCallback(async () => {
-    if (!gameId) return;
+    if (!gameId) return [];
     let q = supabase.from('prompts').select('*').eq('game_id', gameId).order('created_at', { ascending: false });
     if (difficulty !== 'all') q = q.eq('difficulty', difficulty);
-    const { data } = await q;
-    setPrompts((data as Prompt[]) ?? []);
+    const { data, error } = await q;
+    if (error) throw error;
+    return (data as Prompt[]) ?? [];
   }, [gameId, difficulty, supabase]);
 
+  function refresh() {
+    void load().then(setPrompts).catch(() => setMsg('Could not load prompts. Please try again.'));
+  }
   useEffect(() => {
-    load();
+    let active = true;
+    void load().then((data) => { if (active) setPrompts(data); })
+      .catch(() => { if (active) setMsg('Could not load prompts. Please try again.'); });
+    return () => { active = false; };
   }, [load]);
 
   async function addPrompt(e: React.FormEvent) {
@@ -83,7 +92,7 @@ export default function AdminPromptsPage() {
     if (error) return flash(`Error: ${error.message}`);
     flash('Prompt added ✔');
     setF({ ...f, question: '', answer: '', wrong1: '', wrong2: '', wrong3: '', emoji: '', hint: '', fact: '', text: '' });
-    load();
+    refresh();
   }
 
   async function bulkImport() {
@@ -107,18 +116,18 @@ export default function AdminPromptsPage() {
     if (error) return flash(`Error: ${error.message}`);
     flash(`Imported ${rows.length} prompts ✔`);
     setBulk('');
-    load();
+    refresh();
   }
 
   async function remove(id: string) {
     const { error } = await supabase.from('prompts').delete().eq('id', id);
     flash(error ? `Error: ${error.message}` : 'Deleted');
-    load();
+    refresh();
   }
 
   async function setPromptDifficulty(p: Prompt, d: 'easy' | 'hard') {
     await supabase.from('prompts').update({ difficulty: d }).eq('id', p.id);
-    load();
+    refresh();
   }
 
   return (

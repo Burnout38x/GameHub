@@ -8,40 +8,44 @@ import { spotlightEligible } from '@/lib/game-utils';
 function NewRoomForm() {
   const router = useRouter();
   const params = useSearchParams();
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
+  const [retry, setRetry] = useState(0);
   const [games, setGames] = useState<Game[]>([]);
   const [gameSlug, setGameSlug] = useState(params.get('game') ?? '');
   const [difficulty, setDifficulty] = useState('mixed');
   const [rounds, setRounds] = useState('10');
   const [mode, setMode] = useState('classic');
   const [isPublic, setIsPublic] = useState(false);
-  const [timer, setTimer] = useState('off');
+  const [timerChoice, setTimerChoice] = useState<{ slug: string; value: string } | null>(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    createClient()
-      .from('games')
-      .select('*')
-      .eq('is_active', true)
-      .order('sort_order')
-      .then(({ data }) => {
-        setGames((data as Game[]) ?? []);
-        if (!params.get('game') && data?.[0]) setGameSlug(data[0].slug);
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    let active = true;
+    async function loadGames() {
+      try {
+        const { data, error: fetchError } = await createClient()
+          .from('games').select('*').eq('is_active', true).order('sort_order');
+        if (fetchError) throw fetchError;
+        if (!active) return;
+        const available = (data as Game[]) ?? [];
+        setGames(available);
+        setGameSlug((current) => available.some((g) => g.slug === current) ? current : available[0]?.slug ?? '');
+      } catch {
+        if (active) setLoadError('We couldn’t load the games. Please try again.');
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
+    void loadGames();
+    return () => { active = false; };
+  }, [retry]);
 
   const game = games.find((g) => g.slug === gameSlug);
-  useEffect(() => {
-    // The ported speed games default to a timer; everything else starts casual.
-    setTimer(
-      ['mystery-card', 'reverse-definition', 'mental-math-duel'].includes(gameSlug)
-        ? '15'
-        : gameSlug === 'word-chain'
-          ? '12'
-          : 'off'
-    );
-  }, [gameSlug]);
+  const defaultTimer = ['mystery-card', 'reverse-definition', 'mental-math-duel'].includes(gameSlug)
+    ? '15' : gameSlug === 'word-chain' ? '12' : 'off';
+  const timer = timerChoice?.slug === gameSlug ? timerChoice.value : defaultTimer;
   const isMemory = game?.type === 'memory';
   const isPredict = game?.type === 'predict';
   const isCode = game?.type === 'code';
@@ -59,9 +63,11 @@ function NewRoomForm() {
           ? ['12', '20', '30']
           : ['5', '10', '15', '20', '30', '40'];
 
+  const selectedRounds = roundOptions.includes(rounds) ? rounds : roundOptions[0];
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!game) return;
+    if (!game || busy || loading) return;
     setBusy(true);
     setError('');
     try {
@@ -71,7 +77,7 @@ function NewRoomForm() {
         body: JSON.stringify({
           gameId: game.id,
           difficulty,
-          totalRounds: Number(rounds),
+          totalRounds: Number(selectedRounds),
           mode: effectiveMode,
           isPublic,
           answerSeconds:
@@ -81,29 +87,39 @@ function NewRoomForm() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Could not create room');
       router.push(`/room/${data.code}`);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Could not create room. Please try again.');
       setBusy(false);
     }
   }
 
   return (
     <div className="mx-auto mt-6 w-full max-w-md">
-      <form onSubmit={submit} className="glass p-7">
-        <h1 className="text-3xl font-black tracking-tight">Create a Room</h1>
+      <form onSubmit={submit} className="glass p-5 sm:p-7" aria-busy={busy || loading}>
+        <p className="text-xs font-bold uppercase tracking-widest text-indigo-200">Your next game night</p>
+        <h1 className="mt-2 text-3xl font-black tracking-tight">Create a Room</h1>
         <p className="mt-1 text-sm text-white/60">
-          You’ll get a 6-letter code to share. Up to 10 players.
+          Choose a game, set the pace, then invite your people with a 6-character room code.
         </p>
 
+        {loading && <p className="mt-5 text-sm text-white/70" role="status">Loading games…</p>}
+        {loadError && <div className="mt-5" role="alert">
+          <p className="text-sm text-red-300">{loadError}</p>
+          <button type="button" className="btn-secondary mt-3" onClick={() => { setLoading(true); setLoadError(''); setRetry((value) => value + 1); }}>Try again</button>
+        </div>}
+        {!loading && !loadError && games.length === 0 && <p className="mt-5 text-sm text-white/70" role="status">No games are available right now. Please check back soon.</p>}
+        <fieldset disabled={busy || loading || !!loadError || games.length === 0}>
+        <legend className="sr-only">Room settings</legend>
         <label className="field-label" htmlFor="game">Game</label>
-        <select id="game" className="input" value={gameSlug} onChange={(e) => setGameSlug(e.target.value)}>
+        <select id="game" className="input" value={gameSlug} onChange={(e) => { setGameSlug(e.target.value); setTimerChoice(null); }}>
           {games.map((g) => (
             <option key={g.id} value={g.slug}>
               {g.emoji} {g.name}
             </option>
           ))}
         </select>
-        {game && <p className="mt-2 text-xs text-white/50">{game.description}</p>}
+        {game && <p className="mt-2 text-sm text-white/65">{game.description}</p>}
+        {game && !isPredict && <p className="mt-2 text-xs text-indigo-200">{isRule || isChain ? "For 2–10 players. Invite someone to play before starting." : "Play solo or invite up to 9 more players."}</p>}
         {isPredict && (
           <p className="mt-2 text-xs font-bold text-indigo-200">
             💞 For exactly 2 players — question count is evened out so you both get equal turns.
@@ -160,7 +176,7 @@ function NewRoomForm() {
                     ? 'Number of rounds'
                     : 'Number of questions'}
         </label>
-        <select id="rounds" className="input" value={rounds} onChange={(e) => setRounds(e.target.value)}>
+        <select id="rounds" className="input" value={selectedRounds} onChange={(e) => setRounds(e.target.value)}>
           {roundOptions.map((r) => (
             <option key={r} value={r}>
               {r} {isMemory ? `pairs (${Number(r) * 2} cards)` : ''}
@@ -171,9 +187,10 @@ function NewRoomForm() {
         {(game?.type === 'quiz' || isChain) && (
           <>
             <label className="field-label" htmlFor="timer">{isChain ? 'Timer per turn' : 'Timer per question'}</label>
-            <select id="timer" className="input" value={timer} onChange={(e) => setTimer(e.target.value)}>
+            <select id="timer" className="input" value={timer} onChange={(e) => setTimerChoice({ slug: gameSlug, value: e.target.value })}>
               <option value="off">🧘 No timer — casual pace</option>
               <option value="10">⏱ 10 seconds</option>
+              <option value="12">⏱ 12 seconds</option>
               <option value="15">⏱ 15 seconds</option>
               <option value="20">⏱ 20 seconds</option>
               <option value="30">⏱ 30 seconds</option>
@@ -197,8 +214,9 @@ function NewRoomForm() {
           <option value="public">🌍 Public — listed in the room browser</option>
         </select>
 
-        {error && <p className="mt-3 text-sm font-bold text-red-300">{error}</p>}
-        <button className="btn mt-6" disabled={busy || !game}>
+        </fieldset>
+        {error && <p role="alert" className="mt-3 text-sm font-bold text-red-300">{error}</p>}
+        <button className="btn mt-6" disabled={busy || loading || !!loadError || !game}>
           {busy ? 'Creating…' : 'Create room →'}
         </button>
       </form>
@@ -208,7 +226,7 @@ function NewRoomForm() {
 
 export default function NewRoomPage() {
   return (
-    <Suspense>
+    <Suspense fallback={<p role="status" className="py-12 text-center text-white/70">Loading room setup…</p>}>
       <NewRoomForm />
     </Suspense>
   );

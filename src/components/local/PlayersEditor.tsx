@@ -16,6 +16,7 @@ export default function PlayersEditor({
           <div key={i} className="flex gap-2">
             <input
               className="input"
+              aria-label={`Player ${i + 1} name`}
               maxLength={18}
               value={n}
               placeholder={`Player ${i + 1}`}
@@ -24,6 +25,7 @@ export default function PlayersEditor({
             {names.length > 2 && (
               <button
                 type="button"
+                aria-label={`Remove player ${i + 1}`}
                 className="btn-danger !w-auto px-4"
                 onClick={() => onChange(names.filter((_, j) => j !== i))}
               >

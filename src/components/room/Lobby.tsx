@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { useState } from 'react';
 import type { RoomBundle } from './RoomClient';
 import { callRoomApi } from './RoomClient';
@@ -9,78 +10,104 @@ export default function Lobby(props: RoomBundle & { code: string; inRoom: boolea
   const isHost = room.host_id === userId;
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const [copied, setCopied] = useState(false);
+  const [copyMessage, setCopyMessage] = useState('');
+  const isPredict = game.type === 'predict';
+  const needsPartner = isPredict || game.type === 'rule' || game.type === 'chain';
+  const canStart = isPredict ? players.length === 2 : players.length >= (needsPartner ? 2 : 1);
+  const capacity = isPredict ? 2 : 10;
+  const countLabel = game.type === 'memory' ? 'pairs'
+    : game.type === 'code' ? 'codes'
+    : game.type === 'rule' ? 'rules'
+    : game.type === 'chain' ? 'turns'
+    : ['quiz', 'survey', 'predict'].includes(game.type) ? 'questions' : 'rounds';
 
   async function act(action: string) {
+    if (busy) return;
     setBusy(true);
     setError('');
     try {
       await callRoomApi(code, action);
       refresh();
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Something went wrong. Please try again.');
+    } finally {
+      setBusy(false);
     }
-    setBusy(false);
+  }
+
+  async function copyCode() {
+    try {
+      if (!navigator.clipboard) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(code);
+      setCopyMessage('Room code copied. Share it with your people!');
+    } catch {
+      setCopyMessage('Copy isn’t available here. Select the code above and copy it manually.');
+    }
   }
 
   return (
     <div className="mx-auto mt-6 flex w-full max-w-xl flex-col gap-4">
-      <div className="glass p-7 text-center">
-        <div className="pill mx-auto">
-          {game.emoji} {game.name} · {room.difficulty} ·{' '}
-          {game.type === 'memory' ? `${room.total_rounds} pairs` : `${room.total_rounds} rounds`}
-          {room.mode === 'spotlight' ? ' · 🎯 spotlight' : ''}
-          {room.is_public ? ' · 🌍 public' : ''}
-          {room.answer_seconds ? ` · ⏱ ${room.answer_seconds}s` : ''}
+      <section className="glass p-5 text-center sm:p-7" aria-labelledby="lobby-title">
+        <p className="text-xs font-bold uppercase tracking-widest text-indigo-200">Game night starts here</p>
+        <h1 id="lobby-title" className="mt-3 text-3xl font-black tracking-tight">{game.emoji} {game.name}</h1>
+        <p className="mt-2 text-sm text-white/65">{game.description}</p>
+        <div className="mt-4 flex flex-wrap justify-center gap-2 text-xs">
+          <span className="pill">{room.total_rounds} {countLabel}</span>
+          <span className="pill">{room.is_public ? 'Public room' : 'Private room'}</span>
+          {room.mode === 'spotlight' && <span className="pill">Spotlight mode</span>}
+          {['quiz', 'code'].includes(game.type) && <span className="pill">{game.type === 'code' ? `Code length: ${room.difficulty === 'easy' ? 4 : room.difficulty === 'hard' ? 6 : 5} digits` : `${room.difficulty} difficulty`}</span>}
+          {['quiz', 'chain'].includes(game.type) && <span className="pill">{room.answer_seconds ? `${room.answer_seconds}s timer` : 'No timer'}</span>}
         </div>
-        <h1 className="mt-4 text-3xl font-black tracking-tight">Room Code</h1>
+        <h2 className="mt-6 text-sm font-bold text-white/70">Invite with your room code</h2>
         <button
-          className="mx-auto mt-3 block rounded-2xl border border-white/[0.14] bg-black/[0.25] px-8 py-4 font-mono text-4xl font-black tracking-[0.3em] text-indigo-200"
-          onClick={() => {
-            navigator.clipboard?.writeText(code);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 1200);
-          }}
-          title="Copy code"
+          type="button"
+          className="mx-auto mt-3 block max-w-full select-text rounded-2xl border border-white/[0.14] bg-black/[0.25] px-4 py-4 font-mono text-3xl font-black tracking-[0.15em] text-indigo-200 sm:px-8 sm:text-4xl sm:tracking-[0.3em]"
+          onClick={copyCode}
+          aria-label={`Copy room code ${code}`}
         >
           {code}
         </button>
-        <p className="mt-2 text-sm text-white/55">
-          {copied ? 'Copied! ✔' : 'Tap the code to copy · share it with your player(s)'}
-        </p>
-      </div>
+        <p className="mt-2 text-sm text-white/65">Tap to copy. Your guests can enter it on Join a Room.</p>
+        <p role="status" className="mt-2 text-sm text-indigo-200">{copyMessage}</p>
+      </section>
 
-      <div className="glass p-6">
-        <h2 className="text-lg font-black">
-          Players ({players.length}/{game.type === 'predict' ? 2 : 10})
-        </h2>
-        <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+      <section className="glass p-5 sm:p-6" aria-labelledby="players-title" aria-busy={busy}>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 id="players-title" className="text-lg font-black">Players <span className="text-white/60">{players.length}/{capacity}</span></h2>
+          <span className="pill">Waiting room</span>
+        </div>
+        <p className="mt-1 text-sm text-white/65">
+          {isPredict ? 'Exactly two players. You’ll take turns answering and predicting.' : needsPartner ? 'At least two players are needed to start.' : 'Invite your group or start a solo game.'}
+        </p>
+        {players.length === 0 && <p role="status" className="mt-4 text-sm text-white/65">No players have joined yet.</p>}
+        <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
           {players.map((p) => (
-            <li key={p.id} className="glass-sm flex items-center gap-3 px-4 py-3">
-              <span className="text-xl">{p.profile_id === room.host_id ? '👑' : '🎮'}</span>
-              <span className="font-bold">{p.display_name}</span>
-              {p.profile_id === userId && <span className="text-xs text-white/50">(you)</span>}
+            <li key={p.id} className="glass-sm flex min-w-0 items-center gap-3 px-4 py-3">
+              <span aria-hidden="true" className="text-xl">{p.profile_id === room.host_id ? '👑' : '🎮'}</span>
+              <div className="min-w-0">
+                <span className="break-words font-bold">{p.display_name}</span>
+                <p className="text-xs text-white/60">{p.profile_id === room.host_id ? 'Host' : 'Player'}{p.profile_id === userId ? ' · You' : ''}</p>
+              </div>
             </li>
           ))}
         </ul>
-        {error && <p className="mt-3 text-sm font-bold text-red-300">{error}</p>}
+        {error && <p role="alert" className="mt-3 text-sm font-bold text-red-300">{error}</p>}
         <div className="mt-5 flex flex-col gap-3">
           {!inRoom && (
-            <button className="btn" disabled={busy} onClick={() => act('join')}>
-              Join this room
+            <button className="btn" disabled={busy || players.length >= capacity} onClick={() => act('join')}>
+              {busy ? 'Joining…' : players.length >= capacity ? 'Room is full' : 'Join this room'}
             </button>
           )}
           {isHost && inRoom && (
-            <button className="btn" disabled={busy || players.length < 1} onClick={() => act('start')}>
-              {players.length < 2 ? 'Start solo game' : `Start with ${players.length} players`}
+            <button className="btn" disabled={busy || !canStart} onClick={() => act('start')}>
+              {busy ? 'Starting…' : !canStart ? 'Waiting for a second player' : players.length === 1 ? 'Start solo game' : `Start with ${players.length} players`}
             </button>
           )}
-          {!isHost && inRoom && (
-            <p className="text-center text-sm text-white/55">Waiting for the host to start… ⏳</p>
-          )}
+          {!isHost && inRoom && <p role="status" className="text-center text-sm text-white/65">You’re in! Waiting for the host to start…</p>}
+          {!inRoom && <Link href="/rooms" className="btn-secondary">Back to rooms</Link>}
           {inRoom && <LeaveButton code={code} status={room.status} isHost={isHost} />}
         </div>
-      </div>
+      </section>
     </div>
   );
 }

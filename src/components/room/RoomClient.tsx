@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+import Link from 'next/link';
 import type { Game, Prompt, Room, RoomPlayer, RoundAnswer } from '@/lib/types';
 import Lobby from './Lobby';
 import EndScreen from './EndScreen';
@@ -38,63 +38,48 @@ export async function callRoomApi(code: string, action: string, body: Record<str
 }
 
 export default function RoomClient({ code, userId }: { code: string; userId: string }) {
-  const supabase = useRef(createClient()).current;
   const router = useRouter();
   const [bundle, setBundle] = useState<Omit<RoomBundle, 'userId' | 'refresh'> | null>(null);
   const [error, setError] = useState('');
-  const roomIdRef = useRef<string | null>(null);
+  const requestRef = useRef<AbortController | null>(null);
+  const generationRef = useRef(0);
   const wasInRoomRef = useRef(false);
 
   const load = useCallback(async () => {
-    const { data: room } = await supabase.from('rooms').select('*').eq('code', code).single();
-    if (!room) return setError('Room disappeared');
-    roomIdRef.current = room.id;
-    const [{ data: game }, { data: players }, { data: answers }] = await Promise.all([
-      supabase.from('games').select('*').eq('id', room.game_id).single(),
-      supabase.from('room_players').select('*').eq('room_id', room.id).order('joined_at'),
-      supabase
-        .from('round_answers')
-        .select('*')
-        .eq('room_id', room.id)
-        .eq('round_index', room.current_round),
-    ]);
-    let prompt: Prompt | null = null;
-    const promptId = room.prompt_ids?.[room.current_round];
-    if (room.status === 'playing' && promptId) {
-      const { data } = await supabase.from('prompts').select('*').eq('id', promptId).single();
-      prompt = data;
+    const generation = ++generationRef.current;
+    requestRef.current?.abort();
+    const controller = new AbortController();
+    requestRef.current = controller;
+    try {
+      const response = await fetch(`/api/rooms/${encodeURIComponent(code)}`, { signal: controller.signal, cache: 'no-store' });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Could not load this room.');
+      if (generation !== generationRef.current) return;
+      setBundle(data);
+      setError('');
+    } catch (cause) {
+      if (controller.signal.aborted || generation !== generationRef.current) return;
+      setError(cause instanceof Error ? cause.message : 'Connection interrupted. Please retry.');
     }
-    if (game) setBundle({ room, game, players: players ?? [], answers: answers ?? [], prompt });
-  }, [code, supabase]);
+  }, [code]);
 
   useEffect(() => {
-    load();
-  }, [load]);
-
-  // Realtime: refetch on any change to this room's rows. Polling fallback keeps
-  // slow networks in sync even if a websocket event is missed.
-  useEffect(() => {
-    const channel = supabase
-      .channel(`room-${code}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'rooms' }, (payload) => {
-        const row = (payload.new ?? payload.old) as { id?: string };
-        if (row?.id === roomIdRef.current) load();
-      })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'room_players' }, (payload) => {
-        const row = (payload.new ?? payload.old) as { room_id?: string };
-        if (row?.room_id === roomIdRef.current) load();
-      })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'round_answers' }, (payload) => {
-        const row = (payload.new ?? payload.old) as { room_id?: string };
-        if (row?.room_id === roomIdRef.current) load();
-      })
-      .subscribe();
-    const poll = setInterval(load, 5000);
+    let stopped = false;
+    let timer: ReturnType<typeof setTimeout>;
+    async function poll() {
+      if (document.visibilityState === 'visible') await load();
+      if (!stopped) timer = setTimeout(poll, 1500);
+    }
+    const resume = () => { if (document.visibilityState === 'visible') void load(); };
+    void poll();
+    document.addEventListener('visibilitychange', resume);
     return () => {
-      supabase.removeChannel(channel);
-      clearInterval(poll);
+      stopped = true;
+      clearTimeout(timer);
+      requestRef.current?.abort();
+      document.removeEventListener('visibilitychange', resume);
     };
-  }, [code, load, supabase]);
+  }, [load]);
 
   // Kick players back to /games when the room closes under them (host left / too few players).
   useEffect(() => {
@@ -113,8 +98,8 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
     if (amIn) wasInRoomRef.current = true;
   }, [bundle, router, userId]);
 
-  if (error)
-    return <div className="glass mx-auto mt-16 max-w-md p-8 text-center text-red-300">{error}</div>;
+  if (error && !bundle)
+    return <div className="glass mx-auto mt-16 max-w-md p-8 text-center"><h1 className="text-xl font-bold">Let’s reconnect</h1><p role="alert" className="mt-3 text-red-200">{error}</p><button className="btn mt-5" onClick={() => void load()}>Retry connection</button><Link href="/games" className="btn-secondary mt-3">Back to games</Link></div>;
   if (!bundle)
     return (
       <div className="mt-24 text-center text-white/60">
@@ -127,27 +112,29 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
   const { room, game } = bundle;
   const inRoom = bundle.players.some((p) => p.profile_id === userId);
 
-  if (room.status === 'lobby') return <Lobby {...full} code={code} inRoom={inRoom} />;
-  if (room.status === 'finished') return <EndScreen {...full} />;
+  const connectionNotice = error ? <div role="alert" className="glass-sm mx-auto mb-4 max-w-xl p-4 text-sm text-red-200">{error}<button className="btn-secondary mt-3 !py-2" onClick={() => void load()}>Retry connection</button></div> : null;
+  if (room.status === 'lobby') return <>{connectionNotice}<Lobby {...full} code={code} inRoom={inRoom} /></>;
+  if (room.status === 'finished') return <>{connectionNotice}<EndScreen {...full} /></>;
 
   if (!inRoom)
     return (
       <div className="glass mx-auto mt-16 max-w-md p-8 text-center">
         <div className="text-4xl">🔒</div>
-        <p className="mt-3 text-white/70">This game already started without you. Ask for a rematch!</p>
+        <p className="mt-3 text-white/70">This game already started without you. Ask for a rematch!</p><Link href="/games" className="btn-secondary mt-5">Back to games</Link>
       </div>
     );
 
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col gap-4">
+      {connectionNotice}
       <Scoreboard {...full} />
-      {game.type === 'quiz' && <QuizPlay {...full} />}
-      {game.type === 'prompt' && <PromptPlay {...full} />}
+      {game.type === 'quiz' && <QuizPlay key={`${room.id}-${room.current_round}`} {...full} />}
+      {game.type === 'prompt' && <PromptPlay key={`${room.id}-${room.current_round}`} {...full} />}
       {game.type === 'memory' && <MemoryPlay {...full} />}
-      {game.type === 'guess' && <GuessPlay {...full} />}
-      {game.type === 'predict' && <PredictPlay {...full} />}
-      {game.type === 'code' && <CodePlay {...full} />}
-      {game.type === 'rule' && <RulePlay {...full} />}
+      {game.type === 'guess' && <GuessPlay key={`${room.id}-${room.current_round}`} {...full} />}
+      {game.type === 'predict' && <PredictPlay key={`${room.id}-${room.current_round}`} {...full} />}
+      {game.type === 'code' && <CodePlay key={`${room.id}-${room.current_round}`} {...full} />}
+      {game.type === 'rule' && <RulePlay key={`${room.id}-${room.current_round}`} {...full} />}
       {game.type === 'chain' && <ChainPlay {...full} />}
       <LeaveButton code={code} status={room.status} isHost={room.host_id === userId} />
     </div>
