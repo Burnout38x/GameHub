@@ -1,0 +1,12 @@
+{
+  "checks": [
+    "dark rounded picker and mouse selection",
+    "light rounded picker and mouse selection",
+    "arcade rounded picker and mouse selection",
+    "ocean rounded picker and mouse selection",
+    "keyboard open, navigate and commit",
+    "Escape dismisses",
+    "native high-contrast fallback"
+  ],
+  "errors": []
+}
