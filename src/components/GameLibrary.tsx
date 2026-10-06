@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { GAME_CATEGORIES, gameCategoryLabel, matchesGame, type LibraryFilters, type GameMode } from '@/lib/game-library';
+import { gameCategoryLabel, matchesGame, type LibraryFilters, type GameMode } from '@/lib/game-library';
 
 type OnlineGame = { id: string; slug: string; name: string; description: string; emoji: string; type: string };
 type LocalGame = { slug: string; name: string; description: string; emoji: string; meta: string };
@@ -18,16 +18,14 @@ export default function GameLibrary({ online, local, initialSearch = '' }: { onl
   const filtered = Object.keys(initialFilters).some(key => filters[key as keyof LibraryFilters] !== initialFilters[key as keyof LibraryFilters]);
   return <>
     <div className="glass-sm space-y-4 p-4 sm:p-5">
-      <div className="grid gap-3 sm:grid-cols-2">
-        <div className="sm:col-span-2"><label htmlFor="game-search" className="mb-2 block text-sm font-bold">Find a game</label><input id="game-search" className="input" type="search" maxLength={100} value={filters.search} onChange={event => setFilters({ ...filters, search: event.target.value })} placeholder="Search by game name, category or keyword…" /></div>
-        <div><label htmlFor="game-category" className="mb-2 block text-sm font-bold">What feels fun?</label><select id="game-category" className="input" value={filters.category} onChange={event => setFilters({ ...filters, category: event.target.value as LibraryFilters['category'] })}><option value="all">Every category</option>{GAME_CATEGORIES.map(category => <option key={category.id} value={category.id}>{category.label}</option>)}</select></div>
-        <div><label htmlFor="game-audience" className="mb-2 block text-sm font-bold">Who’s playing?</label><select id="game-audience" className="input" value={filters.audience} onChange={event => setFilters({ ...filters, audience: event.target.value as LibraryFilters['audience'] })}><option value="all">Everyone · all games</option><option value="couples">Couples picks</option><option value="groups">Friends & groups</option><option value="family">Family puzzles</option></select></div>
+      <div role="search" aria-label="Search the game library">
+        <label htmlFor="game-search" className="mb-3 block text-sm font-bold">Find a game</label>
+        <input id="game-search" className="input !min-h-14 !rounded-full !px-5" type="search" maxLength={100} value={filters.search} onChange={event => setFilters({ ...filters, search: event.target.value })} placeholder="Search games, categories or keywords…" />
       </div>
       <div className="flex flex-wrap gap-2" role="group" aria-label="Ways to play">{modes.map(mode => <button key={mode.id} type="button" className={`${filters.mode === mode.id ? 'btn' : 'btn-secondary'} !min-h-11 !w-auto !px-4 !py-2 !text-sm`} aria-pressed={filters.mode === mode.id} onClick={() => setFilters({ ...filters, mode: mode.id })}>{mode.label} <span className="ml-1 opacity-70">{mode.id === 'online' ? onlineCount : mode.id === 'local' ? localCount : onlineCount + localCount}</span></button>)}</div>
       <div className="flex flex-wrap items-center justify-between gap-2"><p role="status" className="text-sm text-white/65">{count} {count === 1 ? 'game' : 'games'} to explore{filters.mode === 'all' ? ' across both play modes' : ''}.</p>{filtered && <button type="button" className="btn-ghost !min-h-11 !w-auto !px-3 !py-2 !text-sm" onClick={() => setFilters(initialFilters)}>Reset filters</button>}</div>
-      {filters.audience === 'family' && <p className="text-sm text-white/65">Puzzles to solve together. Choose a difficulty that suits your players; conversation and dare games are excluded from these picks.</p>}
     </div>
-    {count === 0 && <div className="glass-sm p-6 text-center"><h2 className="text-lg font-bold">No games found</h2><p className="mt-2 text-sm text-white/65">Try another category or clear your filters to explore the library.</p><button className="btn-secondary mx-auto mt-4 !w-auto" onClick={() => setFilters(initialFilters)}>Show all games</button></div>}
+    {count === 0 && <div className="glass-sm p-6 text-center"><h2 className="text-lg font-bold">No games found</h2><p className="mt-2 text-sm text-white/65">Try another search or show all games to explore the library.</p><button className="btn-secondary mx-auto mt-4 !w-auto" onClick={() => setFilters(initialFilters)}>Show all games</button></div>}
     {filters.mode !== 'local' && <section id="online" className="scroll-mt-40" aria-labelledby="online-heading">
       <div className="mb-5"><p className="eyebrow">Your own phones · live scores</p><h2 id="online-heading" className="mt-2 text-2xl font-bold">Meet in a game room <span className="text-white/50">({onlineGames.length})</span></h2><p className="mt-1 text-sm text-white/65">Share a room code and play together, wherever you are. An account is needed for online play.</p></div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{onlineGames.map(game => <article key={game.id} className="game-card"><div className="flex items-center justify-between gap-2"><span className="game-icon" aria-hidden="true">{game.emoji}</span><span className="pill">{gameCategoryLabel(game)}</span></div><div><h3 className="text-lg font-bold">{game.name}</h3><p className="mt-2 text-sm leading-relaxed text-white/65">{game.description}</p></div><div className="mt-auto flex items-center justify-between gap-2 border-t border-white/10 pt-4"><span className="text-xs text-white/60">{game.type === 'predict' ? 'Exactly 2' : game.type === 'chain' || game.type === 'rule' ? '2–10' : '1–10'} players</span><Link href={`/rooms/new?game=${game.slug}`} className="btn !min-h-11 !w-auto !rounded-xl !px-4 !py-2 !text-sm" aria-label={`Create ${game.name} room`}>Create room ↗</Link></div></article>)}</div>

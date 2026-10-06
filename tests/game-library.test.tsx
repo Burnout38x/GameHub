@@ -48,7 +48,9 @@ test('search, category, audience and play mode combine without changing the sour
 test('library filters show accurate per-mode counts, preserve launch links, and recover from empty results', t => {
   const view = render(<GameLibrary online={online} local={LOCAL_GAMES} />);
   t.after(cleanup);
-  fireEvent.change(view.getByLabelText('What feels fun?'), { target: { value: 'logic' } });
+  assert.equal(view.getAllByRole('searchbox').length, 1);
+  assert.equal(view.queryByRole('combobox'), null);
+  fireEvent.change(view.getByLabelText('Find a game'), { target: { value: 'logic' } });
   assert.match(view.getByRole('status').textContent ?? '', /4 games/);
   assert.ok(view.getByRole('button', { name: 'Online rooms 1' }));
   assert.ok(view.getByRole('button', { name: 'Pass & play 3' }));
@@ -59,7 +61,6 @@ test('library filters show accurate per-mode counts, preserve launch links, and 
   assert.ok(view.getByRole('heading', { name: 'No games found' }));
   fireEvent.click(view.getByRole('button', { name: 'Show all games' }));
   assert.equal((view.getByLabelText('Find a game') as HTMLInputElement).value, '');
-  assert.equal((view.getByLabelText('What feels fun?') as HTMLSelectElement).value, 'all');
   assert.equal(view.getByRole('button', { name: 'All ways to play 11' }).getAttribute('aria-pressed'), 'true');
   assert.equal(view.getByRole('link', { name: 'Create Mental Math room' }).getAttribute('href'), '/rooms/new?game=mental-math-duel');
 });
