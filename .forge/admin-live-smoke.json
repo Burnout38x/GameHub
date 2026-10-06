@@ -1,0 +1,13 @@
+{
+  "site": "https://naijagamehub.vercel.app",
+  "checks": [
+    "Game night selected and persisted",
+    "Daylight selected and persisted",
+    "Neon arcade selected and persisted",
+    "Ocean lounge selected and persisted",
+    "category/mode/search filters and empty reset",
+    "live admin reports and submission enforce authentication",
+    "live admin screens redirect guests"
+  ],
+  "errors": []
+}

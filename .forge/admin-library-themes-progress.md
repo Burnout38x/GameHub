@@ -13,3 +13,9 @@ Final checks:72 automated tests pass; lint max-warnings0 passes; production buil
 Live migration20261006232153 applied atomically with ledger to jnzbncbmcewsvtjjmddn only after review/test pass. Backup /private/tmp/gamehub-release-20261006/before-admin-reports-public.sql. Existing counts unchanged:4 profiles,24 rooms,20 match_history; new reports0. Report table RLS enabled and no anon/player SELECT grant; both RPCs server-only. Usage profile count4 matches exact data. Report inbox query uses player_reports_status_created_idx. Existing managed Supabase configuration warning remains unrelated.
 
 Rollback: revert app; additive reporting table/functions can remain without affecting prior games. Retain/export submitted reports before any future removal. No production rollback executed. Production push/live frontend smoke follows.
+
+Published feature commit5ea8b44a848f6c92c476e7a02d1b51120d1fbb07 to main and upgrade branch; remote hash verified. Vercel Production deployment6897749962 succeeded. Initial commit-level success belonged to the preview while production was still propagating; the first live theme wait timed out. Checked production-specific deployment and live200 response, then repeated smoke successfully.
+
+Live site https://naijagamehub.vercel.app passed7 smoke checks: selecting and reloading each of4 themes; combined category/mode/search/reset; report/admin API authentication; guest redirects on all3 admin screens. Browser runtime errors0. Evidence admin-live-smoke.json and live theme/library screenshots. Signed-in account/moderation workflow was tested on the isolated production build, not by impersonating an existing production admin. No live test accounts were needed for this release.
+
+All requested work complete. Original users/rooms/scores preserved; new reports table begins empty. Final documentation-only checkpoint follows; application code unchanged from verified5ea8b44.
