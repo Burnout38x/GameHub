@@ -1,0 +1,132 @@
+{
+  "checks": [
+    "production hydration: home game draw and theme respond",
+    "online-live-release-result-dark",
+    "online-live-release-result-light",
+    "live-release: browser play, score, finish",
+    "live room creation, join, start, private answers, scoring, results and history",
+    "temporary test identities and their own rooms removed"
+  ],
+  "violations": [],
+  "overflow": [],
+  "errors": [],
+  "warnings": [],
+  "resourceFailures": [
+    {
+      "path": "/games/local/mystery-card",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/register",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/register",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/leaderboard",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/leaderboard",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/rooms/new",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/rooms/new",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/register",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/leaderboard",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/rooms",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/leaderboard",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/room/4KLVNT",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/api/rooms/4KLVNT",
+      "error": "net::ERR_ABORTED"
+    }
+  ],
+  "screenshots": [
+    ".forge/screenshots/online-live-release-result-dark.png",
+    ".forge/screenshots/online-live-release-result-light.png"
+  ]
+}

@@ -35,3 +35,17 @@ Existing managed Postgres warning: supautils.restrict_extension_versions is a re
 Production deployment6897465185 for exact commit3c48825 succeeded in Vercel (GitHub deployment state success). Generated URL https://game-3nzpr8z9p-james-akintundes-projects.vercel.app redirects to Vercel SSO (302), so it does not provide an unauthenticated app smoke check. GitHub's configured homepage https://game-hub-liard-omega.vercel.app returns404. Asked the user for their current live URL. Native browser inventory also unavailable (native pipe startup failed); no user tabs changed.
 
 Checkpoint: main app has deployed successfully according to Vercel, migration001 verified, migration002 still held pending a live app check at the user's actual address. Next: verify that address serves the new app, apply stage2.sql atomically to the same exact project, run verify.sql, record both migrations and data preservation, then close release gate. No requests to other Supabase databases.
+
+## Release verified at the user's live URL
+
+User supplied https://naijagamehub.vercel.app/games. The live app returned200 and displayed the new Game Library. Isolated Playwright public smoke passed7 checks (home/library/login/join/local-game routes, persistent theme and authenticated-only room snapshot), with no browser runtime errors.
+
+Then migration202610060002 committed atomically with its history entry, on jnzbncbmcewsvtjjmddn only. All four broad read policies are absent; admin prompt policy remains. Authenticated users can update username but cannot update total_points or the whole profiles table. Both migration versions and service-only RPC grants verified.
+
+Post-migration live two-player Riddle Rush check passed using two newly created disposable identities: login, create private room, join through UI, start, hidden correct answer, correct/wrong submissions,1–0 scoring, final results, and two history rows with the correct winner. Both themes passed result-screen accessibility and overflow checks. Browser errors/warnings and accessibility violations:0. Aborted prefetch/navigation requests are retained in the report; all assertions passed. This is a representative production smoke, not a rerun of every game's isolated suite.
+
+Only the two created test accounts and their own cascading test data were removed. Final counts match pre-release:4 profiles,24 rooms,20 match_history. Existing rows were not edited by either schema migration. Evidence: release-smoke.json, release-online-report.json, release-database-verification.txt and two live-result screenshots.
+
+Rollback remains available: previous public schema in /private/tmp/gamehub-release-20261006/before-public.sql; restore the four old read policies/profile update grant together with reverting the app to a4e59ec if rollback is necessary. Do not drop additive RPCs while the new app uses them. Rollback was not executed on production. No rollback needed.
+
+Final state: both database migrations applied, live matching app verified, release complete. Refresh old browser tabs before playing. Remaining known limitations from the original audit: dev-only dependency advisory and managed Supabase configuration warning; neither was hidden or addressed by unrelated production configuration changes.

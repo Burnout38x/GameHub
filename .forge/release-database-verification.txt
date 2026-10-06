@@ -1,0 +1,37 @@
+   version    |        name         
+--------------+---------------------
+ 202610060001 | multiplayer_actions
+ 202610060002 | private_game_reads
+(2 rows)
+
+ profiles | rooms | matches 
+----------+-------+---------
+        4 |    24 |      20
+(1 row)
+
+       proname       | anon_execute | authenticated_execute | service_execute 
+---------------------+--------------+-----------------------+-----------------
+ claim_room_action   | f            | f                     | t
+ finish_room_game    | f            | f                     | t
+ release_room_action | f            | f                     | t
+(3 rows)
+
+ relrowsecurity 
+----------------
+ t
+(1 row)
+
+ tablename |     policyname      
+-----------+---------------------
+ prompts   | prompts admin write
+(1 row)
+
+ stats_table_update | username_update | points_update 
+--------------------+-----------------+---------------
+ f                  | t               | f
+(1 row)
+
+
+WARNING:  invalid configuration parameter name "supautils.restrict_extension_versions", removing it
+DETAIL:  "supautils" is now a reserved prefix.
+

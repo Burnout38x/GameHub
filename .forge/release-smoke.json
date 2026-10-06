@@ -1,0 +1,13 @@
+{
+  "site": "https://naijagamehub.vercel.app",
+  "checks": [
+    "/",
+    "/games",
+    "/login",
+    "/rooms/join",
+    "/games/local/word-chain",
+    "theme persists",
+    "secure snapshot requires authentication"
+  ],
+  "errors": []
+}

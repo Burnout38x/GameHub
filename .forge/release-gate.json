@@ -1,0 +1,10 @@
+{
+  "goal": "Push the verified GameHub update and coordinate its database/app release only for Supabase project jnzbncbmcewsvtjjmddn, preserving existing users, rooms and scores.",
+  "conditions": 3,
+  "mode": "parse",
+  "blocked": false,
+  "problems": [],
+  "hedges": [],
+  "reruns": [],
+  "superseded": []
+}
