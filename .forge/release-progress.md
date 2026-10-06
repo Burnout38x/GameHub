@@ -13,3 +13,9 @@ Current release boundary:
 - Continue by verifying authorized project access, reviewing live schema/migration history and room activity, then coordinating database/app release. Do not apply privacy policy changes while the old app is the only deployed version.
 
 GitHub push proceeds independently to the upgrade branch. Production main and database remain unchanged until the access and release prerequisites are satisfied.
+
+GitHub outcome: application commit a96b7f8 pushed successfully to origin/codex/gamehub-game-night-upgrade. Initial push used Creovex and returned403; the retry used the already-authenticated repository owner Burnout38x for that command only, with no global account switch. Main was not changed.
+
+Production's existing successful deployment is still commit a4e59ec through Vercel. Do not treat the upgrade branch push as a completed production rollout.
+
+Database outcome: unchanged. Await target confirmation/account reconnection from the user because the connected Supabase account cannot access jnzbncbmcewsvtjjmddn. No attempts were made against another database.
