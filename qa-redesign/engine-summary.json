@@ -1,0 +1,83 @@
+{
+  "checks": 7,
+  "pocket": {
+    "random": {
+      "wins": 0,
+      "median": 2,
+      "min": 0,
+      "max": 21
+    },
+    "greedy": {
+      "wins": 0,
+      "median": 38,
+      "min": 19,
+      "max": 48
+    },
+    "planned": {
+      "wins": 30,
+      "score": 64,
+      "medal": "gold",
+      "board": [
+        "stall",
+        "home",
+        "park",
+        "home",
+        "stall",
+        "path",
+        "path",
+        "home",
+        "path",
+        "path",
+        "home",
+        "path",
+        "path",
+        "path",
+        "home",
+        "park",
+        "home",
+        "stall",
+        "home",
+        "park"
+      ]
+    }
+  },
+  "pocketDistinctOffersAcross100Seeds": 100,
+  "market": [
+    {
+      "opponent": "contracts",
+      "players": 2,
+      "wins": 52,
+      "losses": 6,
+      "ties": 2,
+      "averageMargin": 6.416666666666667,
+      "propertyBotContracts": 68
+    },
+    {
+      "opponent": "contracts",
+      "players": 4,
+      "wins": 17,
+      "losses": 98,
+      "ties": 5,
+      "averageMargin": -9.525,
+      "propertyBotContracts": 71
+    },
+    {
+      "opponent": "balanced",
+      "players": 2,
+      "wins": 50,
+      "losses": 8,
+      "ties": 2,
+      "averageMargin": 4.916666666666667,
+      "propertyBotContracts": 62
+    },
+    {
+      "opponent": "balanced",
+      "players": 4,
+      "wins": 17,
+      "losses": 98,
+      "ties": 5,
+      "averageMargin": -10.35,
+      "propertyBotContracts": 71
+    }
+  ]
+}

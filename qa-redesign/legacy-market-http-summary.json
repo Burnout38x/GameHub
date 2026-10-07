@@ -1,0 +1,25 @@
+{
+  "completed": true,
+  "checks": [
+    "Unversioned legal legacy history reloads with original rules; real HTTP commission without contractId consumes3supplies, grants5cash+2reputation+3commissionpoints; persisted scores exact",
+    "Legacy departure aborts without winner or match history"
+  ],
+  "cleanup": [
+    {
+      "kind": "room",
+      "id": "78e6edb5-1f78-4799-bfee-25a07b37e461",
+      "deleted": true
+    },
+    {
+      "kind": "user",
+      "id": "8efb839d-8a38-468e-8d1c-8b9cee7c8085",
+      "deleted": true
+    },
+    {
+      "kind": "user",
+      "id": "3cfe861c-c0ce-4655-8ac5-b4ed11d84c3a",
+      "deleted": true
+    }
+  ],
+  "cleanupVerified": true
+}

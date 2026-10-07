@@ -1,0 +1,134 @@
+{
+  "scope": "Local author simulation only, no real API/database/authorization evidence",
+  "results": [
+    {
+      "width": 320,
+      "theme": "dark",
+      "axe": []
+    },
+    {
+      "width": 320,
+      "theme": "light",
+      "axe": []
+    },
+    {
+      "width": 320,
+      "theme": "arcade",
+      "axe": []
+    },
+    {
+      "width": 320,
+      "theme": "ocean",
+      "axe": []
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "axe": []
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "axe": []
+    },
+    {
+      "width": 390,
+      "theme": "arcade",
+      "axe": []
+    },
+    {
+      "width": 390,
+      "theme": "ocean",
+      "axe": []
+    },
+    {
+      "width": 820,
+      "theme": "dark",
+      "axe": []
+    },
+    {
+      "width": 820,
+      "theme": "light",
+      "axe": []
+    },
+    {
+      "width": 820,
+      "theme": "arcade",
+      "axe": []
+    },
+    {
+      "width": 820,
+      "theme": "ocean",
+      "axe": []
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "axe": []
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "axe": []
+    },
+    {
+      "width": 1440,
+      "theme": "arcade",
+      "axe": []
+    },
+    {
+      "width": 1440,
+      "theme": "ocean",
+      "axe": []
+    },
+    {
+      "guidance": "Focus advances to business controls after travel; contract jump focuses public orders"
+    },
+    {
+      "motion": "8 waypoint finite clockwise motion, changed position, no restart on unchanged-position business action",
+      "duration": 1100
+    },
+    {
+      "motion": "Reduced motion has no token travel animation"
+    },
+    {
+      "crowded": [
+        {
+          "number": "1",
+          "x": 105.34375,
+          "y": 165.859375,
+          "width": 24,
+          "height": 24
+        },
+        {
+          "number": "2",
+          "x": 236.953125,
+          "y": 354.53125,
+          "width": 24,
+          "height": 24
+        },
+        {
+          "number": "3",
+          "x": 131.34375,
+          "y": 165.859375,
+          "width": 24,
+          "height": 24
+        },
+        {
+          "number": "4",
+          "x": 105.34375,
+          "y": 191.859375,
+          "width": 24,
+          "height": 24
+        }
+      ]
+    },
+    {
+      "motion": "Interrupted move settles after reset with no running travel"
+    },
+    {
+      "outcome": "Fixture final winner and point-source breakdown visible"
+    }
+  ],
+  "errors": []
+}

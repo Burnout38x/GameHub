@@ -1,0 +1,80 @@
+{
+  "scope": "Author-run visual simulation. In-browser reducer; no room HTTP or database evidence.",
+  "evidence": [
+    {
+      "width": 320,
+      "motion": [
+        {
+          "playState": "running",
+          "duration": 1100,
+          "keyframes": 8
+        }
+      ],
+      "turnFocus": {
+        "label": "Turn actions",
+        "top": 15.578125
+      },
+      "contractFocus": "Public district contracts",
+      "reducedMotionAnimations": {
+        "reduced": true,
+        "animations": []
+      },
+      "crowded": {
+        "count": 4,
+        "overlap": false
+      },
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "motion": [
+        {
+          "playState": "running",
+          "duration": 1100,
+          "keyframes": 8
+        }
+      ],
+      "turnFocus": {
+        "label": "Turn actions",
+        "top": 16.015625
+      },
+      "contractFocus": "Public district contracts",
+      "reducedMotionAnimations": {
+        "reduced": true,
+        "animations": []
+      },
+      "crowded": {
+        "count": 4,
+        "overlap": false
+      },
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "motion": [
+        {
+          "playState": "running",
+          "duration": 1100,
+          "keyframes": 8
+        }
+      ],
+      "turnFocus": {
+        "label": "Turn actions",
+        "top": 42.5
+      },
+      "contractFocus": "Public district contracts",
+      "reducedMotionAnimations": {
+        "reduced": true,
+        "animations": []
+      },
+      "crowded": {
+        "count": 4,
+        "overlap": false
+      },
+      "errors": [],
+      "overflow": false
+    }
+  ]
+}

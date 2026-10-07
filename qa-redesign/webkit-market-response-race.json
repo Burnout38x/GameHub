@@ -1,0 +1,61 @@
+{
+  "completed": false,
+  "checks": [
+    {
+      "width": 390,
+      "reducedMotion": false,
+      "motion": [
+        {
+          "duration": 1100,
+          "frames": 8
+        }
+      ],
+      "axe": 0,
+      "overflow": false,
+      "focus": true
+    }
+  ],
+  "errors": [
+    "/127.0.0.1:3199/api/social due to access control checks.",
+    "/127.0.0.1:3199/api/social due to access control checks."
+  ],
+  "cleanup": [
+    {
+      "kind": "room",
+      "id": "464b6738-fa24-40e9-9470-6f1b55e2d0fc",
+      "deleted": true
+    },
+    {
+      "kind": "user",
+      "id": "f36e9bd6-bcff-4d5e-979c-4ede19c81c14",
+      "deleted": true
+    },
+    {
+      "kind": "user",
+      "id": "cc469a63-26b9-4cb8-a453-3e5e379ec567",
+      "deleted": true
+    }
+  ],
+  "turnDiagnostic": {
+    "turn": 1,
+    "serverPhase": "trade",
+    "serverVersion": 2,
+    "actorIndex": 0,
+    "visibility": "visible",
+    "headings": [
+      "Market Day",
+      "The neighborhood",
+      "wkqa1_1791372539632’s turn",
+      "Public contracts"
+    ],
+    "buttons": [
+      "☀Bright",
+      "Visit Sunrise district.",
+      "Own a Palm stall.",
+      "Visit Lantern district.",
+      "Leave room 🚪"
+    ]
+  },
+  "failure": "locator.waitFor: Timeout 12000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('region', { name: 'Market board' }).getByRole('button').first() to be visible\u001b[22m\n",
+  "cleanupVerified": true
+}

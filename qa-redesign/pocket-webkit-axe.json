@@ -1,0 +1,82 @@
+[
+  {
+    "width": 320,
+    "theme": "dark",
+    "violations": []
+  },
+  {
+    "width": 320,
+    "theme": "light",
+    "violations": []
+  },
+  {
+    "width": 320,
+    "theme": "arcade",
+    "violations": []
+  },
+  {
+    "width": 320,
+    "theme": "ocean",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "arcade",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "ocean",
+    "violations": []
+  },
+  {
+    "width": 820,
+    "theme": "dark",
+    "violations": []
+  },
+  {
+    "width": 820,
+    "theme": "light",
+    "violations": []
+  },
+  {
+    "width": 820,
+    "theme": "arcade",
+    "violations": []
+  },
+  {
+    "width": 820,
+    "theme": "ocean",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "arcade",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "ocean",
+    "violations": []
+  }
+]

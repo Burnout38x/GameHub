@@ -103,8 +103,11 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
   const inRoom = bundle.players.some((p) => p.profile_id === userId);
 
   const connectionNotice = error ? <div role="alert" className="glass-sm mx-auto mb-4 max-w-xl p-4 text-sm text-red-200">{error}<button className="btn-secondary mt-3 !py-2" onClick={() => void load()}>Retry connection</button></div> : null;
+  if (room.status === 'finished' && room.round_state?.closedReason) return <div className="glass mx-auto max-w-xl p-6" role="status">This match has closed. No results were awarded. <Link href="/games" className="btn-secondary mt-4">Back to games</Link></div>;
   if (room.status === 'lobby') return <>{connectionNotice}<Lobby {...full} code={code} inRoom={inRoom} /></>;
-  if (room.status === 'finished') return <>{connectionNotice}<EndScreen {...full} /></>;
+  if (room.status === 'finished') return game.type === 'market'
+    ? <div className="mx-auto flex w-full max-w-6xl flex-col gap-4">{connectionNotice}<MarketPlay {...full} /><EndScreen {...full} controlsOnly /></div>
+    : <>{connectionNotice}<EndScreen {...full} /></>;
 
   if (!inRoom)
     return (
@@ -115,7 +118,7 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
     );
 
   return (
-    <div className={`mx-auto flex w-full ${game.type === 'market' ? 'max-w-5xl' : 'max-w-xl'} flex-col gap-4`}>
+    <div className={`mx-auto flex w-full ${game.type === 'market' ? 'max-w-6xl' : 'max-w-xl'} flex-col gap-4`}>
       {connectionNotice}
       {game.type !== 'market' && <Scoreboard {...full} />}
       {game.type === 'quiz' && <QuizPlay key={`${room.id}-${room.current_round}`} {...full} />}

@@ -1,0 +1,106 @@
+{
+  "scope": "Real local HTTP, browser cookie authentication and isolated database integration",
+  "app": "http://127.0.0.1:3199",
+  "database": "http://127.0.0.1:58321",
+  "completed": true,
+  "fixtureRegistry": {
+    "users": [
+      "13a0945f-a267-4854-bc6c-7a7f1960f97d",
+      "8b80f678-097a-40e4-b7b3-c655369d3ffe",
+      "402d9d41-8975-4ae1-ae64-4c4bbfda25e6",
+      "9d300990-264d-4c93-8834-b08a48307e5d",
+      "671a002b-0273-4e0a-a1dd-553684b34a82"
+    ],
+    "rooms": [
+      "c6a23718-b821-4f52-ba67-8593abd907e8",
+      "24830023-a552-4842-ad2d-ac5b9dffa438",
+      "8287c47f-826c-48b3-b7e3-5f21a949b68c",
+      "828255f0-e34a-4878-a315-5338687c3f53"
+    ]
+  },
+  "checks": [
+    {
+      "name": "2P duplicate move fenced; both real polling clients converge"
+    },
+    {
+      "name": "2P full real match: equal ten turns, server state/scores/winners/history agree",
+      "turns": 20,
+      "claims": 4
+    },
+    {
+      "name": "2P persisted final screen and host/non-host rematch route"
+    },
+    {
+      "name": "4P duplicate move fenced; both real polling clients converge"
+    },
+    {
+      "name": "4P full real match: equal ten turns, server state/scores/winners/history agree",
+      "turns": 40,
+      "claims": 11
+    },
+    {
+      "name": "4P persisted final screen and host/non-host rematch route"
+    },
+    {
+      "name": "Persisted v2 contracts, stock depletion and set scoring observed",
+      "claims": 11,
+      "setStates": 12,
+      "deniedRestocks": 2
+    },
+    {
+      "name": "Pocket v2 server replay ignores forged score, concurrent retry idempotent, unsupported rules rejected, legacy same-seed separate"
+    },
+    {
+      "name": "Anonymous and authenticated direct result RPCs denied"
+    }
+  ],
+  "failures": [],
+  "cleanup": [
+    {
+      "kind": "room",
+      "id": "c6a23718-b821-4f52-ba67-8593abd907e8",
+      "deleted": true
+    },
+    {
+      "kind": "room",
+      "id": "24830023-a552-4842-ad2d-ac5b9dffa438",
+      "deleted": true
+    },
+    {
+      "kind": "room",
+      "id": "8287c47f-826c-48b3-b7e3-5f21a949b68c",
+      "deleted": true
+    },
+    {
+      "kind": "room",
+      "id": "828255f0-e34a-4878-a315-5338687c3f53",
+      "deleted": true
+    },
+    {
+      "kind": "user",
+      "id": "13a0945f-a267-4854-bc6c-7a7f1960f97d",
+      "deleted": true
+    },
+    {
+      "kind": "user",
+      "id": "8b80f678-097a-40e4-b7b3-c655369d3ffe",
+      "deleted": true
+    },
+    {
+      "kind": "user",
+      "id": "402d9d41-8975-4ae1-ae64-4c4bbfda25e6",
+      "deleted": true
+    },
+    {
+      "kind": "user",
+      "id": "9d300990-264d-4c93-8834-b08a48307e5d",
+      "deleted": true
+    },
+    {
+      "kind": "user",
+      "id": "671a002b-0273-4e0a-a1dd-553684b34a82",
+      "deleted": true
+    }
+  ],
+  "cleanupVerified": true
+}

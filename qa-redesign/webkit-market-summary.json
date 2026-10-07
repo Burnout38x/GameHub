@@ -1,0 +1,79 @@
+{
+  "completed": true,
+  "checks": [
+    {
+      "width": 390,
+      "reducedMotion": false,
+      "motion": [
+        {
+          "duration": 900,
+          "frames": 6
+        }
+      ],
+      "axe": 0,
+      "overflow": false,
+      "focus": true
+    },
+    {
+      "width": 320,
+      "reducedMotion": false,
+      "motion": [
+        {
+          "duration": 900,
+          "frames": 6
+        }
+      ],
+      "axe": 0,
+      "overflow": false,
+      "focus": true
+    },
+    {
+      "width": 1440,
+      "reducedMotion": false,
+      "motion": [
+        {
+          "duration": 680,
+          "frames": 4
+        }
+      ],
+      "axe": 0,
+      "overflow": false,
+      "focus": true
+    },
+    {
+      "width": 390,
+      "reducedMotion": true,
+      "motion": [],
+      "axe": 0,
+      "overflow": false,
+      "focus": true
+    }
+  ],
+  "errors": [
+    "/127.0.0.1:3199/api/social due to access control checks.",
+    "/127.0.0.1:3199/api/social due to access control checks."
+  ],
+  "cleanup": [
+    {
+      "kind": "room",
+      "id": "e548c0da-8f49-4e13-89cb-e7e1bc1c9b15",
+      "deleted": true
+    },
+    {
+      "kind": "user",
+      "id": "b6bb1fbd-f771-4af8-b54c-110218a7de9d",
+      "deleted": true
+    },
+    {
+      "kind": "user",
+      "id": "d69a10ef-746a-469f-aab9-f82119012272",
+      "deleted": true
+    }
+  ],
+  "navigationNoise": [
+    "/127.0.0.1:3199/api/social due to access control checks.",
+    "/127.0.0.1:3199/api/social due to access control checks."
+  ],
+  "gameErrors": [],
+  "cleanupVerified": true
+}

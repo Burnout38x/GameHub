@@ -1,0 +1,41 @@
+{
+  "completed": false,
+  "checks": [
+    {
+      "width": 390,
+      "reducedMotion": false,
+      "motion": [
+        {
+          "duration": 900,
+          "frames": 6
+        }
+      ],
+      "axe": 0,
+      "overflow": false,
+      "focus": true
+    }
+  ],
+  "errors": [
+    "/127.0.0.1:3199/api/social due to access control checks.",
+    "/127.0.0.1:3199/api/social due to access control checks."
+  ],
+  "cleanup": [
+    {
+      "kind": "room",
+      "id": "3ce68914-bf5c-4780-93c4-0f15cee8cc65",
+      "deleted": true
+    },
+    {
+      "kind": "user",
+      "id": "056a91a6-3c1e-444e-9bbe-f38bfc165af8",
+      "deleted": true
+    },
+    {
+      "kind": "user",
+      "id": "22139e3b-4c0b-4539-b787-cf937225fb72",
+      "deleted": true
+    }
+  ],
+  "failure": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('region', { name: 'Market board' }).getByRole('button').first() to be visible\u001b[22m\n",
+  "cleanupVerified": true
+}

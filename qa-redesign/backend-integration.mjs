@@ -1,0 +1,76 @@
+import {chromium} from 'playwright-core';
+import {createClient} from '@supabase/supabase-js';
+import {readFileSync,writeFileSync} from 'node:fs';
+import assert from 'node:assert/strict';
+import {createMarketDay,applyMarketDay,marketDestinations,marketScores,marketOutcome,MARKET_BOARD} from '../src/lib/market-day.ts';
+import {replayPocketRun,scorePocketBoard} from '../src/lib/pocket-paradise.ts';
+
+// Hard-coded disposable targets. This file must never target production.
+const app='http://127.0.0.1:3199';
+const env=Object.fromEntries([...readFileSync('/private/tmp/gamehub-codex-audit-20261006/local.env','utf8').matchAll(/^([A-Z_]+)="(.*)"$/gm)].map(m=>[m[1],m[2]]));
+assert.equal(env.API_URL,'http://127.0.0.1:58321');assert.ok(env.SERVICE_ROLE_KEY);assert.ok(env.ANON_KEY);
+const authOptions={auth:{persistSession:false,autoRefreshToken:false}};
+const admin=createClient(env.API_URL,env.SERVICE_ROLE_KEY,authOptions);
+const createdUsers=[],createdRooms=[],checks=[],failures=[],cleanup=[];
+const report={scope:'Real local HTTP, browser cookie authentication and isolated database integration',app,database:env.API_URL,completed:false,fixtureRegistry:{users:createdUsers,rooms:createdRooms},checks,failures,cleanup};
+const save=()=>writeFileSync('qa-redesign/backend-summary.json',JSON.stringify(report,null,2)+'\n');
+const mark=(name,data={})=>{checks.push({name,...data});save();console.log('PASS '+name);};
+let browser;
+async function person(i){const username=`rdqa${i}_${Date.now()}`,password=crypto.randomUUID()+'Aa1!',email=username+'@example.test';const r=await admin.auth.admin.createUser({email,password,email_confirm:true,user_metadata:{username}});assert.ifError(r.error);const id=r.data.user.id;createdUsers.push(id);save();const context=await browser.newContext({viewport:{width:390,height:844}});const page=await context.newPage();await page.goto(app+'/login');await page.getByLabel('Email',{exact:true}).fill(email);await page.getByLabel('Password',{exact:true}).fill(password);await page.getByRole('button',{name:'Log in',exact:true}).click();await page.waitForURL('**/games');const client=createClient(env.API_URL,env.ANON_KEY,authOptions);assert.ifError((await client.auth.signInWithPassword({email,password})).error);return{id,page,context,client};}
+const post=(p,path,data,headers={})=>p.page.request.post(app+path,{data:Buffer.from(typeof data==='string'?data:JSON.stringify(data)),headers:{'Content-Type':'application/json',...headers}});
+async function ok(p,path,data){const r=await post(p,path,data);assert.equal(r.status(),200,`${path} ${await r.text()}`);return r.json();}
+async function snap(p,code){const r=await p.page.request.get(`${app}/api/rooms/${code}`);assert.equal(r.status(),200);return r.json();}
+async function trackRoom(code){const r=await admin.from('rooms').select('id').eq('code',code).single();assert.ifError(r.error);createdRooms.push(r.data.id);save();return r.data.id;}
+async function create(p,gameId){const {code}=await ok(p,'/api/rooms',{gameId,totalRounds:1});await trackRoom(code);return code;}
+function persistedScore(s,id){const p=s.players.find(p=>p.id===id);const counts=[0,0,0];let property=0;for(let i=0;i<12;i++)if(s.stalls[i].ownerId===id){counts[i%3]++;property+=s.stalls[i].level*2;}return p.reputation+p.commissions*3+property+Math.min(10,Math.floor(p.cash/3))+(s.rulesVersion===2?counts.reduce((sum,n)=>sum+[0,0,3,7,12][n],0):0);}
+function verifyScores(b){for(const p of b.players)assert.equal(p.score,persistedScore(b.room.round_state,p.profile_id));}
+async function pollConverged(p,code,version){await p.page.waitForResponse(async r=>{if(new URL(r.url()).pathname!==`/api/rooms/${code}`||r.status()!==200)return false;try{return(await r.json()).room.round_state.version>=version;}catch{return false;}},{timeout:15000});const b=await snap(p,code);await p.page.getByText(`${persistedScore(b.room.round_state,p.id)} prosperity`,{exact:true}).first().waitFor();}
+function businessCandidates(state){const id=state.players[state.turnIndex].id;const commands=['buy','upgrade','supplies','bank','pass'].map(type=>({type}));for(const c of state.contracts??[])commands.push({type:'commission',contractId:c.id});return commands.flatMap(c=>{try{const next=applyMarketDay(state,id,{...c,expectedVersion:state.version});return[{command:c,next}];}catch{return[];}});}
+function chooseTurn(s){const id=s.players[s.turnIndex].id;const p=s.players[s.turnIndex];const options=[];for(const destination of marketDestinations(s)){const moved=applyMarketDay(s,id,{type:'move',destination,expectedVersion:s.version});for(const o of businessCandidates(moved)){const d=persistedScore(o.next,id)-persistedScore(s,id);const count=o.next.stalls.filter(x=>x.ownerId===id).length;let weight=d+o.next.players[s.turnIndex].cash*.02;if(o.command.type==='commission')weight+=25;if(o.command.type==='buy')weight+=8+(10-s.round)*.3;if(o.command.type==='supplies'&&p.supplies<3&&count)weight+=9;if(o.command.type==='upgrade'&&p.supplies>0&&s.round>=5)weight+=2;options.push({...o,destination,weight});}}return options.sort((a,b)=>b.weight-a.weight)[0];}
+try{
+ // Health fails before creating any fixtures when local services are not ready.
+ const health=await fetch(env.API_URL+'/auth/v1/health',{headers:{apikey:env.ANON_KEY}});assert.equal(health.status,200);
+ browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
+ const people=[];for(let i=0;i<5;i++)people.push(await person(i));const[a,b,c,d,outsider]=people;
+ const catalog=await admin.from('games').select('id,slug,is_active').in('slug',['market-day','pocket-paradise']);assert.ifError(catalog.error);assert.equal(catalog.data.length,2);assert.ok(catalog.data.every(g=>g.is_active),'Root must enable only isolated local catalog fixtures first');const game=catalog.data.find(g=>g.slug==='market-day');
+ const anon={page:await(await browser.newContext()).newPage()};
+ let aggregate={claims:0,setStates:0,deniedRestocks:0};
+ for(const count of [2,4]){
+  const members=people.slice(0,count);const code=await create(a,game.id);for(const p of members.slice(1))await ok(p,`/api/rooms/${code}/join`,{});await ok(a,`/api/rooms/${code}/start`,{});let bundle=await snap(a,code);let s=bundle.room.round_state;assert.equal(s.rulesVersion,2);assert.equal(bundle.room.total_rounds,10);const path=`/api/rooms/${code}/market`;const turns=Object.fromEntries(members.map(p=>[p.id,0]));
+  assert.equal((await post(anon,path,{type:'move',expectedVersion:s.version,destination:marketDestinations(s)[0]})).status(),401);
+  assert.equal((await post(outsider,path,{type:'move',expectedVersion:s.version,destination:marketDestinations(s)[0]})).status(),403);
+  assert.equal((await post(members[1],path,{type:'move',expectedVersion:s.version,destination:marketDestinations(s)[0]})).status(),409);
+  assert.equal((await post(a,path,{type:'move',expectedVersion:s.version,destination:marketDestinations(s)[0]},{Origin:'https://untrusted.example'})).status(),403);
+  await Promise.all(members.slice(0,2).map(async p=>{await p.page.goto(`${app}/room/${code}`);await p.page.getByRole('heading',{name:'Market Day',exact:true}).waitFor();}));
+  let tradeTested=false,reloaded=false,firstMove=true;
+  while(bundle.room.status==='playing'){
+   s=bundle.room.round_state;const id=s.players[s.turnIndex].id,actor=members.find(p=>p.id===id);assert.equal(s.phase,'move');turns[id]++;
+   const choice=chooseTurn(s),move={type:'move',destination:choice.destination,expectedVersion:s.version};const moved=applyMarketDay(s,id,move);
+   if(firstMove){const response=await Promise.all([post(actor,path,move),post(actor,path,move)]);assert.deepEqual(response.map(r=>r.status()).sort(),[200,409]);firstMove=false;await Promise.all(members.slice(0,2).map(p=>pollConverged(p,code,moved.version)));mark(`${count}P duplicate move fenced; both real polling clients converge`);}else await ok(actor,path,move);
+   bundle=await snap(a,code);assert.deepEqual(bundle.room.round_state,moved);verifyScores(bundle);s=moved;
+   let action=choice.command;
+   if(s.round===1){action=s.roundTurn<count-1?{type:'supplies'}:{type:'pass'};if(s.roundTurn===count-1){assert.equal(s.supplyStock,0);assert.equal((await post(actor,path,{type:'supplies',expectedVersion:s.version})).status(),409);assert.deepEqual((await snap(a,code)).room.round_state,s);aggregate.deniedRestocks++;}}
+   const afterBusiness=applyMarketDay(s,id,{...action,expectedVersion:s.version});await ok(actor,path,{...action,expectedVersion:s.version});bundle=await snap(a,code);assert.deepEqual(bundle.room.round_state,afterBusiness);verifyScores(bundle);if(action.type==='commission'){aggregate.claims++;const claimed=bundle.room.round_state.contracts.find(x=>x.id===action.contractId);assert.equal(claimed.claimedBy,id);}
+   if(bundle.players.some(p=>{const counts=[0,0,0];s.stalls.forEach((x,i)=>{if(x.ownerId===p.profile_id)counts[i%3]++;});return counts.some(n=>n>=2);})){aggregate.setStates++;}
+   s=afterBusiness;
+   if(!tradeTested){const target=members.find(p=>p.id!==id);const offer={type:'offer',toId:target.id,give:{cash:1,supplies:0,stall:null},receive:{cash:0,supplies:1,stall:null}};await ok(actor,path,{...offer,expectedVersion:s.version});const offered=applyMarketDay(s,id,{...offer,expectedVersion:s.version});const accept={type:'accept',expectedVersion:offered.version};const accepted=applyMarketDay(offered,target.id,accept);const response=await Promise.all([post(target,path,accept),post(target,path,accept)]);assert.deepEqual(response.map(r=>r.status()).sort(),[200,409]);bundle=await snap(a,code);assert.deepEqual(bundle.room.round_state,accepted);tradeTested=true;}else{const end={type:'end',expectedVersion:s.version};const expected=applyMarketDay(s,id,end);if(s.round===10&&s.roundTurn===count-1){const response=await Promise.all([post(actor,path,end),post(actor,path,end)]);assert.deepEqual(response.map(r=>r.status()).sort(),[200,409]);}else await ok(actor,path,end);bundle=await snap(a,code);assert.deepEqual(bundle.room.round_state,expected);}
+   verifyScores(bundle);if(bundle.room.round_state.round>=3&&!reloaded){await b.page.reload();await b.page.getByRole('heading',{name:'Market Day',exact:true}).waitFor();await pollConverged(b,code,bundle.room.round_state.version);reloaded=true;}
+   assert.ok(Object.values(turns).every(n=>n<=10));
+  }
+  assert.deepEqual(Object.values(turns),Array(count).fill(10));s=bundle.room.round_state;assert.deepEqual([...bundle.room.winner_ids].sort(),marketOutcome(s).winnerIds.sort());const history=await admin.from('match_history').select('profile_id,score,won').eq('room_id',bundle.room.id);assert.ifError(history.error);assert.equal(history.data.length,count);for(const row of history.data){assert.equal(row.score,persistedScore(s,row.profile_id));assert.equal(row.won,bundle.room.winner_ids.includes(row.profile_id));}await Promise.all(members.slice(0,2).map(async p=>{await p.page.reload();await p.page.getByRole('region',{name:'Final market outcome'}).waitFor();}));mark(`${count}P full real match: equal ten turns, server state/scores/winners/history agree`,{turns:count*10,claims:aggregate.claims});
+  await a.page.getByRole('button',{name:'🔁 Rematch (new room)'}).click();await a.page.waitForURL(u=>u.pathname.startsWith('/room/')&&!u.pathname.endsWith(code));const rematchCode=a.page.url().split('/').at(-1);await trackRoom(rematchCode);const rematch=await snap(a,rematchCode);assert.equal(rematch.room.status,'lobby');assert.equal(rematch.room.host_id,a.id);await b.page.reload();await b.page.getByRole('link',{name:/Host started a rematch/}).waitFor();mark(`${count}P persisted final screen and host/non-host rematch route`);
+ }
+ assert.ok(aggregate.claims>0,'Full sessions must actually fulfill public contracts');assert.ok(aggregate.setStates>0,'Full sessions must actually build a district set');assert.equal(aggregate.deniedRestocks,2);mark('Persisted v2 contracts, stock depletion and set scoring observed',aggregate);
+ const moves=JSON.parse(readFileSync('qa-redesign/pocket-winning-fixture.json','utf8')).moves;const seed=JSON.parse(readFileSync('qa-redesign/pocket-winning-fixture.json','utf8')).seed;const base={seed,mode:'standard',moves,rulesVersion:2};const expected=scorePocketBoard(replayPocketRun(seed,'standard',moves,2).board,seed,2).total;
+ assert.equal((await post(anon,'/api/pocket-paradise',base)).status(),401);for(const rulesVersion of [null,0,3,'2',{},false])assert.equal((await post(a,'/api/pocket-paradise',{...base,rulesVersion})).status(),400);
+ const duplicated=await Promise.all([post(a,'/api/pocket-paradise',{...base,score:9999}),post(a,'/api/pocket-paradise',base)]);assert.ok(duplicated.every(r=>r.status()===200));const payloads=await Promise.all(duplicated.map(r=>r.json()));assert.deepEqual(payloads.map(p=>p.recorded).sort(),[false,true]);assert.ok(payloads.every(p=>p.score===expected));
+ const legacy=await ok(a,'/api/pocket-paradise',{seed,mode:'standard',moves});const legacyScore=scorePocketBoard(replayPocketRun(seed,'standard',moves,1).board,seed,1).total;assert.equal(legacy.score,legacyScore);assert.equal(legacy.recorded,true);const ledger=await admin.from('pocket_completions').select('seed,score').eq('profile_id',a.id);assert.ifError(ledger.error);assert.deepEqual(ledger.data.sort((a,b)=>a.seed.localeCompare(b.seed)),[{seed,score:legacyScore},{seed:'v2:'+seed,score:expected}].sort((a,b)=>a.seed.localeCompare(b.seed)));assert.equal((await post(a,'/api/pocket-paradise',{...base,moves:moves.map(()=>({cell:0,offer:0}))})).status(),400);const account=await admin.from('profiles').select('games_played').eq('id',a.id).single();assert.ifError(account.error);assert.equal(account.data.games_played,4);const pocketHistory=await admin.from('match_history').select('score,won').eq('profile_id',a.id).eq('game_id',catalog.data.find(g=>g.slug==='pocket-paradise').id);assert.ifError(pocketHistory.error);assert.equal(pocketHistory.data.length,2);assert.ok(pocketHistory.data.every(h=>h.won===false));mark('Pocket v2 server replay ignores forged score, concurrent retry idempotent, unsupported rules rejected, legacy same-seed separate');
+ for(const client of [createClient(env.API_URL,env.ANON_KEY,authOptions),a.client]){const r=await client.rpc('commit_market_turn',{target_room_id:createdRooms[0],expected_version:0,next_state:{},scores:{}});assert.equal(r.error?.code,'42501');const p=await client.rpc('record_pocket_completion',{actor_id:a.id,run_seed:'forged',run_mode:'standard',verified_score:999});assert.equal(p.error?.code,'42501');}mark('Anonymous and authenticated direct result RPCs denied');
+ report.completed=true;
+}catch(error){failures.push({message:error.message});throw error;}finally{
+ if(browser)await browser.close();
+ // Exact recorded IDs only; do not touch shared fixtures or production data.
+ for(const id of createdRooms){const r=await admin.from('rooms').delete().eq('id',id);cleanup.push({kind:'room',id,deleted:!r.error});if(r.error)failures.push({message:'Room fixture cleanup failed',id});}
+ for(const id of createdUsers){const r=await admin.auth.admin.deleteUser(id);cleanup.push({kind:'user',id,deleted:!r.error});if(r.error)failures.push({message:'User fixture cleanup failed',id});}
+ save();
+}

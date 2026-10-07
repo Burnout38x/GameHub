@@ -52,6 +52,11 @@ export default function Lobby(props: RoomBundle & { code: string; inRoom: boolea
         <p className="text-xs font-bold uppercase tracking-widest text-indigo-200">Game night starts here</p>
         <h1 id="lobby-title" className="mt-3 text-3xl font-black tracking-tight">{game.emoji} {game.name}</h1>
         <p className="mt-2 text-sm text-white/65">{game.description}</p>
+        {game.type === 'market' && <div className="glass-sm mt-4 p-4 text-left">
+          <h2 className="font-bold">Your goal: finish with the most prosperity</h2>
+          <p className="mt-2 text-sm text-white/70">Buy businesses, build district sets and fulfill shared contracts before your rivals. Trade to complete a set or secure supplies. Everyone gets ten turns; equal final scores share the win.</p>
+          <p className="mt-2 text-xs text-white/60">Each turn: choose a route, take one business action, then trade or finish. First player rotates each round. Nobody is eliminated.</p>
+        </div>}
         <div className="mt-4 flex flex-wrap justify-center gap-2 text-xs">
           <span className="pill">{room.total_rounds} {countLabel}</span>
           <span className="pill">{room.is_public ? 'Public room' : 'Private room'}</span>

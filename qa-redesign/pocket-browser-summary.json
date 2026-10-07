@@ -1,0 +1,117 @@
+{
+  "marks": [
+    {
+      "name": "Keyboard preview/cancel preserves history"
+    },
+    {
+      "name": "All twenty placements through UI; failure explains blocked gate"
+    },
+    {
+      "name": "19-move legal fixture plus keyboard final move earns gold"
+    },
+    {
+      "name": "Earned postcard and completed-save reload"
+    },
+    {
+      "name": "Exact challenge retry preserves seed"
+    },
+    {
+      "axeViolationCounts": [
+        {
+          "width": 320,
+          "theme": "dark",
+          "count": 0
+        },
+        {
+          "width": 320,
+          "theme": "light",
+          "count": 0
+        },
+        {
+          "width": 320,
+          "theme": "arcade",
+          "count": 0
+        },
+        {
+          "width": 320,
+          "theme": "ocean",
+          "count": 0
+        },
+        {
+          "width": 390,
+          "theme": "dark",
+          "count": 0
+        },
+        {
+          "width": 390,
+          "theme": "light",
+          "count": 0
+        },
+        {
+          "width": 390,
+          "theme": "arcade",
+          "count": 0
+        },
+        {
+          "width": 390,
+          "theme": "ocean",
+          "count": 0
+        },
+        {
+          "width": 820,
+          "theme": "dark",
+          "count": 0
+        },
+        {
+          "width": 820,
+          "theme": "light",
+          "count": 0
+        },
+        {
+          "width": 820,
+          "theme": "arcade",
+          "count": 0
+        },
+        {
+          "width": 820,
+          "theme": "ocean",
+          "count": 0
+        },
+        {
+          "width": 1440,
+          "theme": "dark",
+          "count": 0
+        },
+        {
+          "width": 1440,
+          "theme": "light",
+          "count": 0
+        },
+        {
+          "width": 1440,
+          "theme": "arcade",
+          "count": 0
+        },
+        {
+          "width": 1440,
+          "theme": "ocean",
+          "count": 0
+        }
+      ],
+      "name": "16 viewport/theme overflow checks"
+    },
+    {
+      "name": "Reduced motion disables committed construction"
+    },
+    {
+      "duration": "0.38s",
+      "name": "Construction finite, no game animations running after settle",
+      "iterations": "1"
+    },
+    {
+      "name": "200% CSS zoom no page overflow"
+    }
+  ],
+  "errors": [],
+  "backend": "Offline; account/API flow not tested"
+}

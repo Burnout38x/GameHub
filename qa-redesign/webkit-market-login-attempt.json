@@ -1,0 +1,14 @@
+{
+  "completed": false,
+  "checks": [],
+  "errors": [],
+  "cleanup": [
+    {
+      "kind": "user",
+      "id": "67c64a95-4b07-4943-94db-bf08f7f73843",
+      "deleted": true
+    }
+  ],
+  "failure": "page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/games\" until \"load\"\n============================================================",
+  "cleanupVerified": true
+}

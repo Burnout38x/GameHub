@@ -1,0 +1,86 @@
+{
+  "rulesVersion": 2,
+  "seed": "independent-0",
+  "moves": [
+    {
+      "cell": 19,
+      "offer": 1
+    },
+    {
+      "cell": 12,
+      "offer": 2
+    },
+    {
+      "cell": 11,
+      "offer": 2
+    },
+    {
+      "cell": 18,
+      "offer": 0
+    },
+    {
+      "cell": 17,
+      "offer": 0
+    },
+    {
+      "cell": 8,
+      "offer": 2
+    },
+    {
+      "cell": 16,
+      "offer": 0
+    },
+    {
+      "cell": 15,
+      "offer": 2
+    },
+    {
+      "cell": 14,
+      "offer": 0
+    },
+    {
+      "cell": 2,
+      "offer": 1
+    },
+    {
+      "cell": 5,
+      "offer": 2
+    },
+    {
+      "cell": 6,
+      "offer": 2
+    },
+    {
+      "cell": 10,
+      "offer": 0
+    },
+    {
+      "cell": 13,
+      "offer": 2
+    },
+    {
+      "cell": 3,
+      "offer": 0
+    },
+    {
+      "cell": 4,
+      "offer": 1
+    },
+    {
+      "cell": 7,
+      "offer": 0
+    },
+    {
+      "cell": 1,
+      "offer": 0
+    },
+    {
+      "cell": 9,
+      "offer": 2
+    },
+    {
+      "cell": 0,
+      "offer": 0
+    }
+  ]
+}

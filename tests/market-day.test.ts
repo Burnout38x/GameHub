@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { applyMarketDay, createMarketDay, marketDestinations, marketScores, MARKET_BOARD, type MarketState } from '../src/lib/market-day';
+import { applyMarketDay, createMarketDay as createMarket, marketDestinations, marketScores, MARKET_BOARD, type MarketState } from '../src/lib/market-day';
+// These regression fixtures preserve the original live-room rules. V2 has a separate suite.
+const createMarketDay = (ids: string[], seed = 1) => createMarket(ids, seed, 1);
 const command = (state: MarketState, type: string, extra: Record<string, unknown> = {}, actor = state.players[state.turnIndex].id) => applyMarketDay(state, actor, { expectedVersion: state.version, type, ...extra });
 function business(state = createMarketDay(['a', 'b'])) { return command(state, 'move', { destination: marketDestinations(state)[0] }); }
 function trade() { return command(business(), 'pass'); }

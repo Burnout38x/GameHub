@@ -1,14 +1,19 @@
-GOAL: Independently verify the complete new-game flows, multiplayer synchronization, UI and regressions with a synergy-qa subagent, fix findings, and release the verified games.
+GOAL: Rebuild Pocket Paradise and Market Day into coherent, satisfying games with meaningful logic, clear goals, rewards and win conditions, and convincing game presentation rather than subpar interfaces.
 
 DONE WHEN:
-  1. Independent requirements and traceable cases cover both games and affected existing flows. PASS (`cat qa-workspace/test-plan/traceability.md` -> 22 of 22 functional acceptance criteria have observed coverage; six technical NFRs assessed; human playtesting explicitly unmeasured.)
-  2. Independent execution, retests and coverage audit close release blockers. PASS (`cat qa-workspace/report/QA-REPORT.md` -> VERDICT: Confirmed. Seven findings independently closed; 98 tests passed; all eight existing multiplayer and eight local games completed; 35 final Market axe scans have zero violations.)
-  3. Both reports are ready for delivery and fixes are pushed and verified live. PASS (`cat qa-workspace/evidence/root-production-smoke.log` -> PASS 10 live library/solo checks, zero page errors; no production accounts, rooms or results created.)
+  1. A written design identifies the current weaknesses and defines each game loop, meaningful decisions, objective, reward, win/loss or success outcome and replay incentive; independent design review challenges it. — PASS (`node qa-redesign/verify-evidence.mjs design` → both designs and independent critique retained)
+  2. Both revised engines implement those rules with validated moves, balanced resource tradeoffs, explicit outcomes and compatible saved/room state handling; meaningful rule and strategy tests pass. — PASS (`node qa-redesign/verify-evidence.mjs rules` → 7 independent engine groups, 114 unit tests, 100 distinct offers)
+  3. Both game UIs communicate goals, consequences, progress and final outcomes through polished responsive board presentation, contextual controls and purposeful motion; browser playthroughs and visual inspection cover mobile and desktop. — PASS (`node qa-redesign/verify-evidence.mjs ui` → Chromium/WebKit flows, 22 Market visual checks, 10 full-page checks)
+  4. Independent review verifies full game flows, multiplayer synchronization, authorization and affected regressions; findings are fixed and retested. — PASS (`node qa-redesign/verify-evidence.mjs integration` → real 2P/4P completion, concurrency, persistence, compatibility and verified cleanup)
+  5. Verified changes, design notes and progress logs are committed and pushed, and production deployment is checked after acceptance. — NOT CHECKED (accepted locally; push and deployment next)
 
-OUT: Physical-device certification, human fun/balance studies and production gameplay mutations.
-RISK: Local disposable tests only; public production smoke uses local practice without recorded results.
+OUT: Unrelated game redesigns; paid prizes; destructive production data edits.
+RISK: Reversible source changes. Only authorized Supabase project jnzbncbmcewsvtjjmddn may be affected if additive compatibility requires it; existing players and saves must not be corrupted. Local isolated test accounts and rooms only.
 
-Independent reports: qa-workspace/report/QA-REPORT.md and qa-workspace/report/BUG-TRACE.md. Both delivered with clickable links in the final response. QA fixtures: 50 recorded IDs confirmed absent.
-Release code: 1f9dd093b0aed08bfb1c26ba3d97b01fa0593639 pushed to both authorized branches. Production deployment 6899565697 succeeded. Author-run live smoke supplements independent acceptance. No database change required for these QA fixes.
+PHASES: Diagnose and design; engines and presentation; independent playthrough/review; release.
+STATUS: Design, implementation and independent acceptance complete. Release pending. Prior QA established technical behavior; this acceptance also covers player motivation and strategic choices.
 
-Gate reruns only read-only local evidence commands. The original browser suites and network deployment checks ran separately and retain their evidence.
+AMENDED 2026-10-07: User requires fluid, lifelike movement without resource-heavy effects.
+  + DONE WHEN 6. Token travel, construction and reward feedback reflect real committed actions with bounded transform/opacity motion, reduced-motion support and no perpetual render loop; interrupted/reconnected states remain operable. — PASS (`node qa-redesign/verify-evidence.mjs motion` → bounded travel, reduced motion and no unchanged-poll restart verified)
+
+Evidence commands above revalidate retained artifacts, not new browser executions. Actual browser commands and test scope are in qa-redesign. Root final local release smoke passed 10 Chromium/WebKit viewport checks with full-page axe and one main landmark after the semantic correction.

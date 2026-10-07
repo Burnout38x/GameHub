@@ -40,8 +40,12 @@ try{
    if(turn===0){const rs=await Promise.all([post(actor,`/api/rooms/${code}/market`,cmd),post(actor,`/api/rooms/${code}/market`,cmd)]);assert.deepEqual(rs.map(r=>r.status()).sort(),[200,409]);mark('simultaneous duplicate move applies exactly once');}
    else assert((await post(actor,`/api/rooms/${code}/market`,cmd)).ok());
   }else if(s.phase==='business'){
-   const p=s.players[s.turnIndex],stall=s.stalls[p.position];const type=!stall.ownerId&&p.cash>=6?'buy':p.supplies>=3?'commission':p.cash>=3&&p.supplies<=9?'supplies':'pass';
-   assert((await post(actor,`/api/rooms/${code}/market`,{type,expectedVersion:s.version})).ok());
+   const p=s.players[s.turnIndex],stall=s.stalls[p.position];
+   const district=['Sunrise','Palm','Lantern'][p.position%3];
+   const owned=s.stalls.filter((v,i)=>v.ownerId===p.id&&i%3===p.position%3);
+   const contract=s.contracts?.find(c=>!c.claimedBy&&c.district===district&&owned.length&&(c.tier===1||owned.length>=2||owned.some(v=>v.level>=2))&&p.supplies>=c.supplies&&p.cash>=c.cash);
+   const type=contract?'commission':!stall.ownerId&&p.cash>=6?'buy':s.rulesVersion===2?(p.cash>=4&&p.supplies<=10&&s.supplyStock>=2?'supplies':'pass'):(p.supplies>=3?'commission':p.cash>=3&&p.supplies<=9?'supplies':'pass');
+   assert((await post(actor,`/api/rooms/${code}/market`,{type,contractId:contract?.id,expectedVersion:s.version})).ok());
   }else if(s.phase==='trade'){
    if(turn===0&&!s.offer){const target=people.find(p=>p.id!==actor.id);assert((await post(actor,`/api/rooms/${code}/market`,{type:'offer',expectedVersion:s.version,toId:target.id,give:{cash:1,supplies:0,stall:null},receive:{cash:0,supplies:1,stall:null}})).ok());}
    else if(s.offer){const target=people.find(p=>p.id===s.offer.toId);const cmd={type:'accept',expectedVersion:s.version};const rs=await Promise.all([post(target,`/api/rooms/${code}/market`,cmd),post(target,`/api/rooms/${code}/market`,cmd)]);assert.deepEqual(rs.map(r=>r.status()).sort(),[200,409]);turn++;mark('concurrent trade acceptance transfers assets once');}

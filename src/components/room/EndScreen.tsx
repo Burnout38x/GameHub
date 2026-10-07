@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { RoomBundle } from './RoomClient';
 
-export default function EndScreen({ room, game, players, userId }: RoomBundle) {
+export default function EndScreen({ room, game, players, userId, controlsOnly = false }: RoomBundle & { controlsOnly?: boolean }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -50,6 +50,7 @@ export default function EndScreen({ room, game, players, userId }: RoomBundle) {
   return (
     <div className="mx-auto mt-8 flex w-full max-w-xl flex-col gap-4 text-center">
       <div className="result-enter glass flex min-w-0 flex-col items-center gap-5 p-5 sm:p-8">
+        {!controlsOnly && <>
         <div aria-hidden="true" className="grid h-24 w-24 place-items-center rounded-[2rem] border border-white/15 text-5xl shadow-lg" style={{ background: 'linear-gradient(135deg, var(--surface), var(--surface-end))', boxShadow: 'inset 0 0 0 5px var(--surface), 0 10px 28px #00000015' }}>{solo ? '⭐' : winners.length > 1 ? '🤝' : '🏆'}</div>
         <div className="pill">{game.emoji} {game.name} · Complete</div>
         <h1 className="min-w-0 max-w-full text-3xl font-black sm:text-4xl leading-tight tracking-tight [overflow-wrap:anywhere]">{title}</h1>
@@ -73,6 +74,7 @@ export default function EndScreen({ room, game, players, userId }: RoomBundle) {
             })}
           </ol>
         </section>
+        </>}
         {error && <p role="alert" className="text-sm font-bold text-red-300">{error}</p>}
         {room.round_state?.nextRoomCode && !isHost && (
           <Link href={`/room/${room.round_state.nextRoomCode}`} className="btn">

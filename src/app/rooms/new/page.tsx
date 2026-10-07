@@ -120,7 +120,7 @@ function NewRoomForm() {
           ))}
         </select>
         {game && <p className="mt-2 text-sm text-white/65">{game.description}</p>}
-        {game && !isPredict && <p className="mt-2 text-xs text-indigo-200">{isMarket ? "For 2–4 players. Ten market days, no player elimination." : isRule || isChain ? "For 2–10 players. Invite someone to play before starting." : "Play solo or invite up to 9 more players."}</p>}
+        {game && !isPredict && <p className="mt-2 text-xs text-indigo-200">{isMarket ? "2–4 rivals. Build district sets and claim shared contracts. Highest prosperity after ten equal turns wins; ties share the victory." : isRule || isChain ? "For 2–10 players. Invite someone to play before starting." : "Play solo or invite up to 9 more players."}</p>}
         {isPredict && (
           <p className="mt-2 text-xs font-bold text-indigo-200">
             💞 For exactly 2 players — question count is evened out so you both get equal turns.
