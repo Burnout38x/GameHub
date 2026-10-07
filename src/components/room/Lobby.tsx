@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import type { RoomBundle } from './RoomClient';
-import { callRoomApi } from './RoomClient';
+import { callRoomApi } from '@/lib/room-api';
 import LeaveButton from './LeaveButton';
 import RoomFriendsInvite from '@/components/social/RoomFriendsInvite';
 
@@ -13,9 +13,9 @@ export default function Lobby(props: RoomBundle & { code: string; inRoom: boolea
   const [error, setError] = useState('');
   const [copyMessage, setCopyMessage] = useState('');
   const isPredict = game.type === 'predict';
-  const needsPartner = isPredict || game.type === 'rule' || game.type === 'chain';
+  const needsPartner = isPredict || game.type === 'market' || game.type === 'rule' || game.type === 'chain';
   const canStart = isPredict ? players.length === 2 : players.length >= (needsPartner ? 2 : 1);
-  const capacity = isPredict ? 2 : 10;
+  const capacity = isPredict ? 2 : game.type === 'market' ? 4 : 10;
   const countLabel = game.type === 'memory' ? 'pairs'
     : game.type === 'code' ? 'codes'
     : game.type === 'rule' ? 'rules'

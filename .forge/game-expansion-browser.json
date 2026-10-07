@@ -1,0 +1,18 @@
+{
+  "checks": [
+    "solo catalog launch and room-creation guard",
+    "2–4 capacity, fixed ten rounds, outsider and wrong-turn rejection",
+    "Market board initial viewport matrix",
+    "simultaneous duplicate move applies exactly once",
+    "concurrent trade acceptance transfers assets once",
+    "full four-player forty-turn completion, reconnect and exactly four results",
+    "results and rematch create fresh lobby",
+    "explicit departure safely aborts fixed-player economy without results",
+    "solo server replay rejects forged moves and duplicate result, progress increments once",
+    "zero browser page errors"
+  ],
+  "errors": [],
+  "requests": 141,
+  "p95Milliseconds": 136.81487500000003,
+  "maxMilliseconds": 338.05004199999985
+}

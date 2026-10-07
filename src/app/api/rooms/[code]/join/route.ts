@@ -11,9 +11,9 @@ async function handlePost(_req: Request, { params }: { params: { code: string } 
 
   if (me) return NextResponse.json({ ok: true }); // already in — rejoin
   if (room.status !== 'lobby') return jsonError('Game already started', 409);
-  const maxPlayers = ctx.game.type === 'predict' ? 2 : 10;
+  const maxPlayers = ctx.game.type === 'predict' ? 2 : ctx.game.type === 'market' ? 4 : 10;
   if (ctx.players.length >= maxPlayers)
-    return jsonError(maxPlayers === 2 ? 'This game is for exactly 2 players' : 'Room is full (max 10)', 409);
+    return jsonError(maxPlayers === 2 ? 'This game is for exactly 2 players' : `Room is full (max ${maxPlayers})`, 409);
 
   const { data: profile } = await admin
     .from('profiles')

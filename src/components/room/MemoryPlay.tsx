@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import type { RoomBundle } from './RoomClient';
-import { callRoomApi } from './RoomClient';
+import { callRoomApi } from '@/lib/room-api';
 
 export default function MemoryPlay({ room, players, userId, refresh }: RoomBundle) {
   const [busy, setBusy] = useState(false);

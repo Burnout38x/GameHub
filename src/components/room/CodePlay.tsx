@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import type { RoomBundle } from './RoomClient';
-import { callRoomApi } from './RoomClient';
+import { callRoomApi } from '@/lib/room-api';
 
 /** Code Crackers — the secret code is server-side; take turns, use the clues. */
 export default function CodePlay({ room, players, userId, refresh }: RoomBundle) {

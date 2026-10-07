@@ -80,7 +80,7 @@ test('category buttons keep All games and combine with search and play mode', t 
   const view = render(<GameLibrary online={online} local={LOCAL_GAMES} />);
   t.after(cleanup);
   const categoryButtons = view.getByRole('group', { name: 'Game categories' });
-  assert.equal(categoryButtons.querySelectorAll('button').length, 8);
+  assert.equal(categoryButtons.querySelectorAll('button').length, 9);
   fireEvent.click(view.getByRole('button', { name: /Couples & connection/ }));
   assert.ok(view.getByRole('link', { name: 'Create Know Your Partner room' }));
   assert.equal(view.queryByRole('link', { name: 'Create Mental Math room' }), null);
@@ -95,4 +95,23 @@ test('category buttons keep All games and combine with search and play mode', t 
   assert.equal(view.queryByRole('link', { name: 'Create Mental Math room' }), null);
   fireEvent.click(view.getByRole('button', { name: 'Reset filters' }));
   assert.equal(view.getByRole('button', { name: /^All games/ }).getAttribute('aria-pressed'), 'true');
+});
+
+test('new strategy games retain distinct solo and online launch flows', () => {
+  const games = [
+    { id: 'p', slug: 'pocket-paradise', name: 'Pocket Paradise', description: 'Build twenty plots.', emoji: '🏡', type: 'solo' },
+    { id: 'm', slug: 'market-day', name: 'Market Day', description: 'Trade and grow stalls.', emoji: '🏘️', type: 'market' },
+  ];
+  const view = render(<GameLibrary online={games} local={[]} />);
+  fireEvent.click(view.getByRole('button', { name: /Build & strategy/ }));
+  assert.equal(view.getByRole('link', { name: 'Build your paradise →' }).getAttribute('href'), '/play/pocket-paradise');
+  assert.equal(view.getByRole('link', { name: 'Create Market Day room' }).getAttribute('href'), '/rooms/new?game=market-day');
+  assert.ok(view.getByText('2–4 players'));
+  fireEvent.click(view.getByRole('button', { name: /Solo adventures/ }));
+  assert.equal(view.queryByRole('link', { name: 'Create Market Day room' }), null);
+  fireEvent.change(view.getByRole('searchbox'), { target: { value: 'missing' } });
+  assert.ok(view.getByText('No games found'));
+  fireEvent.click(view.getByRole('button', { name: 'Show all games' }));
+  assert.ok(view.getByRole('link', { name: 'Create Market Day room' }));
+  cleanup();
 });

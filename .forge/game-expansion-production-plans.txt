@@ -1,0 +1,27 @@
+                                   QUERY PLAN                                   
+--------------------------------------------------------------------------------
+ LockRows  (cost=0.14..2.37 rows=1 width=488)
+   ->  Index Scan using rooms_pkey on rooms  (cost=0.14..2.36 rows=1 width=488)
+         Index Cond: (id = '00000000-0000-0000-0000-000000000000'::uuid)
+(3 rows)
+
+                                                              QUERY PLAN                                                               
+---------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=2.38..2.39 rows=1 width=8)
+   ->  Index Only Scan using pocket_completions_time_idx on pocket_completions  (cost=0.15..2.37 rows=1 width=0)
+         Index Cond: ((profile_id = '00000000-0000-0000-0000-000000000000'::uuid) AND (completed_at > (now() - '01:00:00'::interval)))
+(3 rows)
+
+      relname       | relrowsecurity 
+--------------------+----------------
+ pocket_completions | t
+(1 row)
+
+         proname          | prosecdef |      proconfig       | authenticated_execute 
+--------------------------+-----------+----------------------+-----------------------
+ commit_market_turn       | f         | {"search_path=\"\""} | f
+ leave_market_match       | f         | {"search_path=\"\""} | f
+ record_pocket_completion | f         | {"search_path=\"\""} | f
+(3 rows)
+
+

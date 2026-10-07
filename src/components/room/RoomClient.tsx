@@ -12,6 +12,7 @@ import GuessPlay from './GuessPlay';
 import PredictPlay from './PredictPlay';
 import CodePlay from './CodePlay';
 import RulePlay from './RulePlay';
+import MarketPlay from './MarketPlay';
 import ChainPlay from './ChainPlay';
 import Scoreboard from './Scoreboard';
 import LeaveButton from './LeaveButton';
@@ -24,17 +25,6 @@ export interface RoomBundle {
   prompt: Prompt | null;
   userId: string;
   refresh: () => void;
-}
-
-export async function callRoomApi(code: string, action: string, body: Record<string, any> = {}) {
-  const res = await fetch(`/api/rooms/${code}/${action}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || 'Something went wrong');
-  return data;
 }
 
 export default function RoomClient({ code, userId }: { code: string; userId: string }) {
@@ -125,9 +115,9 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
     );
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-col gap-4">
+    <div className={`mx-auto flex w-full ${game.type === 'market' ? 'max-w-5xl' : 'max-w-xl'} flex-col gap-4`}>
       {connectionNotice}
-      <Scoreboard {...full} />
+      {game.type !== 'market' && <Scoreboard {...full} />}
       {game.type === 'quiz' && <QuizPlay key={`${room.id}-${room.current_round}`} {...full} />}
       {game.type === 'prompt' && <PromptPlay key={`${room.id}-${room.current_round}`} {...full} />}
       {game.type === 'memory' && <MemoryPlay {...full} />}
@@ -135,8 +125,9 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
       {game.type === 'predict' && <PredictPlay key={`${room.id}-${room.current_round}`} {...full} />}
       {game.type === 'code' && <CodePlay key={`${room.id}-${room.current_round}`} {...full} />}
       {game.type === 'rule' && <RulePlay key={`${room.id}-${room.current_round}`} {...full} />}
+      {game.type === 'market' && <MarketPlay {...full} />}
       {game.type === 'chain' && <ChainPlay {...full} />}
-      <LeaveButton code={code} status={room.status} isHost={room.host_id === userId} />
+      <LeaveButton code={code} status={room.status} isHost={room.host_id === userId} endsMatch={game.type === 'market'} />
     </div>
   );
 }

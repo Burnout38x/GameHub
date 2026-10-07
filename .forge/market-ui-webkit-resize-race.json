@@ -1,0 +1,227 @@
+{
+  "checks": [
+    "webkit movement dark 320x740",
+    "webkit movement dark 390x844",
+    "webkit movement dark 717x512",
+    "webkit movement dark 820x1180",
+    "webkit movement dark 1440x900",
+    "webkit movement light 320x740",
+    "webkit movement light 390x844",
+    "webkit movement light 717x512",
+    "webkit movement light 820x1180",
+    "webkit movement light 1440x900",
+    "webkit movement arcade 320x740",
+    "webkit movement arcade 390x844",
+    "webkit movement arcade 717x512",
+    "webkit movement arcade 820x1180",
+    "webkit movement arcade 1440x900",
+    "webkit movement ocean 320x740",
+    "webkit movement ocean 390x844",
+    "webkit movement ocean 717x512",
+    "webkit movement ocean 820x1180",
+    "webkit movement ocean 1440x900",
+    "webkit keyboard flat toggle",
+    "webkit keyboard movement",
+    "webkit deliberate movement focuses actions turn1",
+    "webkit trade-form dark 320x740",
+    "webkit trade-form dark 390x844",
+    "webkit trade-form dark 717x512",
+    "webkit trade-form dark 820x1180",
+    "webkit trade-form dark 1440x900",
+    "webkit trade-form light 320x740",
+    "webkit trade-form light 390x844",
+    "webkit trade-form light 717x512",
+    "webkit trade-form light 820x1180",
+    "webkit trade-form light 1440x900",
+    "webkit trade-form arcade 320x740",
+    "webkit trade-form arcade 390x844",
+    "webkit trade-form arcade 717x512",
+    "webkit trade-form arcade 820x1180",
+    "webkit trade-form arcade 1440x900",
+    "webkit trade-form ocean 320x740",
+    "webkit trade-form ocean 390x844",
+    "webkit trade-form ocean 717x512",
+    "webkit trade-form ocean 820x1180",
+    "webkit trade-form ocean 1440x900",
+    "webkit trade acceptance through UI",
+    "webkit deliberate movement focuses actions turn2",
+    "webkit trade decline through UI",
+    "webkit deliberate movement focuses actions turn3",
+    "webkit trade form resets on returning turn",
+    "webkit reduced-motion preference exercised"
+  ],
+  "issues": [
+    {
+      "engine": "webkit",
+      "label": "trade-form",
+      "theme": "dark",
+      "width": 717,
+      "scrollWidth": 717,
+      "bottom": 1609,
+      "height": 2005,
+      "outside": []
+    },
+    {
+      "engine": "webkit",
+      "label": "trade-form",
+      "theme": "light",
+      "width": 717,
+      "scrollWidth": 717,
+      "bottom": 1609,
+      "height": 2005,
+      "outside": []
+    },
+    {
+      "engine": "webkit",
+      "label": "trade-form",
+      "theme": "arcade",
+      "width": 717,
+      "scrollWidth": 717,
+      "bottom": 1609,
+      "height": 2005,
+      "outside": []
+    }
+  ],
+  "pageErrors": [],
+  "screenshots": [
+    ".forge/screenshots/market-webkit-board-390.png",
+    ".forge/screenshots/market-webkit-board-1440.png",
+    ".forge/screenshots/market-webkit-trade-form-320.png"
+  ],
+  "axe": [
+    {
+      "engine": "webkit",
+      "label": "movement",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "movement",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "movement",
+      "theme": "arcade",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "movement",
+      "theme": "ocean",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "trade-form",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "trade-form",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "trade-form",
+      "theme": "arcade",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "trade-form",
+      "theme": "ocean",
+      "violations": []
+    }
+  ],
+  "networkFailures": [
+    {
+      "engine": "webkit",
+      "person": 0,
+      "path": "/api/rooms/U5WY6P",
+      "error": "cancelled",
+      "at": 1791335043534
+    },
+    {
+      "engine": "webkit",
+      "person": 1,
+      "path": "/api/rooms/U5WY6P",
+      "error": "cancelled",
+      "at": 1791335044581
+    }
+  ],
+  "navigations": [
+    {
+      "engine": "webkit",
+      "person": 0,
+      "path": "/login",
+      "at": 1791335039763
+    },
+    {
+      "engine": "webkit",
+      "person": 0,
+      "path": "/login",
+      "at": 1791335040329
+    },
+    {
+      "engine": "webkit",
+      "person": 0,
+      "path": "/games",
+      "at": 1791335040657
+    },
+    {
+      "engine": "webkit",
+      "person": 1,
+      "path": "/login",
+      "at": 1791335040899
+    },
+    {
+      "engine": "webkit",
+      "person": 1,
+      "path": "/login",
+      "at": 1791335041295
+    },
+    {
+      "engine": "webkit",
+      "person": 1,
+      "path": "/games",
+      "at": 1791335041588
+    },
+    {
+      "engine": "webkit",
+      "person": 0,
+      "path": "/rooms/join",
+      "at": 1791335042601
+    },
+    {
+      "engine": "webkit",
+      "person": 0,
+      "path": "/room/U5WY6P",
+      "at": 1791335043218
+    },
+    {
+      "engine": "webkit",
+      "person": 1,
+      "path": "/rooms/join",
+      "at": 1791335043331
+    },
+    {
+      "engine": "webkit",
+      "person": 1,
+      "path": "/room/U5WY6P",
+      "at": 1791335044268
+    }
+  ],
+  "closing": [
+    {
+      "engine": "webkit",
+      "at": 1791335052337
+    }
+  ],
+  "navigationCancellations": [],
+  "unexplainedErrors": []
+}

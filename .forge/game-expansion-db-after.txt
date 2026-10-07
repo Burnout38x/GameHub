@@ -1,0 +1,32 @@
+ current_database |                                      version                                       
+------------------+------------------------------------------------------------------------------------
+ postgres         | PostgreSQL 17.6 on aarch64-unknown-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit
+(1 row)
+
+  object  | count 
+----------+-------
+ profiles |     4
+ rooms    |    24
+ history  |    20
+ prompts  |   766
+(4 rows)
+
+  object  |              digest              
+----------+----------------------------------
+ profiles | 2594219c6eae3ac5b756f2080ea2f922
+ rooms    | 73b3c460ac8bdd104a329a5b09dd602c
+ history  | b17f0a2b062b5b94c52b4dd033cfd6d4
+ prompts  | 74d5d8ca30be9cbe56075dc4984fb3ce
+(4 rows)
+
+     conname      |                                                                                pg_get_constraintdef                                                                                 
+------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ games_type_check | CHECK ((type = ANY (ARRAY['quiz'::text, 'prompt'::text, 'memory'::text, 'guess'::text, 'predict'::text, 'code'::text, 'rule'::text, 'chain'::text, 'market'::text, 'solo'::text])))
+(1 row)
+
+    version     
+----------------
+ 20261007005306
+(1 row)
+
+

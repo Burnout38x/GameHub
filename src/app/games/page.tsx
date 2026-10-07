@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/server';
 export const dynamic = 'force-dynamic';
 
 const NOTICES: Record<string, string> = {
+  market_player_left: 'Market Day ended because a player left. No result was recorded. Start a new room with the remaining players.',
   host_left: 'Room closed by the host.',
   not_enough_players: 'Room closed — not enough players to keep playing.',
   removed: "You're no longer in that room.",

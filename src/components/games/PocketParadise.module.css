@@ -1,0 +1,20 @@
+.scene { background: radial-gradient(ellipse at 50% 20%,color-mix(in srgb,var(--accent-cool) 16%,transparent),transparent 75%),var(--surface); }
+.board { display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding:12px 0 8px; }
+.plot { position:relative; min-width:0;min-height:60px;aspect-ratio:1/1.12;border:1px solid color-mix(in srgb,var(--ink) 22%,transparent);border-radius:14px;background:color-mix(in srgb,var(--accent-cool) 7%,var(--canvas));box-shadow:0 6px 0 color-mix(in srgb,var(--canvas) 80%,black);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;transition:transform .2s,border-color .2s; }
+.plot:disabled { cursor:default;opacity:1; }
+.plot:not(:disabled):hover { transform:translateY(-3px);border-color:var(--accent-cool); }
+.selected { outline:3px solid var(--accent);outline-offset:1px; }
+.empty { color:var(--accent-cool);font-size:24px; }
+.building { width:64%;height:48%;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:clamp(22px,4vw,38px);font-weight:900;line-height:1;box-shadow:4px 5px 0 #0003;transform:skewY(-6deg);animation:grow .28s ease-out; }
+.tileLabel { position:relative;z-index:1;font-size:10px;font-weight:800;margin-top:5px;color:#142b2b; }
+.home { background:#f4c79d; }.home .building { background:#dd986d;border-top:8px solid #b95252;color:#fff1d0; }
+.stall { background:#eeb7c8; }.stall .building { background:#bc5f7d;border-top:8px dashed #ffe0a5;color:#fff1d0; }
+.park { background:#a0d5b5; }.park .building { background:#378165;color:#d7ffd2;border-radius:50% 50% 20% 20%; }
+.path { background:#bad2e1; }.path .building { background:#6e899f;color:#eff8ff; }
+.flat .plot { box-shadow:none;aspect-ratio:1; }.flat .building { transform:none;box-shadow:none;animation:none; }
+.offer { min-width:0;min-height:88px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:8px 4px;border:1px solid color-mix(in srgb,var(--ink) 25%,transparent);border-radius:18px;font-size:13px;background:var(--canvas); }
+.activeOffer { outline:3px solid var(--accent-cool);outline-offset:1px;background:color-mix(in srgb,var(--accent-cool) 15%,var(--canvas)); }
+@keyframes grow { from{opacity:.5;transform:translateY(-9px) skewY(-6deg)}to{opacity:1;transform:translateY(0) skewY(-6deg)} }
+@media(prefers-reduced-motion:reduce){.plot{transition:none}.building{animation:none}.plot:not(:disabled):hover{transform:none}}
+@media(max-width:359px){.board{gap:6px}.plot{border-radius:10px;min-height:55px}.building{font-size:22px}.tileLabel{font-size:9px}}
+.confirmDock{position:fixed;z-index:35;bottom:max(10px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:600px;padding:10px;border:1px solid color-mix(in srgb,var(--ink) 22%,transparent);border-radius:22px;background:var(--surface);box-shadow:0 6px 32px #0006;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}.confirmDock button{font-size:13px;padding:10px;margin:0;min-height:48px}.hasPreview{padding-bottom:100px}

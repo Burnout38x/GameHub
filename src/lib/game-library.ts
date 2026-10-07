@@ -5,17 +5,20 @@ export const GAME_CATEGORIES = [
   { id: 'conversation', label: 'Conversation' },
   { id: 'couples', label: 'Couples & connection' },
   { id: 'party', label: 'Party challenges' },
+  { id: 'strategy', label: 'Build & strategy' },
   { id: 'memory', label: 'Memory' },
 ] as const;
 export type GameCategory = typeof GAME_CATEGORIES[number]['id'];
 export type GameAudience = 'all' | 'couples' | 'groups' | 'family';
-export type GameMode = 'all' | 'online' | 'local';
+export type GameMode = 'all' | 'online' | 'local' | 'solo';
 export type LibraryGame = { slug: string; name: string; description: string; type?: string };
 export type LibraryFilters = { search: string; category: GameCategory | 'all'; audience: GameAudience; mode: GameMode };
 
 // Categories describe play, rather than the engine used to run a game.
 // Family picks are a narrow set of puzzles; conversation banks are not age-rated.
 const taxonomy: Record<string, { category: GameCategory; audiences: GameAudience[] }> = {
+  'pocket-paradise': { category: 'strategy', audiences: ['family', 'groups', 'couples'] },
+  'market-day': { category: 'strategy', audiences: ['family', 'groups', 'couples'] },
   'doctor-dash': { category: 'trivia', audiences: ['groups', 'couples'] },
   'riddle-rush': { category: 'words', audiences: ['groups', 'couples'] },
   'emoji-movie': { category: 'trivia', audiences: ['groups', 'couples'] },

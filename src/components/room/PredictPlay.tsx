@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import type { RoomBundle } from './RoomClient';
-import { callRoomApi } from './RoomClient';
+import { callRoomApi } from '@/lib/room-api';
 
 /** Know Your Partner (multiple choice) and Who Remembers It Better (free text). */
 export default function PredictPlay({ room, game, players, answers, prompt, userId, refresh }: RoomBundle) {

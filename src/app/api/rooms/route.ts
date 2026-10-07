@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
     .select('id, slug, type, is_active')
     .eq('id', gameId)
     .single();
+  if (game?.type === 'solo') return jsonError('Open this game from the solo library');
   if (!game || !game.is_active) return jsonError('Game not found', 404);
   if (mode === 'spotlight' && !spotlightEligible(game.slug, game.type))
     return jsonError('Spotlight mode is not available for this game');
@@ -60,7 +61,7 @@ export async function POST(req: NextRequest) {
         mode,
         is_public: !!isPublic,
         answer_seconds: timer,
-        total_rounds: rounds,
+        total_rounds: game.type === 'market' ? 10 : rounds,
       })
       .select()
       .single();

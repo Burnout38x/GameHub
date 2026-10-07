@@ -29,7 +29,7 @@ function NewRoomForm() {
           .from('games').select('*').eq('is_active', true).order('sort_order');
         if (fetchError) throw fetchError;
         if (!active) return;
-        const available = (data as Game[]) ?? [];
+        const available = ((data as Game[]) ?? []).filter(g => g.type !== 'solo');
         setGames(available);
         setGameSlug((current) => available.some((g) => g.slug === current) ? current : available[0]?.slug ?? '');
       } catch {
@@ -46,6 +46,7 @@ function NewRoomForm() {
   const defaultTimer = ['mystery-card', 'reverse-definition', 'mental-math-duel'].includes(gameSlug)
     ? '15' : gameSlug === 'word-chain' ? '12' : 'off';
   const timer = timerChoice?.slug === gameSlug ? timerChoice.value : defaultTimer;
+  const isMarket = game?.type === 'market';
   const isMemory = game?.type === 'memory';
   const isPredict = game?.type === 'predict';
   const isCode = game?.type === 'code';
@@ -53,7 +54,7 @@ function NewRoomForm() {
   const isChain = game?.type === 'chain';
   const canSpotlight = game ? spotlightEligible(game.slug, game.type) : false;
   const effectiveMode = canSpotlight ? mode : 'classic';
-  const roundOptions = isMemory
+  const roundOptions = isMarket ? ['10'] : isMemory
     ? ['6', '8', '10', '12', '15', '20']
     : isPredict
       ? ['6', '10', '14', '20']
@@ -119,7 +120,7 @@ function NewRoomForm() {
           ))}
         </select>
         {game && <p className="mt-2 text-sm text-white/65">{game.description}</p>}
-        {game && !isPredict && <p className="mt-2 text-xs text-indigo-200">{isRule || isChain ? "For 2–10 players. Invite someone to play before starting." : "Play solo or invite up to 9 more players."}</p>}
+        {game && !isPredict && <p className="mt-2 text-xs text-indigo-200">{isMarket ? "For 2–4 players. Ten market days, no player elimination." : isRule || isChain ? "For 2–10 players. Invite someone to play before starting." : "Play solo or invite up to 9 more players."}</p>}
         {isPredict && (
           <p className="mt-2 text-xs font-bold text-indigo-200">
             💞 For exactly 2 players — question count is evened out so you both get equal turns.
@@ -141,7 +142,7 @@ function NewRoomForm() {
           </>
         )}
 
-        {game?.type !== 'guess' && game?.type !== 'memory' && !isPredict && !isCode && !isRule && !isChain && (
+        {game?.type !== 'guess' && game?.type !== 'memory' && !isPredict && !isCode && !isRule && !isChain && !isMarket && (
           <>
             <label className="field-label" htmlFor="difficulty">Difficulty</label>
             <select id="difficulty" className="input" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
@@ -164,7 +165,7 @@ function NewRoomForm() {
         )}
 
         <label className="field-label" htmlFor="rounds">
-          {isMemory
+          {isMarket ? 'Market days (one turn each per day)' : isMemory
             ? 'Number of pairs'
             : isCode
               ? 'Codes to crack'

@@ -1,0 +1,229 @@
+{
+  "checks": [
+    "webkit movement dark 320x740",
+    "webkit movement dark 390x844",
+    "webkit movement dark 717x512",
+    "webkit movement dark 820x1180",
+    "webkit movement dark 1440x900",
+    "webkit movement light 320x740",
+    "webkit movement light 390x844",
+    "webkit movement light 717x512",
+    "webkit movement light 820x1180",
+    "webkit movement light 1440x900",
+    "webkit movement arcade 320x740",
+    "webkit movement arcade 390x844",
+    "webkit movement arcade 717x512",
+    "webkit movement arcade 820x1180",
+    "webkit movement arcade 1440x900",
+    "webkit movement ocean 320x740",
+    "webkit movement ocean 390x844",
+    "webkit movement ocean 717x512",
+    "webkit movement ocean 820x1180",
+    "webkit movement ocean 1440x900",
+    "webkit keyboard flat toggle",
+    "webkit keyboard movement",
+    "webkit deliberate movement focuses actions turn1",
+    "webkit trade-form dark 320x740",
+    "webkit trade-form dark 390x844",
+    "webkit trade-form dark 717x512",
+    "webkit trade-form dark 820x1180",
+    "webkit trade-form dark 1440x900",
+    "webkit trade-form light 320x740",
+    "webkit trade-form light 390x844",
+    "webkit trade-form light 717x512",
+    "webkit trade-form light 820x1180",
+    "webkit trade-form light 1440x900",
+    "webkit trade-form arcade 320x740",
+    "webkit trade-form arcade 390x844",
+    "webkit trade-form arcade 717x512",
+    "webkit trade-form arcade 820x1180",
+    "webkit trade-form arcade 1440x900",
+    "webkit trade-form ocean 320x740",
+    "webkit trade-form ocean 390x844",
+    "webkit trade-form ocean 717x512",
+    "webkit trade-form ocean 820x1180",
+    "webkit trade-form ocean 1440x900",
+    "webkit trade acceptance through UI",
+    "webkit deliberate movement focuses actions turn2",
+    "webkit trade decline through UI",
+    "webkit deliberate movement focuses actions turn3",
+    "webkit trade form resets on returning turn",
+    "webkit reduced-motion preference exercised"
+  ],
+  "issues": [],
+  "pageErrors": [
+    {
+      "engine": "webkit",
+      "person": 0,
+      "message": "/127.0.0.1:3202/api/social due to access control checks.",
+      "at": 1791334991603
+    },
+    {
+      "engine": "webkit",
+      "person": 1,
+      "message": "/127.0.0.1:3202/api/social due to access control checks.",
+      "at": 1791334992093
+    }
+  ],
+  "screenshots": [
+    ".forge/screenshots/market-webkit-board-390.png",
+    ".forge/screenshots/market-webkit-board-1440.png",
+    ".forge/screenshots/market-webkit-trade-form-320.png"
+  ],
+  "axe": [
+    {
+      "engine": "webkit",
+      "label": "movement",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "movement",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "movement",
+      "theme": "arcade",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "movement",
+      "theme": "ocean",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "trade-form",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "trade-form",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "trade-form",
+      "theme": "arcade",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "trade-form",
+      "theme": "ocean",
+      "violations": []
+    }
+  ],
+  "networkFailures": [
+    {
+      "engine": "webkit",
+      "person": 0,
+      "path": "/api/rooms/F5N86M",
+      "error": "cancelled",
+      "at": 1791334992018
+    },
+    {
+      "engine": "webkit",
+      "person": 1,
+      "path": "/api/rooms/F5N86M",
+      "error": "cancelled",
+      "at": 1791334992481
+    },
+    {
+      "engine": "webkit",
+      "person": 0,
+      "path": "/api/rooms/F5N86M",
+      "error": "cancelled",
+      "at": 1791334995187
+    }
+  ],
+  "navigations": [
+    {
+      "engine": "webkit",
+      "person": 0,
+      "path": "/login",
+      "at": 1791334989712
+    },
+    {
+      "engine": "webkit",
+      "person": 0,
+      "path": "/login",
+      "at": 1791334990154
+    },
+    {
+      "engine": "webkit",
+      "person": 0,
+      "path": "/games",
+      "at": 1791334990487
+    },
+    {
+      "engine": "webkit",
+      "person": 1,
+      "path": "/login",
+      "at": 1791334990733
+    },
+    {
+      "engine": "webkit",
+      "person": 1,
+      "path": "/login",
+      "at": 1791334991135
+    },
+    {
+      "engine": "webkit",
+      "person": 1,
+      "path": "/games",
+      "at": 1791334991420
+    },
+    {
+      "engine": "webkit",
+      "person": 0,
+      "path": "/room/F5N86M",
+      "at": 1791334991604
+    },
+    {
+      "engine": "webkit",
+      "person": 0,
+      "path": "/room/F5N86M",
+      "at": 1791334992005
+    },
+    {
+      "engine": "webkit",
+      "person": 1,
+      "path": "/room/F5N86M",
+      "at": 1791334992095
+    },
+    {
+      "engine": "webkit",
+      "person": 1,
+      "path": "/room/F5N86M",
+      "at": 1791334992469
+    }
+  ],
+  "closing": [
+    {
+      "engine": "webkit",
+      "at": 1791334999034
+    }
+  ],
+  "navigationCancellations": [],
+  "unexplainedErrors": [
+    {
+      "engine": "webkit",
+      "person": 0,
+      "message": "/127.0.0.1:3202/api/social due to access control checks.",
+      "at": 1791334991603
+    },
+    {
+      "engine": "webkit",
+      "person": 1,
+      "message": "/127.0.0.1:3202/api/social due to access control checks.",
+      "at": 1791334992093
+    }
+  ]
+}

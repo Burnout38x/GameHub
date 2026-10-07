@@ -1,3 +1,4 @@
+import { isSameOriginRequest } from '@/lib/server/request-origin';
 import { withRoomLock } from '@/lib/server/room-lock';
 export const maxDuration = 30;
 import { NextResponse } from 'next/server';
@@ -29,6 +30,13 @@ async function handlePost(_req: Request, { params }: { params: { code: string } 
     }
     await admin.from('room_players').delete().eq('id', me.id);
     return NextResponse.json({ ok: true });
+  }
+
+  if (game.type === 'market') {
+    const { data, error } = await admin.rpc('leave_market_match', { target_room_id: room.id, actor_id: userId });
+    if (error) return jsonError('Could not leave the market. Please retry.', 500);
+    if (!data) return jsonError('This room changed. Please refresh.', 409);
+    return NextResponse.json({ ok: true, closed: true });
   }
 
   // Playing: remove the player (their answers/score history stays), then keep the game sane.
@@ -81,6 +89,7 @@ async function handlePost(_req: Request, { params }: { params: { code: string } 
 }
 
 export async function POST(req: Request, context: { params: Promise<{ code: string }> }) {
+  if (!isSameOriginRequest(req)) return jsonError('Request origin not allowed', 403);
   const params = await context.params;
   return withRoomLock(params.code, () => handlePost(req as never, { params }));
 }

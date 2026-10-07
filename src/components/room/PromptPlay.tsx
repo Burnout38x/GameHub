@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import type { RoomBundle } from './RoomClient';
-import { callRoomApi } from './RoomClient';
+import { callRoomApi } from '@/lib/room-api';
 import { isTurnBased } from '@/lib/game-utils';
 
 function formatTime(s: number) {

@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import type { RoomBundle } from './RoomClient';
-import { callRoomApi } from './RoomClient';
+import { callRoomApi } from '@/lib/room-api';
 
 /** Word Association Chain — keep the chain alive; weak links go to a vote. */
 export default function ChainPlay({ room, players, userId, refresh }: RoomBundle) {

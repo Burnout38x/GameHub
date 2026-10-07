@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { RoomBundle } from './RoomClient';
-import { callRoomApi } from './RoomClient';
+import { callRoomApi } from '@/lib/room-api';
 import { shuffle, isTurnBased } from '@/lib/game-utils';
 
 export default function QuizPlay({ room, game, players, answers, prompt, userId, refresh }: RoomBundle) {

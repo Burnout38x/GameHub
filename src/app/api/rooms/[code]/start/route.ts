@@ -3,6 +3,8 @@ export const maxDuration = 30;
 import { NextResponse } from 'next/server';
 import { loadRoomContext, jsonError } from '@/lib/server/room-actions';
 import { shuffle, spotlightRoundCount, roundDeadline, isTurnBased } from '@/lib/game-utils';
+import { createMarketDay } from '@/lib/market-day';
+import { randomInt } from 'node:crypto';
 import { buildRuleRound } from '@/lib/server/rule-round';
 
 /** POST /api/rooms/[code]/start — host starts the game. */
@@ -19,6 +21,9 @@ async function handlePost(_req: Request, { params }: { params: { code: string } 
   if ((game.type === 'rule' || game.type === 'chain') && players.length < 2)
     return jsonError('This game needs at least 2 players', 409);
 
+  if (game.type === 'solo') return jsonError('This is a solo game', 409);
+  if (game.type === 'market' && (players.length < 2 || players.length > 4)) return jsonError('Market Day needs 2–4 players', 409);
+
   const firstTurn = players[0].profile_id;
   const update: Record<string, any> = {
     status: 'playing',
@@ -27,7 +32,10 @@ async function handlePost(_req: Request, { params }: { params: { code: string } 
     turn_player_id: firstTurn,
   };
 
-  if (game.type === 'quiz' || game.type === 'prompt' || game.type === 'predict') {
+  if (game.type === 'market') {
+    update.total_rounds = 10;
+    update.round_state = createMarketDay(players.map(p => p.profile_id), randomInt(1, 2147483647));
+  } else if (game.type === 'quiz' || game.type === 'prompt' || game.type === 'predict') {
     let q = admin.from('prompts').select('id').eq('game_id', game.id);
     if (room.difficulty !== 'mixed') q = q.eq('difficulty', room.difficulty);
     const { data: prompts } = await q;

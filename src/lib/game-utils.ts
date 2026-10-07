@@ -42,7 +42,7 @@ export function deadlinePassed(deadline: string | null | undefined, now: number 
 /** Games where one player acts per round instead of everyone answering at once. */
 export function isTurnBased(gameSlug: string, gameType: string, mode: string = 'classic'): boolean {
   if (mode === 'spotlight') return true;
-  if (['memory', 'guess', 'predict', 'code', 'rule', 'chain'].includes(gameType)) return true;
+  if (['memory', 'guess', 'predict', 'code', 'rule', 'chain', 'market'].includes(gameType)) return true;
   return ['truth-or-dare', 'truth-or-dare-after-dark', 'two-minute-challenge'].includes(gameSlug);
 }
 

@@ -1,0 +1,20 @@
+{
+  "completed": true,
+  "environment": {
+    "app": "http://127.0.0.1:3199",
+    "database": "http://127.0.0.1:58321"
+  },
+  "checks": [
+    "anonymous and foreign-origin mutations rejected for both games",
+    "malformed, oversized, incomplete, practice and forged solo histories rejected",
+    "anonymous/authenticated direct completion, market commit RPC and private ledger access denied",
+    "queued friend invitations cannot bypass four-player Market capacity",
+    "stale final commit and incomplete-score transaction leave room, scores and result history unchanged",
+    "malformed and wrong-phase market commands leave persisted game unchanged",
+    "simultaneous solo replay records exactly one completion and one progress increment",
+    "thirteenth hourly solo completion rejected; duplicate remains idempotent; ledger/history/progress totals match",
+    "foreign-origin departure rejected; actual departure atomically closes game, removes member, records no result and fences delayed completion"
+  ],
+  "cleanedUsers": 5,
+  "cleanedRooms": 1
+}

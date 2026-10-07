@@ -1,0 +1,238 @@
+{
+  "checks": [
+    "chromium movement dark 320x740",
+    "chromium movement dark 390x844",
+    "chromium movement dark 717x512",
+    "chromium movement dark 820x1180",
+    "chromium movement dark 1440x900",
+    "chromium movement light 320x740",
+    "chromium movement light 390x844",
+    "chromium movement light 717x512",
+    "chromium movement light 820x1180",
+    "chromium movement light 1440x900",
+    "chromium movement arcade 320x740",
+    "chromium movement arcade 390x844",
+    "chromium movement arcade 717x512",
+    "chromium movement arcade 820x1180",
+    "chromium movement arcade 1440x900",
+    "chromium movement ocean 320x740",
+    "chromium movement ocean 390x844",
+    "chromium movement ocean 717x512",
+    "chromium movement ocean 820x1180",
+    "chromium movement ocean 1440x900",
+    "chromium keyboard flat toggle",
+    "chromium keyboard movement",
+    "chromium deliberate movement focuses actions turn1",
+    "chromium trade-form dark 320x740",
+    "chromium trade-form dark 390x844",
+    "chromium trade-form dark 717x512",
+    "chromium trade-form dark 820x1180",
+    "chromium trade-form dark 1440x900",
+    "chromium trade-form light 320x740",
+    "chromium trade-form light 390x844",
+    "chromium trade-form light 717x512",
+    "chromium trade-form light 820x1180",
+    "chromium trade-form light 1440x900",
+    "chromium trade-form arcade 320x740",
+    "chromium trade-form arcade 390x844",
+    "chromium trade-form arcade 717x512",
+    "chromium trade-form arcade 820x1180",
+    "chromium trade-form arcade 1440x900",
+    "chromium trade-form ocean 320x740",
+    "chromium trade-form ocean 390x844",
+    "chromium trade-form ocean 717x512",
+    "chromium trade-form ocean 820x1180",
+    "chromium trade-form ocean 1440x900",
+    "chromium trade acceptance through UI",
+    "chromium deliberate movement focuses actions turn2",
+    "chromium trade decline through UI",
+    "chromium deliberate movement focuses actions turn3",
+    "chromium trade form resets on returning turn",
+    "chromium deliberate movement focuses actions turn4",
+    "chromium deliberate movement focuses actions turn5",
+    "chromium deliberate movement focuses actions turn6",
+    "chromium deliberate movement focuses actions turn7",
+    "chromium deliberate movement focuses actions turn8",
+    "chromium deliberate movement focuses actions turn9",
+    "chromium deliberate movement focuses actions turn10",
+    "chromium deliberate movement focuses actions turn11",
+    "chromium deliberate movement focuses actions turn12",
+    "chromium deliberate movement focuses actions turn13",
+    "chromium deliberate movement focuses actions turn14",
+    "chromium deliberate movement focuses actions turn15",
+    "chromium deliberate movement focuses actions turn16",
+    "chromium deliberate movement focuses actions turn17",
+    "chromium deliberate movement focuses actions turn18",
+    "chromium deliberate movement focuses actions turn19",
+    "chromium deliberate movement focuses actions turn20",
+    "full two-player twenty-turn game entirely through controls records two results",
+    "chromium reduced-motion preference exercised",
+    "webkit movement dark 320x740",
+    "webkit movement dark 390x844",
+    "webkit movement dark 717x512",
+    "webkit movement dark 820x1180",
+    "webkit movement dark 1440x900",
+    "webkit movement light 320x740",
+    "webkit movement light 390x844",
+    "webkit movement light 717x512",
+    "webkit movement light 820x1180",
+    "webkit movement light 1440x900",
+    "webkit movement arcade 320x740",
+    "webkit movement arcade 390x844",
+    "webkit movement arcade 717x512",
+    "webkit movement arcade 820x1180",
+    "webkit movement arcade 1440x900",
+    "webkit movement ocean 320x740",
+    "webkit movement ocean 390x844",
+    "webkit movement ocean 717x512",
+    "webkit movement ocean 820x1180",
+    "webkit movement ocean 1440x900",
+    "webkit keyboard flat toggle",
+    "webkit keyboard movement",
+    "webkit deliberate movement focuses actions turn1",
+    "webkit trade-form dark 320x740",
+    "webkit trade-form dark 390x844",
+    "webkit trade-form dark 717x512",
+    "webkit trade-form dark 820x1180",
+    "webkit trade-form dark 1440x900",
+    "webkit trade-form light 320x740",
+    "webkit trade-form light 390x844",
+    "webkit trade-form light 717x512",
+    "webkit trade-form light 820x1180",
+    "webkit trade-form light 1440x900",
+    "webkit trade-form arcade 320x740",
+    "webkit trade-form arcade 390x844",
+    "webkit trade-form arcade 717x512",
+    "webkit trade-form arcade 820x1180",
+    "webkit trade-form arcade 1440x900",
+    "webkit trade-form ocean 320x740",
+    "webkit trade-form ocean 390x844",
+    "webkit trade-form ocean 717x512",
+    "webkit trade-form ocean 820x1180",
+    "webkit trade-form ocean 1440x900",
+    "webkit trade acceptance through UI",
+    "webkit deliberate movement focuses actions turn2",
+    "webkit trade decline through UI",
+    "webkit deliberate movement focuses actions turn3",
+    "webkit trade form resets on returning turn",
+    "webkit reduced-motion preference exercised"
+  ],
+  "issues": [],
+  "pageErrors": [
+    {
+      "engine": "webkit",
+      "message": "/127.0.0.1:3202/api/social due to access control checks."
+    },
+    {
+      "engine": "webkit",
+      "message": "/127.0.0.1:3202/api/social due to access control checks."
+    }
+  ],
+  "screenshots": [
+    ".forge/screenshots/market-chromium-board-390.png",
+    ".forge/screenshots/market-chromium-board-1440.png",
+    ".forge/screenshots/market-chromium-trade-form-320.png",
+    ".forge/screenshots/market-chromium-results-390.png",
+    ".forge/screenshots/market-webkit-board-390.png",
+    ".forge/screenshots/market-webkit-board-1440.png",
+    ".forge/screenshots/market-webkit-trade-form-320.png"
+  ],
+  "axe": [
+    {
+      "engine": "chromium",
+      "label": "movement",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "label": "movement",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "label": "movement",
+      "theme": "arcade",
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "label": "movement",
+      "theme": "ocean",
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "label": "trade-form",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "label": "trade-form",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "label": "trade-form",
+      "theme": "arcade",
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "label": "trade-form",
+      "theme": "ocean",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "movement",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "movement",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "movement",
+      "theme": "arcade",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "movement",
+      "theme": "ocean",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "trade-form",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "trade-form",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "trade-form",
+      "theme": "arcade",
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "label": "trade-form",
+      "theme": "ocean",
+      "violations": []
+    }
+  ]
+}

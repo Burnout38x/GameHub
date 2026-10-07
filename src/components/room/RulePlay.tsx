@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import type { RoomBundle } from './RoomClient';
-import { callRoomApi } from './RoomClient';
+import { callRoomApi } from '@/lib/room-api';
 
 /** Rule Discoverer — test examples or identify the hidden rule. */
 export default function RulePlay({ room, players, userId, refresh }: RoomBundle) {
