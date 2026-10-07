@@ -91,7 +91,7 @@ export default function CodePlay({ room, players, userId, refresh }: RoomBundle)
             </button>
           ))}
         </div>
-        <div className="flex w-full max-w-sm gap-2">
+        <div className="flex w-full max-w-sm flex-col gap-2 min-[400px]:flex-row">
           <button className="btn-secondary flex-1 !py-3" disabled={!isMyTurn || busy} onClick={() => setDigits([])}>
             Clear
           </button>

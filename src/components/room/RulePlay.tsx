@@ -101,9 +101,9 @@ export default function RulePlay({ room, players, userId, refresh }: RoomBundle)
         <h2 className="text-lg font-black">Evidence</h2>
         <div className="mt-3 flex max-h-72 flex-col gap-2 overflow-y-auto">
           {evidence.map((e, i) => (
-            <div key={i} className="glass-sm flex items-center justify-between gap-2 px-4 py-3 text-sm">
-              <span className="font-bold">{e.value}</span>
-              <span className="flex items-center gap-2">
+            <div key={i} className="glass-sm flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
+              <span className="min-w-0 font-bold">{e.value}</span>
+              <span className="flex min-w-0 flex-wrap items-center gap-2">
                 <span className={`font-black ${e.accepted ? 'text-emerald-300' : 'text-red-300'}`}>
                   {e.accepted ? 'Accepted' : 'Rejected'}
                 </span>

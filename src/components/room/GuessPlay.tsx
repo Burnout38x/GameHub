@@ -92,8 +92,8 @@ export default function GuessPlay({ room, players, userId, refresh }: RoomBundle
           <div className="text-xs font-black uppercase tracking-wide text-white/65">This round</div>
           <ul className="mt-2 flex flex-col gap-1 text-sm">
             {[...state.guesses].reverse().map((g, i) => (
-              <li key={i} className="flex items-center justify-between">
-                <span className="text-white/70">
+              <li key={i} className="flex flex-wrap items-center justify-between gap-2">
+                <span className="min-w-0 text-white/70">
                   {g.name} guessed <strong className="text-white">{g.value}</strong>
                 </span>
                 <span className={g.dir === 'correct' ? 'font-black text-emerald-300' : 'text-white/65'}>

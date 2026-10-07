@@ -3,7 +3,8 @@ import { cpSync, mkdirSync, readFileSync, symlinkSync, existsSync, unlinkSync } 
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 const root = process.cwd();
-const dir = '/private/tmp/gamehub-codex-audit-20261006/app';
+const dir = process.env.QA_RESPONSIVE === '1' ? '/private/tmp/gamehub-codex-audit-20261006/app-responsive' : '/private/tmp/gamehub-codex-audit-20261006/app';
+const port = process.env.QA_RESPONSIVE === '1' ? '3202' : '3199';
 const vars = Object.fromEntries(readFileSync('/private/tmp/gamehub-codex-audit-20261006/local.env', 'utf8').split('\n').flatMap((line) => { const match = line.match(/^([A-Z_]+)="(.*)"$/); return match ? [[match[1], match[2]]] : []; }));
 if (vars.API_URL !== 'http://127.0.0.1:58321') throw new Error('Refusing non-isolated backend');
 mkdirSync(dir, { recursive: true });
@@ -23,7 +24,7 @@ if (production) {
     build.on('exit', code => code === 0 ? resolve() : reject(new Error(`Isolated build exited ${code}`)));
   });
 }
-const child=spawn(process.execPath,[nextBin,...(production ? ['start'] : ['dev','--webpack']),'-p','3199'],{
+const child=spawn(process.execPath,[nextBin,...(production ? ['start'] : ['dev','--webpack']),'-p',port],{
  cwd:dir,stdio:'inherit',env:auditEnv,
 });
 process.on('SIGTERM',()=>child.kill('SIGTERM')); process.on('SIGINT',()=>child.kill('SIGINT'));

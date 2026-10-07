@@ -53,7 +53,7 @@ export default function FriendsDashboard() {
     </section>
     <div aria-live="polite" role="status" className={notice ? 'glass-sm p-4 text-sm' : 'sr-only'}>{notice}</div>
     {(error || actionError) && <div role="alert" className="glass-sm flex flex-wrap items-center justify-between gap-3 p-4"><p className="text-sm text-red-300">{actionError || error}</p>{error && <button className="btn-secondary !w-auto !py-2" onClick={() => void refresh()}>Retry</button>}</div>}
-    <section id="invitations" className="glass scroll-mt-6 p-6 sm:p-8" aria-labelledby="invites-heading">
+    <section id="invitations" className="glass scroll-mt-56 p-6 sm:p-8" aria-labelledby="invites-heading">
       <h2 id="invites-heading" className="text-xl font-black">Room invitations</h2>
       <p className="mt-2 text-sm text-white/65">Mutual friends can invite you from their room. Invites wait here when you’re away, for up to 24 hours while the lobby stays open.</p>
       {!data ? <p className="mt-4 text-sm text-white/65">Loading invitations…</p> : !data.invitations.length ? <div className="glass-sm mt-4 p-5"><p className="font-bold">No invitations yet</p><p className="mt-1 text-sm text-white/65">Start a room and invite your friends to join you.</p><Link href="/rooms" className="btn-secondary mt-4 !w-auto">Find or create a room</Link></div> : <ul className="mt-4 space-y-3">{data.invitations.map(invite => <li key={invite.id} className="glass-sm p-4">

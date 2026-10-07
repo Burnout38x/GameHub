@@ -1,0 +1,809 @@
+{
+  "checks": [
+    {
+      "label": "/games",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 282
+    },
+    {
+      "label": "/games",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 182
+    },
+    {
+      "label": "/games",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 182
+    },
+    {
+      "label": "/rooms",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 282
+    },
+    {
+      "label": "/rooms",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 182
+    },
+    {
+      "label": "/rooms",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 182
+    },
+    {
+      "label": "/rooms/new",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 282
+    },
+    {
+      "label": "/rooms/new",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 182
+    },
+    {
+      "label": "/rooms/new",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 182
+    },
+    {
+      "label": "/rooms/join",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 282
+    },
+    {
+      "label": "/rooms/join",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 182
+    },
+    {
+      "label": "/rooms/join",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 182
+    },
+    {
+      "label": "/profile",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 282
+    },
+    {
+      "label": "/profile",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 182
+    },
+    {
+      "label": "/profile",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 182
+    },
+    {
+      "label": "/friends",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 282
+    },
+    {
+      "label": "/friends",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 182
+    },
+    {
+      "label": "/friends",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 182
+    },
+    {
+      "label": "/leaderboard",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 282
+    },
+    {
+      "label": "/leaderboard",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 182
+    },
+    {
+      "label": "/leaderboard",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 182
+    },
+    {
+      "label": "/report",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 282
+    },
+    {
+      "label": "/report",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 182
+    },
+    {
+      "label": "/report",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 182
+    },
+    {
+      "label": "/admin",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 282
+    },
+    {
+      "label": "/admin",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 182
+    },
+    {
+      "label": "/admin",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 182
+    },
+    {
+      "label": "/admin/users",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 282
+    },
+    {
+      "label": "/admin/users",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 182
+    },
+    {
+      "label": "/admin/users",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 182
+    },
+    {
+      "label": "/admin/games",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 282
+    },
+    {
+      "label": "/admin/games",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 182
+    },
+    {
+      "label": "/admin/games",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 182
+    },
+    {
+      "label": "/admin/prompts",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 282
+    },
+    {
+      "label": "/admin/prompts",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 182
+    },
+    {
+      "label": "/admin/prompts",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 182
+    },
+    {
+      "label": "/admin/reports",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 282
+    },
+    {
+      "label": "/admin/reports",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 182
+    },
+    {
+      "label": "/admin/reports",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 182
+    },
+    {
+      "label": "/admin/reports/inbox",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 282
+    },
+    {
+      "label": "/admin/reports/inbox",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 182
+    },
+    {
+      "label": "/admin/reports/inbox",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 182
+    },
+    {
+      "label": "invitation-anchor-clear",
+      "width": 320
+    },
+    {
+      "label": "invitation-anchor-clear",
+      "width": 768
+    },
+    {
+      "label": "room-lobby-long-usernames",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "room-lobby-long-usernames",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "room-lobby-long-usernames",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-doctor-dash",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-doctor-dash",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-doctor-dash",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "final-scores-long-usernames",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "final-scores-long-usernames",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "final-scores-long-usernames",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-riddle-rush",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-riddle-rush",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-riddle-rush",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-emoji-movie",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-emoji-movie",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-emoji-movie",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-movie-trivia",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-movie-trivia",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-movie-trivia",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-never-have-i-ever",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-never-have-i-ever",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-never-have-i-ever",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-would-you-rather",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-would-you-rather",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-would-you-rather",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-truth-or-dare",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-truth-or-dare",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-truth-or-dare",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-truth-or-dare-after-dark",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-truth-or-dare-after-dark",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-truth-or-dare-after-dark",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-two-minute-challenge",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-two-minute-challenge",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-two-minute-challenge",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-memory-match",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-memory-match",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-memory-match",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-number-guess",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-number-guess",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-number-guess",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-mystery-card",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-mystery-card",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-mystery-card",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-reverse-definition",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-reverse-definition",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-reverse-definition",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-mental-math-duel",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-mental-math-duel",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-mental-math-duel",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-know-your-partner",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-know-your-partner",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-know-your-partner",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-who-remembers",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-who-remembers",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-who-remembers",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-code-crackers",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-code-crackers",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-code-crackers",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-rule-discoverer",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-rule-discoverer",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-rule-discoverer",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-word-chain",
+      "width": 375,
+      "height": 812,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-word-chain",
+      "width": 820,
+      "height": 1180,
+      "headerHeight": 69
+    },
+    {
+      "label": "play-word-chain",
+      "width": 844,
+      "height": 390,
+      "headerHeight": 69
+    }
+  ],
+  "issues": [],
+  "errors": [
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/admin/prompts?_rsc=WJ2SqlVonzVmIa0E due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/leaderboard?_rsc=Ylzt1ouNiQXLdV9t due to access control checks.",
+    "/127.0.0.1:3202/themes?_rsc=Ylzt1ouNiQXLdV9t due to access control checks.",
+    "/127.0.0.1:3202/report?_rsc=Ylzt1ouNiQXLdV9t due to access control checks.",
+    "/127.0.0.1:3202/admin?_rsc=Ylzt1ouNiQXLdV9t due to access control checks.",
+    "/127.0.0.1:3202/rooms/join?_rsc=Ylzt1ouNiQXLdV9t due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks."
+  ],
+  "screenshots": [],
+  "networkFailures": [
+    {
+      "path": "/rooms/new",
+      "error": "cancelled"
+    },
+    {
+      "path": "/friends",
+      "error": "cancelled"
+    },
+    {
+      "path": "/admin",
+      "error": "cancelled"
+    },
+    {
+      "path": "/rooms/join",
+      "error": "cancelled"
+    },
+    {
+      "path": "/friends",
+      "error": "cancelled"
+    },
+    {
+      "path": "/rooms/join",
+      "error": "cancelled"
+    },
+    {
+      "path": "/admin/prompts",
+      "error": "cancelled"
+    },
+    {
+      "path": "/admin/users",
+      "error": "cancelled"
+    },
+    {
+      "path": "/rooms/join",
+      "error": "cancelled"
+    },
+    {
+      "path": "/admin/reports",
+      "error": "cancelled"
+    },
+    {
+      "path": "/admin/games",
+      "error": "cancelled"
+    },
+    {
+      "path": "/profile",
+      "error": "cancelled"
+    },
+    {
+      "path": "/api/social",
+      "error": "cancelled"
+    },
+    {
+      "path": "/",
+      "error": "cancelled"
+    },
+    {
+      "path": "/games",
+      "error": "cancelled"
+    },
+    {
+      "path": "/api/social",
+      "error": "cancelled"
+    },
+    {
+      "path": "/rooms",
+      "error": "cancelled"
+    },
+    {
+      "path": "/admin",
+      "error": "cancelled"
+    }
+  ],
+  "navigationCancellations": [
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/admin/prompts?_rsc=WJ2SqlVonzVmIa0E due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/leaderboard?_rsc=Ylzt1ouNiQXLdV9t due to access control checks.",
+    "/127.0.0.1:3202/themes?_rsc=Ylzt1ouNiQXLdV9t due to access control checks.",
+    "/127.0.0.1:3202/report?_rsc=Ylzt1ouNiQXLdV9t due to access control checks.",
+    "/127.0.0.1:3202/admin?_rsc=Ylzt1ouNiQXLdV9t due to access control checks.",
+    "/127.0.0.1:3202/rooms/join?_rsc=Ylzt1ouNiQXLdV9t due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks.",
+    "/127.0.0.1:3202/api/social due to access control checks."
+  ],
+  "unexplainedErrors": []
+}
