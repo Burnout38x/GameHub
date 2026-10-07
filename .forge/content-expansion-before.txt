@@ -1,0 +1,20 @@
+    object     | rows 
+---------------+------
+ profiles      |    4
+ rooms         |   24
+ match_history |   20
+ prompts       |  696
+(4 rows)
+
+     slug      | difficulty | count 
+---------------+------------+-------
+ doctor-dash   | easy       |    44
+ doctor-dash   | hard       |    18
+ truth-or-dare | easy       |    15
+ truth-or-dare | hard       |    10
+(4 rows)
+
+
+WARNING:  invalid configuration parameter name "supautils.restrict_extension_versions", removing it
+DETAIL:  "supautils" is now a reserved prefix.
+

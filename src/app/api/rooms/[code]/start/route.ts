@@ -2,7 +2,7 @@ import { withRoomLock } from '@/lib/server/room-lock';
 export const maxDuration = 30;
 import { NextResponse } from 'next/server';
 import { loadRoomContext, jsonError } from '@/lib/server/room-actions';
-import { shuffle, spotlightRoundCount, roundDeadline } from '@/lib/game-utils';
+import { shuffle, spotlightRoundCount, roundDeadline, isTurnBased } from '@/lib/game-utils';
 import { buildRuleRound } from '@/lib/server/rule-round';
 
 /** POST /api/rooms/[code]/start — host starts the game. */
@@ -34,7 +34,7 @@ async function handlePost(_req: Request, { params }: { params: { code: string } 
     if (!prompts || prompts.length === 0)
       return jsonError(`No ${room.difficulty} prompts for this game yet — ask the admin to add some`, 409);
     const target =
-      (room.mode === 'spotlight' || game.type === 'predict') && players.length > 1
+      isTurnBased(game.slug, game.type, room.mode) && players.length > 1
         ? spotlightRoundCount(room.total_rounds, players.length, prompts.length) // equal turns each
         : room.total_rounds;
     const ids = shuffle(prompts.map((p) => p.id)).slice(0, target);

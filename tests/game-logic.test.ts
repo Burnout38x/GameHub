@@ -67,6 +67,7 @@ test('turn-based classification matches game design', () => {
   assert.equal(isTurnBased('who-remembers', 'predict'), true);
   assert.equal(isTurnBased('code-crackers', 'code'), true);
   assert.equal(isTurnBased('truth-or-dare', 'prompt'), true);
+  assert.equal(isTurnBased('truth-or-dare-after-dark', 'prompt'), true);
   assert.equal(isTurnBased('two-minute-challenge', 'prompt'), true);
   assert.equal(isTurnBased('never-have-i-ever', 'prompt'), false);
   assert.equal(isTurnBased('would-you-rather', 'prompt'), false);

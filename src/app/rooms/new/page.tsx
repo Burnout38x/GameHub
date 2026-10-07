@@ -145,8 +145,8 @@ function NewRoomForm() {
           <>
             <label className="field-label" htmlFor="difficulty">Difficulty</label>
             <select id="difficulty" className="input" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
-              <option value="easy">😌 Easy</option>
-              <option value="hard">🔥 Hard</option>
+              <option value="easy">{game?.config?.adultsOnly ? '😌 Flirty' : '😌 Easy'}</option>
+              <option value="hard">{game?.config?.adultsOnly ? '🔥 Bold' : '🔥 Hard'}</option>
               <option value="mixed">🎲 Mixed (everything)</option>
             </select>
           </>

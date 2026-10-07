@@ -23,6 +23,7 @@ const taxonomy: Record<string, { category: GameCategory; audiences: GameAudience
   'never-have-i-ever': { category: 'conversation', audiences: ['groups', 'couples'] },
   'would-you-rather': { category: 'conversation', audiences: ['groups', 'couples'] },
   'truth-or-dare': { category: 'party', audiences: ['groups', 'couples'] },
+  'truth-or-dare-after-dark': { category: 'couples', audiences: ['couples', 'groups'] },
   'two-minute-challenge': { category: 'party', audiences: ['groups', 'couples'] },
   'memory-match': { category: 'memory', audiences: ['groups', 'couples', 'family'] },
   'number-guess': { category: 'logic', audiences: ['groups', 'couples', 'family'] },

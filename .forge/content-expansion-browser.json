@@ -1,0 +1,10 @@
+{
+  "checks": [
+    "adult pack discoverable by game search",
+    "three requested rounds become four equal turns for two players",
+    "adult label and skip boundary visible on mobile",
+    "active-player-only answers, skips, scores and completed game flow",
+    "all thirty new medical questions load in the hard pool"
+  ],
+  "errors": []
+}

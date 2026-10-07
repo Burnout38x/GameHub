@@ -83,6 +83,7 @@ export default function PromptPlay({ room, game, players, answers, prompt, userI
 
       <div className="glass flex min-h-[220px] flex-col items-center justify-center gap-4 p-7 text-center">
         {content.category && <div className="pill">{content.category}</div>}
+        {cfg.adultsOnly && <p className="text-sm text-white/65">18+ · Agree on boundaries. Only involve willing adults; you can always skip.</p>}
         <div className="text-2xl font-black leading-snug tracking-tight">{content.text}</div>
         {timerLength > 0 && (
           <div

@@ -43,7 +43,7 @@ export function deadlinePassed(deadline: string | null | undefined, now: number 
 export function isTurnBased(gameSlug: string, gameType: string, mode: string = 'classic'): boolean {
   if (mode === 'spotlight') return true;
   if (['memory', 'guess', 'predict', 'code', 'rule', 'chain'].includes(gameType)) return true;
-  return gameSlug === 'truth-or-dare' || gameSlug === 'two-minute-challenge';
+  return ['truth-or-dare', 'truth-or-dare-after-dark', 'two-minute-challenge'].includes(gameSlug);
 }
 
 /** Games that can be played in spotlight mode (one player answers at a time). */
