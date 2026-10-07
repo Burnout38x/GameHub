@@ -1,0 +1,17 @@
+{
+  "checks": [
+    "dark-320: categories, All games, one search bar, no overflow, accessibility passed",
+    "dark-375: categories, All games, one search bar, no overflow, accessibility passed",
+    "dark-1440: categories, All games, one search bar, no overflow, accessibility passed",
+    "light-320: categories, All games, one search bar, no overflow, accessibility passed",
+    "light-375: categories, All games, one search bar, no overflow, accessibility passed",
+    "light-1440: categories, All games, one search bar, no overflow, accessibility passed",
+    "arcade-320: categories, All games, one search bar, no overflow, accessibility passed",
+    "arcade-375: categories, All games, one search bar, no overflow, accessibility passed",
+    "arcade-1440: categories, All games, one search bar, no overflow, accessibility passed",
+    "ocean-320: categories, All games, one search bar, no overflow, accessibility passed",
+    "ocean-375: categories, All games, one search bar, no overflow, accessibility passed",
+    "ocean-1440: categories, All games, one search bar, no overflow, accessibility passed"
+  ],
+  "errors": []
+}

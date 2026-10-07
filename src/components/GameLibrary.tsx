@@ -1,12 +1,14 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { gameCategoryLabel, matchesGame, type LibraryFilters, type GameMode } from '@/lib/game-library';
+import { GAME_CATEGORIES, gameCategoryLabel, matchesGame, type LibraryFilters, type GameMode } from '@/lib/game-library';
 
 type OnlineGame = { id: string; slug: string; name: string; description: string; emoji: string; type: string };
 type LocalGame = { slug: string; name: string; description: string; emoji: string; meta: string };
 const initialFilters: LibraryFilters = { search: '', category: 'all', audience: 'all', mode: 'all' };
 const modes: { id: GameMode; label: string }[] = [{ id: 'all', label: 'All ways to play' }, { id: 'online', label: 'Online rooms' }, { id: 'local', label: 'Pass & play' }];
+const categoryIcons: Record<string, string> = { all: '🎮', trivia: '🧠', words: '💬', logic: '🧩', conversation: '🗣️', couples: '💞', party: '🎉', memory: '🃏' };
+const categories = [{ id: 'all', label: 'All games' }, ...GAME_CATEGORIES] as const;
 
 export default function GameLibrary({ online, local, initialSearch = '' }: { online: OnlineGame[]; local: LocalGame[]; initialSearch?: string }) {
   const [filters, setFilters] = useState<LibraryFilters>({ ...initialFilters, search: initialSearch });
@@ -22,6 +24,20 @@ export default function GameLibrary({ online, local, initialSearch = '' }: { onl
         <label htmlFor="game-search" className="mb-3 block text-sm font-bold">Find a game</label>
         <input id="game-search" className="input !min-h-14 !rounded-full !px-5" type="search" maxLength={100} value={filters.search} onChange={event => setFilters({ ...filters, search: event.target.value })} placeholder="Search games, categories or keywords…" />
       </div>
+      <section className="border-t border-white/10 pt-4" aria-labelledby="categories-heading">
+        <h2 id="categories-heading" className="text-sm font-bold">Browse categories</h2>
+        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4" role="group" aria-label="Game categories">
+          {categories.map(category => {
+            const categoryFilters = { ...filters, category: category.id };
+            const total = online.filter(game => matchesGame(game, categoryFilters, 'online')).length + local.filter(game => matchesGame(game, categoryFilters, 'local')).length;
+            return <button key={category.id} type="button" className={`${filters.category === category.id ? 'btn' : 'btn-secondary'} !min-h-14 !justify-start !rounded-2xl !px-3 !py-3 !text-left !text-xs sm:!text-sm`} aria-pressed={filters.category === category.id} onClick={() => setFilters({ ...filters, category: category.id })}>
+              <span aria-hidden="true" className="shrink-0 text-lg">{categoryIcons[category.id]}</span>
+              <span className="min-w-0 flex-1">{category.label}</span>
+              <span className="shrink-0 text-xs tabular-nums" aria-label={`${total} games`}>{total}</span>
+            </button>;
+          })}
+        </div>
+      </section>
       <div className="flex flex-wrap gap-2" role="group" aria-label="Ways to play">{modes.map(mode => <button key={mode.id} type="button" className={`${filters.mode === mode.id ? 'btn' : 'btn-secondary'} !min-h-11 !w-auto !px-4 !py-2 !text-sm`} aria-pressed={filters.mode === mode.id} onClick={() => setFilters({ ...filters, mode: mode.id })}>{mode.label} <span className="ml-1 opacity-70">{mode.id === 'online' ? onlineCount : mode.id === 'local' ? localCount : onlineCount + localCount}</span></button>)}</div>
       <div className="flex flex-wrap items-center justify-between gap-2"><p role="status" className="text-sm text-white/65">{count} {count === 1 ? 'game' : 'games'} to explore{filters.mode === 'all' ? ' across both play modes' : ''}.</p>{filtered && <button type="button" className="btn-ghost !min-h-11 !w-auto !px-3 !py-2 !text-sm" onClick={() => setFilters(initialFilters)}>Reset filters</button>}</div>
     </div>

@@ -75,3 +75,24 @@ test('navigation search initializes both catalogs and can be cleared without los
   fireEvent.click(view.getByRole('button', { name: 'Reset filters' }));
   assert.ok(view.getByRole('link', { name: 'Create Truth or Dare room' }));
 });
+
+test('category buttons keep All games and combine with search and play mode', t => {
+  const view = render(<GameLibrary online={online} local={LOCAL_GAMES} />);
+  t.after(cleanup);
+  const categoryButtons = view.getByRole('group', { name: 'Game categories' });
+  assert.equal(categoryButtons.querySelectorAll('button').length, 8);
+  fireEvent.click(view.getByRole('button', { name: /Couples & connection/ }));
+  assert.ok(view.getByRole('link', { name: 'Create Know Your Partner room' }));
+  assert.equal(view.queryByRole('link', { name: 'Create Mental Math room' }), null);
+  fireEvent.change(view.getByRole('searchbox'), { target: { value: 'mental math' } });
+  assert.ok(view.getByRole('heading', { name: 'No games found' }));
+  fireEvent.click(view.getByRole('button', { name: /^All games/ }));
+  assert.equal((view.getByRole('searchbox') as HTMLInputElement).value, 'mental math');
+  assert.ok(view.getByRole('link', { name: 'Create Mental Math room' }));
+  fireEvent.click(view.getByRole('button', { name: /Pass & play/ }));
+  fireEvent.click(view.getByRole('button', { name: /Logic & numbers/ }));
+  assert.ok(view.getByRole('link', { name: 'Play Mental Math Duel on one device' }));
+  assert.equal(view.queryByRole('link', { name: 'Create Mental Math room' }), null);
+  fireEvent.click(view.getByRole('button', { name: 'Reset filters' }));
+  assert.equal(view.getByRole('button', { name: /^All games/ }).getAttribute('aria-pressed'), 'true');
+});
