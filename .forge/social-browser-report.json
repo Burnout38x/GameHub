@@ -1,0 +1,26 @@
+{
+  "checks": [
+    "anonymous access denied",
+    "username search, follow counts and idempotency",
+    "mutual follow rule and online privacy",
+    "private persistent invite, acceptance and duplicate acceptance",
+    "closed-room invitations reject safely and unfollow works",
+    "lobby-invitation-375",
+    "search and follow → lobby invite → returning-player notice → join room UI",
+    "atomic game completion counts exactly once in progress and win streak",
+    "direct table and privileged RPC access denied",
+    "weekly goal validates, persists and cannot target another player",
+    "dark-375-/friends",
+    "dark-375-/profile",
+    "light-375-/friends",
+    "light-375-/profile",
+    "arcade-375-/friends",
+    "arcade-375-/profile",
+    "ocean-375-/friends",
+    "ocean-375-/profile",
+    "friends-320",
+    "friends-1440"
+  ],
+  "errors": [],
+  "violations": []
+}

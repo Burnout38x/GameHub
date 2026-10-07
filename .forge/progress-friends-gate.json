@@ -1,0 +1,10 @@
+{
+  "goal": "Add manageable player progress/streaks, following and online friends, and private room invitations that returning friends can receive.",
+  "conditions": 4,
+  "mode": "parse",
+  "blocked": false,
+  "problems": [],
+  "hedges": [],
+  "reruns": [],
+  "superseded": []
+}

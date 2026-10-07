@@ -4,6 +4,7 @@ import { useState } from 'react';
 import type { RoomBundle } from './RoomClient';
 import { callRoomApi } from './RoomClient';
 import LeaveButton from './LeaveButton';
+import RoomFriendsInvite from '@/components/social/RoomFriendsInvite';
 
 export default function Lobby(props: RoomBundle & { code: string; inRoom: boolean }) {
   const { room, game, players, userId, code, inRoom, refresh } = props;
@@ -71,6 +72,7 @@ export default function Lobby(props: RoomBundle & { code: string; inRoom: boolea
         <p role="status" className="mt-2 text-sm text-indigo-200">{copyMessage}</p>
       </section>
 
+      {inRoom && <RoomFriendsInvite code={code} />}
       <section className="glass p-5 sm:p-6" aria-labelledby="players-title" aria-busy={busy}>
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 id="players-title" className="text-lg font-black">Players <span className="text-white/60">{players.length}/{capacity}</span></h2>

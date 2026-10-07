@@ -1,0 +1,37 @@
+    object     | rows 
+---------------+------
+ profiles      |    4
+ rooms         |   24
+ match_history |   20
+(3 rows)
+
+    version     |      name       
+----------------+-----------------
+ 20261006235906 | player_social
+ 20261006235911 | player_progress
+(2 rows)
+
+         relname          | relrowsecurity | anon_read | authenticated_read 
+--------------------------+----------------+-----------+--------------------
+ player_follows           | t              | f         | f
+ player_presence          | t              | f         | f
+ player_progress_settings | t              | f         | f
+ room_invitations         | t              | f         | f
+(4 rows)
+
+         proname         | anon_execute | authenticated_execute | service_execute 
+-------------------------+--------------+-----------------------+-----------------
+ player_progress_summary | f            | f                     | t
+ player_social_action    | f            | f                     | t
+ player_social_dashboard | f            | f                     | t
+(3 rows)
+
+ profiles_checked | history_counts_match 
+------------------+----------------------
+                4 | t
+(1 row)
+
+
+WARNING:  invalid configuration parameter name "supautils.restrict_extension_versions", removing it
+DETAIL:  "supautils" is now a reserved prefix.
+

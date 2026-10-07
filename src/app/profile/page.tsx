@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import Link from 'next/link';
+import ProgressTracker from './ProgressTracker';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,34 +26,16 @@ export default async function ProfilePage() {
 
   const earnedIds = new Set((earned ?? []).map((e) => e.achievement_id));
 
-  const stats: [string, string | number][] = [
-    ['Games played', profile?.games_played ?? 0],
-    ['Games won', profile?.games_won ?? 0],
-    ['Total points', profile?.total_points ?? 0],
-    ['Current streak', `🔥 ${profile?.current_streak ?? 0}`],
-    ['Best streak', `🔥 ${profile?.best_streak ?? 0}`],
-    [
-      'Win rate',
-      profile?.games_played
-        ? `${Math.round(((profile.games_won ?? 0) / profile.games_played) * 100)}%`
-        : '—',
-    ],
-  ];
-
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-6">
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6">
       <div className="glass p-7">
         <div className="pill">{profile?.role === 'admin' ? '👑 Admin' : '🎮 Player'}</div>
         <h1 className="mt-3 text-3xl font-black tracking-tight">{profile?.username}</h1>
-        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {stats.map(([name, value]) => (
-            <div key={name} className="glass-sm px-4 py-3">
-              <div className="text-xs text-white/55">{name}</div>
-              <div className="mt-1 text-2xl font-black">{value}</div>
-            </div>
-          ))}
-        </div>
+        <p className="mt-2 text-white/65">Your game-night journey, one game at a time.</p>
+        <Link href="/friends" className="btn-secondary mt-4 sm:w-auto">Friends & invitations →</Link>
       </div>
+
+      <ProgressTracker />
 
       <div className="glass p-7">
         <h2 className="text-xl font-black">Achievements</h2>
@@ -59,7 +43,7 @@ export default async function ProfilePage() {
           {(all ?? []).map((a) => {
             const got = earnedIds.has(a.id);
             return (
-              <div key={a.id} className={`glass-sm flex items-center gap-3 px-4 py-3 ${got ? '' : 'opacity-40'}`}>
+              <div key={a.id} className={`glass-sm flex items-center gap-3 px-4 py-3 ${got ? '' : 'border-dashed'}`}>
                 <span className="text-2xl">{got ? a.emoji : '🔒'}</span>
                 <div>
                   <div className="text-sm font-black">{a.name}</div>
@@ -75,7 +59,7 @@ export default async function ProfilePage() {
         <h2 className="text-xl font-black">Recent games</h2>
         <ul className="mt-3 flex flex-col gap-2">
           {(history ?? []).map((h: any) => (
-            <li key={h.id} className="glass-sm flex items-center justify-between px-4 py-3 text-sm">
+            <li key={h.id} className="glass-sm flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
               <span className="font-bold">
                 {h.games?.emoji} {h.games?.name}
               </span>

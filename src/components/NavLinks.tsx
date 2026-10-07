@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
 import SignOutButton from './SignOutButton';
+import SocialPresence from './social/SocialPresence';
 import { registrationAvailable } from '@/lib/config';
 
 export default function NavLinks({ signedIn, username, isAdmin }: {
@@ -12,7 +13,7 @@ export default function NavLinks({ signedIn, username, isAdmin }: {
   const pathname = usePathname();
   const locked = pathname?.startsWith('/room/');
   const brand = <span className="flex items-center gap-2 text-lg font-black sm:text-xl tracking-tight"><Image src="/brand/gamehub-logo.png" alt="" width={40} height={40} sizes="40px" className="h-10 w-10 shrink-0 object-contain" priority /><span>Game<span className="text-[#9cddd2]">Hub</span></span></span>;
-  if (locked) return <>{brand}<div className="flex items-center gap-2"><span className="pill">Game room</span><ThemeToggle /></div></>;
+  if (locked) return <>{brand}<div className="flex flex-wrap items-center gap-2">{signedIn && <SocialPresence />}<span className="pill">Game room</span><ThemeToggle /></div></>;
   const links = [['/games', 'Games'], ['/rooms', 'Rooms'], ['/leaderboard', 'Leaderboard'], ['/themes', 'Themes'], ['/report', 'Report an issue']];
   return <>
     <Link href="/" aria-label="GameHub home">{brand}</Link>
@@ -28,6 +29,7 @@ export default function NavLinks({ signedIn, username, isAdmin }: {
     </div>
     <div className="flex w-full flex-wrap items-center gap-1 border-t border-white/10 pt-2" aria-label="Main navigation">
       {links.map(([href, label]) => <Link key={href} href={href} className="nav-link !px-2 !text-xs sm:!px-3 sm:!text-sm" aria-current={pathname === href || pathname?.startsWith(href + '/') ? 'page' : undefined}>{label}</Link>)}
+      {signedIn && <><Link href="/profile" className="nav-link !px-2 !text-xs sm:!px-3 sm:!text-sm" aria-current={pathname === '/profile' ? 'page' : undefined}>Progress</Link><Link href="/friends" className="nav-link !px-2 !text-xs sm:!px-3 sm:!text-sm" aria-current={pathname === '/friends' ? 'page' : undefined}>Friends</Link><SocialPresence /></>}
       {isAdmin && <Link href="/admin" className="nav-link" aria-current={pathname?.startsWith('/admin') ? 'page' : undefined}>Admin</Link>}
       <Link href="/rooms/join" className="nav-link ml-auto !px-2 !text-xs !text-[#f7bd78] sm:!text-sm" aria-label="Join with a code"><span className="sm:hidden">Join ↗</span><span className="hidden sm:inline">Join with code ↗</span></Link>
     </div>

@@ -1,0 +1,15 @@
+{
+  "checks": [
+    "simultaneous HTTP accepts enforce two-player capacity using shared room lock",
+    "expired invitation is absent from inbox and cannot join",
+    "online status expires after 90 seconds without a heartbeat",
+    "concurrent invitations enforce three-per-friend hourly limit atomically",
+    "concurrent invitations enforce twenty-per-sender hourly limit atomically",
+    "anonymous and authenticated clients cannot read/delete private social rows or invoke privileged functions",
+    "RLS enabled; dashboard and bounded inbox EXPLAIN ANALYZE complete"
+  ],
+  "failure": null,
+  "plans": "     relname      | relrowsecurity \n------------------+----------------\n player_follows   | t\n player_presence  | t\n room_invitations | t\n(3 rows)\n\n                                     QUERY PLAN                                      \n-------------------------------------------------------------------------------------\n Result  (cost=0.00..0.26 rows=1 width=32) (actual time=3.574..3.575 rows=1 loops=1)\n   Buffers: shared hit=1284\n Planning Time: 0.027 ms\n Execution Time: 3.642 ms\n(4 rows)\n\n                                                                 QUERY PLAN                                                                 \n--------------------------------------------------------------------------------------------------------------------------------------------\n Limit  (cost=11.31..11.32 rows=1 width=112) (actual time=0.020..0.020 rows=0 loops=1)\n   Buffers: shared hit=2\n   ->  Sort  (cost=11.31..11.32 rows=1 width=112) (actual time=0.020..0.020 rows=0 loops=1)\n         Sort Key: created_at DESC\n         Sort Method: quicksort  Memory: 25kB\n         Buffers: shared hit=2\n         ->  Bitmap Heap Scan on room_invitations  (cost=4.17..11.30 rows=1 width=112) (actual time=0.018..0.018 rows=0 loops=1)\n               Recheck Cond: (recipient_id = 'b480bb5e-5eb0-46d5-8b01-7cb70f021186'::uuid)\n               Filter: ((status = 'pending'::text) AND (expires_at > now()))\n               Rows Removed by Filter: 19\n               Heap Blocks: exact=1\n               Buffers: shared hit=2\n               ->  Bitmap Index Scan on room_invitations_inbox  (cost=0.00..4.17 rows=3 width=0) (actual time=0.002..0.002 rows=24 loops=1)\n                     Index Cond: (recipient_id = 'b480bb5e-5eb0-46d5-8b01-7cb70f021186'::uuid)\n                     Buffers: shared hit=1\n Planning Time: 0.041 ms\n Execution Time: 0.031 ms\n(17 rows)\n\n",
+  "disposableUsersCleaned": 3,
+  "disposableRoomsCleaned": 4
+}

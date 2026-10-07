@@ -1,0 +1,12 @@
+# Player progress implementation
+
+- `/profile` now shows verified completed-match totals, daily UTC play streak and best, Monday–Sunday activity, adjustable saved weekly games target (1–50), multiplayer current/best win streak, existing achievements and recent games.
+- `player_progress_summary` aggregates all completed history inside PostgreSQL, avoiding API row truncation. Win counters remain the authoritative atomic finisher counters: solo rooms preserve them, tied multiplayer wins count. No scores or old rows changed.
+- Private goal table: RLS enabled, no public/anon/authenticated access; service-only invoker RPC. API authenticates user and obtains identity server-side. PATCH validates integer bounds, same origin, and 2KB payload limit.
+- Distinct daily UTC activity retains yesterday's streak through today; missing a full day resets only current streak. Weekly completed games include repeat games in one day. Anonymous pass & play does not fabricate account results.
+- Loading/retry/save feedback and semantic progressbar; existing four-theme classes, narrow layout, reduced-motion progress transition. Focus/visibility and visible-tab minute refresh update verified progress without erasing unsaved goal input.
+- Verification: `TSX_TSCONFIG_PATH=tsconfig.test.json node --import tsx --test tests/progress.test.ts` — 5 passed (duplicate dates, missing day, UTC midnight/year boundary, empty/future data, goal validation).
+- `npx eslint src/app/profile src/app/api/progress src/lib/progress.ts tests/progress.test.ts --max-warnings=0` — passed. `npx tsc --noEmit` — passed before final refresh hardening; root integrated build pending.
+- Supabase docs reviewed: https://supabase.com/docs/guides/database/functions. Changelog markdown endpoint failed in web tool (unsupported markdown type).
+- Independent social backend review: actor comes from authenticated getUser; private tables/RPC grants, mutual invite checks, opt-in mutual-only presence, per-actor quotas, room lock shared with ordinary joins, invite ownership/rechecks and bounded search all inspected. No release-blocking issue found. Pairwise unfollow/invite race can briefly leave a stale pending invite; acceptance and dashboard recheck mutual follows, so it cannot confer room access after unfollow commits.
+- Isolated PostgreSQL read check after migration: summary returns JSON object with 0 completed games for absent profile; authenticated function EXECUTE=false and settings SELECT=false. Final `npx tsc --noEmit` passed after refresh hardening.
