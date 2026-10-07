@@ -4,7 +4,7 @@
   "mode": "parse",
   "blocked": true,
   "problems": [
-    "  2. PASS without evidence \u2014 backticked text is not a command"
+    "  2. PASS without evidence \u2014 no observed output \u2014 use  PASS (`cmd` -> what it printed)"
   ],
   "hedges": [],
   "reruns": [],
