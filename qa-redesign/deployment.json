@@ -1,0 +1,9 @@
+{
+  "codeCommit": "7eacc7c5dcc20c1dd8d0dc003b766bc1072ae3a9",
+  "deploymentId": 6908823358,
+  "state": "success",
+  "environment": "Production",
+  "environmentUrl": "https://game-4twl9fgb0-james-akintundes-projects.vercel.app",
+  "publicUrl": "https://naijagamehub.vercel.app",
+  "evidence": "GitHub deployment status and Vercel commit status both success"
+}

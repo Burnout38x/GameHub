@@ -23,3 +23,5 @@ WebKit follow-up classification: the initial masked-password login attempt succe
 No open game-rule or independently reproduced presentation blockers remain. The final independent report records the backend and cross-browser gate results and their scope.
 
 Root RD-06 retest: `local-release-smoke.json` records all ten Chromium/WebKit viewport checks passing with exactly one main landmark, zero full-page WCAG axe violations, no overflow and no page errors.
+
+Release source revision: `7eacc7c5dcc20c1dd8d0dc003b766bc1072ae3a9`. Root added the final semantic landmark correction and verified it with ten full-page Chromium/WebKit smoke checks; the independent game findings and their scope above remain unchanged.

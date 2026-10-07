@@ -21,3 +21,7 @@ Independent two- and four-player sessions completed 20 and 40 turns. Scores, win
 ## Release checkpoint
 
 Targeted WebKit acceptance passed. Root then found and fixed a nested main landmark in Pocket. The rebuilt production app passed ten public-flow checks across Chromium/WebKit at 320, 390, 717, 820 and 1440 pixels, including full-page axe, no overflow and one main landmark. Targeted lint and type checking passed again. Source changes are accepted for push; production verification is next.
+
+Release source committed and pushed to both `main` and `codex/gamehub-game-night-upgrade`: `7eacc7c5dcc20c1dd8d0dc003b766bc1072ae3a9`. Vercel build is pending. All task-owned local app/gateway processes and the three test containers were stopped after fixture cleanup. Other Docker projects were left untouched.
+
+Production deployment 6908823358 succeeded for source `7eacc7c`. Ten live Chromium/WebKit checks passed across five sizes with zero page errors, no overflow, one main landmark and zero full-page WCAG axe findings. No live accounts, rooms or results were created. All six acceptance conditions passed; final evidence is ready to archive.

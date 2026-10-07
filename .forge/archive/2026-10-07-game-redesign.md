@@ -5,13 +5,13 @@ DONE WHEN:
   2. Both revised engines implement those rules with validated moves, balanced resource tradeoffs, explicit outcomes and compatible saved/room state handling; meaningful rule and strategy tests pass. — PASS (`node qa-redesign/verify-evidence.mjs rules` → 7 independent engine groups, 114 unit tests, 100 distinct offers)
   3. Both game UIs communicate goals, consequences, progress and final outcomes through polished responsive board presentation, contextual controls and purposeful motion; browser playthroughs and visual inspection cover mobile and desktop. — PASS (`node qa-redesign/verify-evidence.mjs ui` → Chromium/WebKit flows, 22 Market visual checks, 10 full-page checks)
   4. Independent review verifies full game flows, multiplayer synchronization, authorization and affected regressions; findings are fixed and retested. — PASS (`node qa-redesign/verify-evidence.mjs integration` → real 2P/4P completion, concurrency, persistence, compatibility and verified cleanup)
-  5. Verified changes, design notes and progress logs are committed and pushed, and production deployment is checked after acceptance. — NOT CHECKED (accepted locally; push and deployment next)
+  5. Verified changes, design notes and progress logs are committed and pushed, and production deployment is checked after acceptance. — PASS (`node qa-redesign/verify-evidence.mjs release` → production deployment successful and 10 live Chromium/WebKit checks passed)
 
 OUT: Unrelated game redesigns; paid prizes; destructive production data edits.
 RISK: Reversible source changes. Only authorized Supabase project jnzbncbmcewsvtjjmddn may be affected if additive compatibility requires it; existing players and saves must not be corrupted. Local isolated test accounts and rooms only.
 
 PHASES: Diagnose and design; engines and presentation; independent playthrough/review; release.
-STATUS: Design, implementation and independent acceptance complete. Release pending. Prior QA established technical behavior; this acceptance also covers player motivation and strategic choices.
+STATUS: All six conditions passed. Source pushed to both authorized branches; exact production deployment and ten live browser checks passed. Prior QA established technical behavior; this acceptance also covers player motivation and strategic choices.
 
 AMENDED 2026-10-07: User requires fluid, lifelike movement without resource-heavy effects.
   + DONE WHEN 6. Token travel, construction and reward feedback reflect real committed actions with bounded transform/opacity motion, reduced-motion support and no perpetual render loop; interrupted/reconnected states remain operable. — PASS (`node qa-redesign/verify-evidence.mjs motion` → bounded travel, reduced motion and no unchanged-poll restart verified)
