@@ -18,3 +18,17 @@
 @media(prefers-reduced-motion:reduce){.plot{transition:none}.building{animation:none}.plot:not(:disabled):hover{transform:none}}
 @media(max-width:359px){.board{gap:6px}.plot{border-radius:10px;min-height:55px}.building{font-size:22px}.tileLabel{font-size:9px}}
 .confirmDock{position:fixed;z-index:35;bottom:max(10px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:600px;padding:10px;border:1px solid color-mix(in srgb,var(--ink) 22%,transparent);border-radius:22px;background:var(--surface);box-shadow:0 6px 32px #0006;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}.confirmDock button{font-size:13px;padding:10px;margin:0;min-height:48px}.hasPreview{padding-bottom:100px}
+
+/* A fixed oblique camera keeps the whole neighborhood visible without drag controls. */
+.board:not(.flat) { transform: perspective(1000px) rotateX(28deg) rotateZ(-20deg) scale(.8); transform-style: flat; margin-block: 1.3rem; }
+.board:not(.flat) .plot { border-radius: 10px; box-shadow: 0 5px 0 color-mix(in srgb,var(--canvas) 60%,#3e6854), 0 12px 14px #0002; }
+.building { width: 84%; height: 70%; background: none !important; border: 0 !important; border-radius: 0 !important; box-shadow: none; font-size: inherit; transform: none; animation: miniature-arrive .25s ease-out; }
+.miniature { display: block; width: 100%; height: 100%; overflow: visible; }
+.board:not(.flat) .building { transform: rotateZ(20deg) scale(1.12); transform-origin: 50% 75%; }
+.board:not(.flat) .tileLabel { transform: rotateZ(20deg); margin-top: 0; }
+.board:not(.flat) .empty { transform: rotateZ(20deg); }
+.flat .building { height: 65%; }
+@keyframes miniature-arrive { from { opacity: .4; translate: 0 -8px; } to { opacity: 1; translate: 0 0; } }
+@media(prefers-reduced-motion:reduce) { .building { animation: none; } }
+
+.plot > * { pointer-events: none; }

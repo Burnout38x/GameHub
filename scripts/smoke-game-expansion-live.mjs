@@ -11,10 +11,18 @@ for(const engine of['chromium','webkit']){
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   await page.getByRole('searchbox').fill('pocket');await page.getByRole('link',{name:'Build your paradise →'}).click();
   await page.getByRole('button',{name:'Relaxed practice',exact:true}).click();await page.getByRole('button',{name:'Row 1, column 1: empty plot',exact:true}).click();await page.getByRole('button',{name:'Cancel preview',exact:true}).click();
+  await page.getByRole('button',{name:'Row 1, column 1: empty plot',exact:true}).click();
+  await page.getByRole('button',{name:/Confirm placement/}).click();
+  await page.getByText('1/20 plots',{exact:true}).waitFor();
+  assert.equal(await page.locator('main').count(),1);
+  assert.equal(await page.locator('button[aria-label^="Row 1, column 1:"] svg').count(),1);
+  await page.locator('.skip-link').focus();
+  const clipping=await page.locator('.skip-link').evaluate(el=>getComputedStyle(el).clipPath);
+  assert.equal(clipping,'none');
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   await page.getByRole('button',{name:'Dimensional board',exact:true}).click();
-  checks.push({engine,width,height,library:true,soloPracticePreview:true,flatBoard:true,overflow:false});await ctx.close();
+  checks.push({engine,width,height,library:true,soloPracticePreview:true,miniaturePlacement:true,singleMain:true,visibleSkipLink:true,flatBoard:true,overflow:false});await ctx.close();
  }}finally{await browser.close();}
 }
-writeFileSync('.forge/game-expansion-live.json',JSON.stringify({base,codeCommit:'d21ddc6adb3b586943d18b03b7548cd233aec865',checks,errors},null,2));
+writeFileSync('.forge/game-expansion-live.json',JSON.stringify({base,codeCommit:process.env.QA_CODE_COMMIT ?? 'local-verification',checks,errors},null,2));
 assert.deepEqual(errors,[]);console.log(`PASS ${checks.length} live library/solo checks, zero page errors; no production accounts, rooms or results created.`);

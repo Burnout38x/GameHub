@@ -47,7 +47,7 @@ try{
   try{
    const a=await person(browser,engine,0),b=await person(browser,engine,1),people=[a,b];
    const cr=await a.page.request.post(app+'/api/rooms',{data:{gameId:game.id}});assert(cr.ok(),await cr.text());const{code}=await cr.json();const row=(await admin.from('rooms').select('id').eq('code',code).single()).data;rooms.push(row.id);
-   for(const player of [a,b]){await player.page.getByRole('link',{name:'Join with a code',exact:true}).click();await player.page.getByLabel('Room code',{exact:true}).fill(code);await player.page.getByRole('button',{name:'Join room →',exact:true}).click();await player.page.waitForURL(`**/room/${code}`);}await a.page.getByRole('button',{name:'Start with 2 players',exact:true}).click();
+   for(const player of [a,b]){await player.page.getByRole('link',{name:/^Join(?: with code)? ↗$/}).click();await player.page.getByLabel('Room code',{exact:true}).fill(code);await player.page.getByRole('button',{name:'Join room →',exact:true}).click();await player.page.waitForURL(`**/room/${code}`);}await a.page.getByRole('button',{name:'Start with 2 players',exact:true}).click();
    await a.page.getByRole('button',{name:/Move to /}).first().waitFor();
    await matrix(a.page,engine,'movement');
    await screenshot(a.page,engine,'board',a.page.getByRole('region',{name:'Market board'}),390);

@@ -31,7 +31,7 @@ export default function NavLinks({ signedIn, username, isAdmin }: {
       {links.map(([href, label]) => <Link key={href} href={href} className="nav-link !px-2 !text-xs sm:!px-3 sm:!text-sm" aria-current={pathname === href || pathname?.startsWith(href + '/') ? 'page' : undefined}>{label}</Link>)}
       {signedIn && <><Link href="/profile" className="nav-link !px-2 !text-xs sm:!px-3 sm:!text-sm" aria-current={pathname === '/profile' ? 'page' : undefined}>Progress</Link><Link href="/friends" className="nav-link !px-2 !text-xs sm:!px-3 sm:!text-sm" aria-current={pathname === '/friends' ? 'page' : undefined}>Friends</Link><SocialPresence /></>}
       {isAdmin && <Link href="/admin" className="nav-link" aria-current={pathname?.startsWith('/admin') ? 'page' : undefined}>Admin</Link>}
-      <Link href="/rooms/join" className="nav-link ml-auto !px-2 !text-xs !text-[#f7bd78] sm:!text-sm" aria-label="Join with a code"><span className="sm:hidden">Join ↗</span><span className="hidden sm:inline">Join with code ↗</span></Link>
+      <Link href="/rooms/join" className="nav-link ml-auto !px-2 !text-xs !text-[#f7bd78] sm:!text-sm"><span className="sm:hidden">Join ↗</span><span className="hidden sm:inline">Join with code ↗</span></Link>
     </div>
   </>;
 }

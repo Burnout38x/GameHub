@@ -50,7 +50,7 @@ export default function MarketPlay({ room, players, userId, refresh }: RoomBundl
 
   return <div className={styles.game} aria-busy={busy}>
     <div className={styles.topline}>
-      <div><div className="eyebrow mb-1">Build a little market empire</div><h2 className={styles.title}>Market Day</h2></div>
+      <div><div className="eyebrow mb-1">Build a little market empire</div><h1 className={styles.title}>Market Day</h1></div>
       <span className="pill">Round {state.round} / {MARKET_ROUNDS}</span>
     </div>
     <div className={styles.players} aria-label="Market standings">
@@ -62,7 +62,7 @@ export default function MarketPlay({ room, players, userId, refresh }: RoomBundl
     </div>
 
     <section className={styles.boardShell} aria-label="Market board">
-      <div className={styles.topline}><div><h3 className="font-black">The neighborhood</h3><p className={styles.muted}>Numbered tokens show each player’s location.</p></div>
+      <div className={styles.topline}><div><h2 className="font-black">The neighborhood</h2><p className={styles.muted}>Numbered tokens show each player’s location.</p></div>
         <button className="btn-secondary !px-3 !py-2 text-sm" aria-pressed={flat} onClick={() => setFlat(!flat)}>Flat board {flat ? 'on' : 'off'}</button>
       </div>
       <div className={`${styles.board} ${flat ? '' : styles.dimensional}`}>
@@ -73,17 +73,17 @@ export default function MarketPlay({ room, players, userId, refresh }: RoomBundl
           const cost = stall.ownerId && stall.ownerId !== userId ? Math.min(state.players.find(player => player.id === userId)?.cash ?? 0, stall.level) : 0;
           const contents = <><span className={styles.toy} aria-hidden="true">{icons[index]}</span><span className={styles.tileName}>{place.name}</span>
             <span className={styles.tileMeta}>{stall.ownerId ? `${name(stall.ownerId)} · level ${stall.level}` : `${place.price} coins · available`}</span>
-            <span className={styles.tokens}>{visiting.map(player => <span className={styles.token} key={player.id} title={name(player.id)} aria-label={`${name(player.id)} is here`}>{state.players.indexOf(player) + 1}</span>)}</span>
+            <span className={styles.tokens}>{visiting.map(player => <span className={styles.token} key={player.id} title={name(player.id)}>{state.players.indexOf(player) + 1}<span className="sr-only"> {name(player.id)} is here</span></span>)}</span>
             {available && <span className={styles.tileMeta}>{cost ? `Visit · pay ${cost} coins` : 'Move here →'}</span>}</>;
           const className = `${styles.tile} ${available ? styles.tileAvailable : ''} ${visiting.some(player => player.id === userId) ? styles.tileSelected : ''}`;
-          return available ? <button key={index} className={className} disabled={busy} onClick={() => void act({ type: 'move', destination: index })} aria-label={`Move to ${place.name}${cost ? `, pay ${cost} coins to the owner` : ', no visit fee'}`}>{contents}</button>
+          return available ? <button key={index} className={className} disabled={busy} onClick={() => void act({ type: 'move', destination: index })}><span className="sr-only">Move to </span>{contents}{!cost && <span className="sr-only">. No visit fee.</span>}</button>
             : <div key={index} className={className}>{contents}</div>;
         })}
       </div>
     </section>
 
     <section ref={controlsRef} tabIndex={-1} className={styles.controls} aria-label="Turn actions">
-      <div role="status" aria-live="polite"><h3 className="text-lg font-black">{state.phase === 'finished' ? 'Market closed' : mine ? 'Your turn' : `${name(current.id)}’s turn`}</h3>
+      <div role="status" aria-live="polite"><h2 className="text-lg font-black">{state.phase === 'finished' ? 'Market closed' : mine ? 'Your turn' : `${name(current.id)}’s turn`}</h2>
         <p className={styles.muted}>{state.phase === 'move' ? mine ? 'Choose one of the three highlighted destinations above.' : 'Choosing a destination…' : state.phase === 'business' ? `At ${currentPlace.name} · choose one business action.` : state.phase === 'trade' ? 'Trade with a neighbor, or finish this turn.' : 'Final prosperity determines the winner.'}</p>
       </div>
       {error && <p role="alert" className={`${styles.error} mt-3`}>{error}</p>}
@@ -96,7 +96,7 @@ export default function MarketPlay({ room, players, userId, refresh }: RoomBundl
         <button className={styles.action} disabled={busy} onClick={() => void act({ type: 'pass' })}><strong>☕ Take a break</strong><span>Skip your business action this turn</span></button>
       </div>}
       {offer && <div className={`${styles.notice} mt-4`}>
-        <h4 className="font-black">{name(offer.fromId)} offers {name(offer.toId)} a deal</h4>
+        <h3 className="font-black">{name(offer.fromId)} offers {name(offer.toId)} a deal</h3>
         <p className="mt-2">{name(offer.fromId)} gives: <strong>{describeAssets(offer.give)}</strong></p>
         <p className="mt-1">{name(offer.toId)} gives: <strong>{describeAssets(offer.receive)}</strong></p>
         {myOffer && <div className="mt-3 flex flex-wrap gap-2"><button className="btn" disabled={busy} onClick={() => void act({ type: 'accept' })}>Accept trade</button><button className="btn-secondary" disabled={busy} onClick={() => void act({ type: 'decline' })}>Decline</button></div>}
