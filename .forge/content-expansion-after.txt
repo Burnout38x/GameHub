@@ -1,0 +1,39 @@
+    object     | rows 
+---------------+------
+ profiles      |    4
+ rooms         |   24
+ match_history |   20
+ prompts       |  766
+(4 rows)
+
+ retained_original_prompts 
+---------------------------
+                       696
+(1 row)
+
+           slug           | difficulty | count 
+--------------------------+------------+-------
+ doctor-dash              | easy       |    44
+ doctor-dash              | hard       |    48
+ truth-or-dare            | easy       |    15
+ truth-or-dare            | hard       |    10
+ truth-or-dare-after-dark | easy       |    16
+ truth-or-dare-after-dark | hard       |    24
+(6 rows)
+
+           slug           | difficulty | added_prompts 
+--------------------------+------------+---------------
+ doctor-dash              | hard       |            30
+ truth-or-dare-after-dark | easy       |            16
+ truth-or-dare-after-dark | hard       |            24
+(3 rows)
+
+    version     |              name              
+----------------+--------------------------------
+ 20261007001332 | doctor_dash_after_dark_content
+(1 row)
+
+
+WARNING:  invalid configuration parameter name "supautils.restrict_extension_versions", removing it
+DETAIL:  "supautils" is now a reserved prefix.
+
