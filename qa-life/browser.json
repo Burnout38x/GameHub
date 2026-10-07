@@ -1,0 +1,110 @@
+{
+  "base": "http://127.0.0.1:3199",
+  "results": [
+    {
+      "engine": "chromium",
+      "width": 320,
+      "movement": true,
+      "settled": true,
+      "aligned": true,
+      "gateStable": true,
+      "axe": [],
+      "reducedMotion": true,
+      "toggle": true,
+      "previewIsolated": true,
+      "overflow": false
+    },
+    {
+      "engine": "chromium",
+      "width": 390,
+      "movement": true,
+      "settled": true,
+      "aligned": true,
+      "gateStable": true,
+      "axe": [],
+      "reducedMotion": true,
+      "toggle": true,
+      "previewIsolated": true,
+      "overflow": false
+    },
+    {
+      "engine": "chromium",
+      "width": 820,
+      "movement": true,
+      "settled": true,
+      "aligned": true,
+      "gateStable": true,
+      "axe": [],
+      "reducedMotion": true,
+      "toggle": true,
+      "previewIsolated": true,
+      "overflow": false
+    },
+    {
+      "engine": "chromium",
+      "width": 1440,
+      "movement": true,
+      "settled": true,
+      "aligned": true,
+      "gateStable": true,
+      "axe": [],
+      "reducedMotion": true,
+      "toggle": true,
+      "previewIsolated": true,
+      "overflow": false
+    },
+    {
+      "engine": "webkit",
+      "width": 320,
+      "movement": true,
+      "settled": true,
+      "aligned": true,
+      "gateStable": true,
+      "axe": [],
+      "reducedMotion": true,
+      "toggle": true,
+      "previewIsolated": true,
+      "overflow": false
+    },
+    {
+      "engine": "webkit",
+      "width": 390,
+      "movement": true,
+      "settled": true,
+      "aligned": true,
+      "gateStable": true,
+      "axe": [],
+      "reducedMotion": true,
+      "toggle": true,
+      "previewIsolated": true,
+      "overflow": false
+    },
+    {
+      "engine": "webkit",
+      "width": 820,
+      "movement": true,
+      "settled": true,
+      "aligned": true,
+      "gateStable": true,
+      "axe": [],
+      "reducedMotion": true,
+      "toggle": true,
+      "previewIsolated": true,
+      "overflow": false
+    },
+    {
+      "engine": "webkit",
+      "width": 1440,
+      "movement": true,
+      "settled": true,
+      "aligned": true,
+      "gateStable": true,
+      "axe": [],
+      "reducedMotion": true,
+      "toggle": true,
+      "previewIsolated": true,
+      "overflow": false
+    }
+  ],
+  "errors": []
+}

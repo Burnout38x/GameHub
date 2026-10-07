@@ -13,3 +13,7 @@
 @media(max-width:440px){.page{border-radius:10px;margin-block:8px}.boardLegend{font-size:11px;align-items:start}.boardLegend>span{max-width:51%}.gate{width:36px;left:-9px}.gate span{font-size:8px;padding:3px 2px;letter-spacing:.5px}.forecast{line-height:1.5}.contextHelp{font-size:12px}.charter .eyebrow{font-size:9px}.progressRow span{font-size:11px}}
 /* A game heading is part of the forest scene, not the site's themed navigation header. */
 .page .header{background:transparent}
+
+/* Keep the entry fixed to the board when the neighborhood report expands. */
+.board{position:relative}.board>.gate{left:-36px;top:37.5%;width:39px}
+@media(max-width:440px){.board>.gate{left:-29px;width:32px}}

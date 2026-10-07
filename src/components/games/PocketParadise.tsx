@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { createPocketRun, placePocketTile, pocketOffers, pocketNeighbors, POCKET_GATE, POCKET_MEDALS, POCKET_LABELS, scorePocketBoard, validatePocketSave, type PocketMode, type PocketRun, type PocketTile } from '@/lib/pocket-paradise';
 import styles from './PocketParadise.module.css';
+import PocketLife from './PocketLife';
 
 const SAVE_KEY = 'gamehub:pocket-paradise:v1';
 /** Original low-poly miniatures, rendered sharply without a WebGL dependency. */
@@ -145,21 +146,23 @@ export default function PocketParadise() {
   const boardScene = <div className={`${styles.scene} ${flat ? styles.flat : ''}`}>
     <div className={styles.landscape}><span>WILLOW MEADOW</span><span>{run ? `${20 - run.moves.length} plots to grow` : 'A town that works together'}</span></div>
     <div className={styles.map}>
-      {!legacy && <div className={styles.gate} aria-label="West entry gate leads to row 2 column 1"><span>GATE</span><b>→</b></div>}
       <div className={styles.board} role="group" aria-label="Neighborhood: four rows and five columns. West gate enters row 2, column 1.">
+      {!legacy && <div className={styles.gate} aria-label="West entry gate leads to row 2 column 1"><span>GATE</span><b>→</b></div>}
+
         {board.map((tile, i) => {
           const selected = cell === i;
           const active = displayScore.happyHomes.includes(i) || displayScore.openStalls.includes(i) || displayScore.connected.includes(i);
           return <button key={i} data-pocket-cell={i} type="button" disabled={!run || !!run.board[i] || done} aria-pressed={selected} aria-label={`Row ${Math.floor(i / 5) + 1}, column ${i % 5 + 1}: ${tile ? `${POCKET_LABELS[tile]}${!legacy ? `, ${tileState(board, i, displayScore)}` : ''}${selected ? ', preview' : ''}` : `empty plot${i === POCKET_GATE && !legacy ? ', gate entrance: build a path here' : ''}`}`} className={`${styles.plot} ${tile ? styles[tile] : ''} ${selected ? styles.selected : ''} ${active && !legacy ? styles.served : ''} ${i === POCKET_GATE && !legacy ? styles.entryPlot : ''}`} onClick={() => setCell(i)}>
             {tile ? <>
               {tile === 'path' && !legacy && <span className={styles.roadLines} aria-hidden="true">{pocketNeighbors(i).filter(n => board[n] === 'path').map(n => <i key={n} className={n === i - 5 ? styles.north : n === i + 5 ? styles.south : n === i - 1 ? styles.west : styles.east} />)}{i === POCKET_GATE && <i className={styles.west} />}</span>}
-              <span key={selected ? 'preview' : 'built'} className={`${styles.building} ${selected ? styles.ghost : ''}`}><PocketTileArt tile={tile} /></span>
+              <span key={selected ? 'preview' : 'built'} className={`${styles.building} ${selected ? styles.ghost : ''}`}>{tile === 'path' && !legacy ? <svg className={styles.miniature} viewBox="0 0 80 80" aria-hidden="true"><rect x="10" y="25" width="60" height="30" rx="5" fill="#e6debc"/><path d="M30 25V55M50 25V55M10 40H70" stroke="#c8b994" strokeWidth="1.5"/></svg> : <PocketTileArt tile={tile} />}</span>
               <span className={styles.tileLabel}>{tile === 'stall' ? 'Stall' : POCKET_LABELS[tile]}</span>
-              {!legacy && tile !== 'park' && <span key={String(active)} className={`${styles.service} ${active ? styles.serviceOn : ''}`} aria-hidden="true">{active ? '✓' : '·'}</span>}
+              {!legacy && tile !== 'park' && <span key={String(active)} className={`${styles.service} ${active ? styles.serviceOn : ''}`} aria-hidden="true">{active ? '✓' : '!'}</span>}
             </> : <span aria-hidden="true" className={styles.empty}>{i === POCKET_GATE && !legacy ? '→' : '+'}</span>}
           </button>;
         })}
       </div>
+      {run && !legacy && <PocketLife board={run.board} lastCell={run.moves.at(-1)?.cell} previewing={cell !== null} />}
     </div>
     <div className={styles.boardLegend}><span><i />{legacy ? 'Classic adjacency rules' : '✓ Happy · open · connected'}</span><span>Edges count. Diagonals don’t.</span></div>
   </div>;
@@ -170,7 +173,7 @@ export default function PocketParadise() {
     {!ready ? <p role="status">Opening your neighborhood…</p> : !run ? <div className={styles.intro}>
       {boardScene}<section className={styles.welcome}><span className={styles.eyebrow}>YOUR OPENING-DAY CHARTER</span><h2>Make room<br />for everyone.</h2><p>Connect paths to the gate. Give homes a park and access. Open stalls beside happy homes and connected paths.</p><div className={styles.goalSummary}><strong>4 happy homes</strong><strong>2 open stalls</strong><strong>36+ points</strong></div><p>Meet all three in 20 placements to earn a bronze charter. Reach 46 for silver, 56 for gold.</p><button className={styles.primary} onClick={() => start('standard')}>Build my neighborhood →</button><div className={styles.buttonRow}><button className={styles.secondary} onClick={() => start('daily')}>Today’s challenge</button><button className={styles.secondary} onClick={() => start('practice')}>Practice</button></div><small>Daily offers are shared and refresh at midnight UTC. Practice uses the same rules and stays on this device.</small></section>
     </div> : <>
-      {legacy && <p className={styles.notice}>Classic save · Your original rules and score are preserved. Finish this town, or choose a fresh neighborhood below to try opening-day charters.</p>}
+      {legacy && <p className={styles.notice}>Classic save · Your original rules and score are preserved. Finish this town, or choose a fresh neighborhood below for walking residents and opening-day charters. Residents use the new connected-path rules, so they are not shown on classic saves.</p>}
       <div className={styles.toolbar}><span>{run.mode === 'daily' ? `Daily · ${run.seed}` : run.mode === 'practice' ? 'Practice meadow' : 'Your neighborhood'}</span><strong>{run.moves.length}/20 built</strong><strong>{score!.total} pts</strong><button aria-pressed={flat} onClick={toggleFlat}>{flat ? 'Flat pieces' : 'Miniatures'}</button></div>
       <div className={styles.playLayout}>
         <div className={styles.boardColumn}>

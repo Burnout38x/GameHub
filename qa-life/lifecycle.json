@@ -1,0 +1,6 @@
+{
+  "hiddenEventCancels": true,
+  "visibleEventSettles": true,
+  "resizeCancelsAndAligns": true,
+  "note": "Visibility change event simulated; resize is actual browser viewport change"
+}
