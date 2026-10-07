@@ -3970,38 +3970,5 @@
     "chromium": "154.0.8037.99",
     "webkit": "26.6"
   },
-  "screenshots": [
-    {
-      "label": "webkit / 375x812",
-      "path": ".forge/screenshots/responsive-public-defect-1.png"
-    },
-    {
-      "label": "webkit / 390x844",
-      "path": ".forge/screenshots/responsive-public-defect-2.png"
-    },
-    {
-      "label": "webkit / 820x1180",
-      "path": ".forge/screenshots/responsive-public-defect-3.png"
-    },
-    {
-      "label": "webkit / 844x390",
-      "path": ".forge/screenshots/responsive-public-defect-4.png"
-    },
-    {
-      "label": "webkit /games 375x812",
-      "path": ".forge/screenshots/responsive-public-defect-5.png"
-    },
-    {
-      "label": "webkit /games 390x844",
-      "path": ".forge/screenshots/responsive-public-defect-6.png"
-    },
-    {
-      "label": "webkit /games 820x1180",
-      "path": ".forge/screenshots/responsive-public-defect-7.png"
-    },
-    {
-      "label": "webkit /games 844x390",
-      "path": ".forge/screenshots/responsive-public-defect-8.png"
-    }
-  ]
+  "screenshots": []
 }

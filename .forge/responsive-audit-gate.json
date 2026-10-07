@@ -1,0 +1,12 @@
+{
+  "goal": "Check GameHub at phone, tablet, foldable, portrait/landscape and desktop screen sizes; fix overflow, clipped UI and scrolling problems.",
+  "conditions": 3,
+  "mode": "parse",
+  "blocked": true,
+  "problems": [
+    "  2. PASS without evidence \u2014 backticked text is not a command"
+  ],
+  "hedges": [],
+  "reruns": [],
+  "superseded": []
+}

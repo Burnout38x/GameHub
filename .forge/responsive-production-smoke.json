@@ -1,0 +1,85 @@
+{
+  "commit": "8ececb4",
+  "checks": [
+    {
+      "engine": "Chromium",
+      "width": 320,
+      "height": 568,
+      "overflow": false,
+      "bottomReachable": true,
+      "header": "static"
+    },
+    {
+      "engine": "Chromium",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "bottomReachable": true,
+      "header": "static"
+    },
+    {
+      "engine": "Chromium",
+      "width": 717,
+      "height": 512,
+      "overflow": false,
+      "bottomReachable": true,
+      "header": "sticky"
+    },
+    {
+      "engine": "Chromium",
+      "width": 820,
+      "height": 1180,
+      "overflow": false,
+      "bottomReachable": true,
+      "header": "sticky"
+    },
+    {
+      "engine": "Chromium",
+      "width": 844,
+      "height": 390,
+      "overflow": false,
+      "bottomReachable": true,
+      "header": "static"
+    },
+    {
+      "engine": "WebKit",
+      "width": 320,
+      "height": 568,
+      "overflow": false,
+      "bottomReachable": true,
+      "header": "static"
+    },
+    {
+      "engine": "WebKit",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "bottomReachable": true,
+      "header": "static"
+    },
+    {
+      "engine": "WebKit",
+      "width": 717,
+      "height": 512,
+      "overflow": false,
+      "bottomReachable": true,
+      "header": "sticky"
+    },
+    {
+      "engine": "WebKit",
+      "width": 820,
+      "height": 1180,
+      "overflow": false,
+      "bottomReachable": true,
+      "header": "sticky"
+    },
+    {
+      "engine": "WebKit",
+      "width": 844,
+      "height": 390,
+      "overflow": false,
+      "bottomReachable": true,
+      "header": "static"
+    }
+  ]
+}
