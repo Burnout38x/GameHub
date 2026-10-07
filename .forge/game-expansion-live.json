@@ -1,0 +1,97 @@
+{
+  "base": "https://naijagamehub.vercel.app",
+  "codeCommit": "d21ddc6adb3b586943d18b03b7548cd233aec865",
+  "checks": [
+    {
+      "engine": "chromium",
+      "width": 320,
+      "height": 740,
+      "library": true,
+      "soloPracticePreview": true,
+      "flatBoard": true,
+      "overflow": false
+    },
+    {
+      "engine": "chromium",
+      "width": 390,
+      "height": 844,
+      "library": true,
+      "soloPracticePreview": true,
+      "flatBoard": true,
+      "overflow": false
+    },
+    {
+      "engine": "chromium",
+      "width": 717,
+      "height": 512,
+      "library": true,
+      "soloPracticePreview": true,
+      "flatBoard": true,
+      "overflow": false
+    },
+    {
+      "engine": "chromium",
+      "width": 820,
+      "height": 1180,
+      "library": true,
+      "soloPracticePreview": true,
+      "flatBoard": true,
+      "overflow": false
+    },
+    {
+      "engine": "chromium",
+      "width": 1440,
+      "height": 900,
+      "library": true,
+      "soloPracticePreview": true,
+      "flatBoard": true,
+      "overflow": false
+    },
+    {
+      "engine": "webkit",
+      "width": 320,
+      "height": 740,
+      "library": true,
+      "soloPracticePreview": true,
+      "flatBoard": true,
+      "overflow": false
+    },
+    {
+      "engine": "webkit",
+      "width": 390,
+      "height": 844,
+      "library": true,
+      "soloPracticePreview": true,
+      "flatBoard": true,
+      "overflow": false
+    },
+    {
+      "engine": "webkit",
+      "width": 717,
+      "height": 512,
+      "library": true,
+      "soloPracticePreview": true,
+      "flatBoard": true,
+      "overflow": false
+    },
+    {
+      "engine": "webkit",
+      "width": 820,
+      "height": 1180,
+      "library": true,
+      "soloPracticePreview": true,
+      "flatBoard": true,
+      "overflow": false
+    },
+    {
+      "engine": "webkit",
+      "width": 1440,
+      "height": 900,
+      "library": true,
+      "soloPracticePreview": true,
+      "flatBoard": true,
+      "overflow": false
+    }
+  ],
+  "errors": []
+}

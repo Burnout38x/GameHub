@@ -1,0 +1,10 @@
+{
+  "goal": "Build Pocket Paradise and Market Day as playable, polished games in GameHub.",
+  "conditions": 4,
+  "mode": "parse",
+  "blocked": false,
+  "problems": [],
+  "hedges": [],
+  "reruns": [],
+  "superseded": []
+}

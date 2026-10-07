@@ -1,0 +1,20 @@
+      slug       |  type  | is_active 
+-----------------+--------+-----------
+ market-day      | market | t
+ pocket-paradise | solo   | t
+(2 rows)
+
+    version     |      name      
+----------------+----------------
+ 20261007005306 | game_expansion
+(1 row)
+
+  object  | count 
+----------+-------
+ profiles |     4
+ rooms    |    24
+ history  |    20
+ prompts  |   766
+(4 rows)
+
+
