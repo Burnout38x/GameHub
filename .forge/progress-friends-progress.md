@@ -1,12 +1,12 @@
 # Progress, friends and invitations
 
-Anchor: `.forge/progress-friends-anchor.md`.
+Anchor: `.forge/archive/2026-10-06-progress-friends.md`.
 
 ## Phases
 
 1. Contracts and implementation — MET. Progress summary derives completed results; win streak retains atomic existing finisher rules. Private goal settings, social graph, opt-in presence, mutual invitations and rounded theme-aware UI implemented. Defaults remain both streak types and mutual-friend invites. No response to optional clarification received at implementation checkpoint.
 2. Isolated validation and independent review — MET. Both additive migrations applied to disposable local database (127.0.0.1:58322). Native agents cross-reviewed backend/progress and root UI integration. Final result: 80 unit tests pass, lint clean, both production and isolated builds pass; 20 browser/API checks pass across four themes and 320/375/1440 widths with zero accessibility violations/browser errors. Seven database checks cover concurrent room capacity, atomic quotas, expired invites, stale presence and private grants. Actual atomic game completion counts once in progress even when called twice. Local query plan uses the invite inbox index; dashboard ~3.6ms on a small fixture, not a scale benchmark.
-3. Release — IN PROGRESS. Fresh schema backup taken; additive migration applied only to authorized live project jnzbncbmcewsvtjjmddn. Before/after existing records: 4 profiles, 24 rooms, 20 match results. All four profiles' aggregate history counts match. RLS enabled on all four new tables; browser roles denied all three RPCs while service role allowed. Push/deployment verification next. Rollback code first, preserve additive tables/preferences unless separately authorized to delete them.
+3. Release — MET. Fresh schema backup taken; additive migration applied only to authorized live project jnzbncbmcewsvtjjmddn. Before/after existing records: 4 profiles, 24 rooms, 20 match results. All four profiles' aggregate history counts match. RLS enabled on all four new tables; browser roles denied all three RPCs while service role allowed. Feature commit 792b636 pushed to main and codex/gamehub-game-night-upgrade. Vercel Production deployment 6898308016 reports success for exact SHA 792b6364c98059ac9d44c826a444f9f3f8b434a8. Read-only production smoke: /games 200; /friends 307 to login with return URL; /api/social and /api/progress 401 for guests. Authenticated flows were verified in isolated local production-mode build. Isolated QA app stopped; disposable users/rooms cleaned. Rollback code first, preserve additive tables/preferences unless separately authorized to delete them.
 
 Anchor re-read at implementation checkpoint: yes. Still matches GOAL: yes.
 

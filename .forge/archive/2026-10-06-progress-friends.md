@@ -9,4 +9,4 @@ DONE WHEN:
 OUT: External email/SMS/push messages; changing existing accounts/scores; unrelated databases; fabricated online status; recording unsigned local games as verified online wins.
 RISK: Additive private tables/RPCs only; presence requires explicit privacy control. Only jnzbncbmcewsvtjjmddn is authorized live. Test isolated first. Preserve old app compatibility and row counts. No resets.
 
-Defaults pending clarification: both daily-play and win streaks; invitations between mutual follows. Daily streak uses explicit UTC day boundaries unless a local timezone design is agreed; UI must explain boundaries. In-app queued invites stay valid only while lobby exists and before expiry. No browser notification permissions required.
+Adopted defaults after optional clarification remained unanswered: both daily-play and win streaks; invitations between mutual follows. Daily streak uses explicit UTC day boundaries unless a local timezone design is agreed; UI must explain boundaries. In-app queued invites stay valid only while lobby exists and before expiry. No browser notification permissions required.
