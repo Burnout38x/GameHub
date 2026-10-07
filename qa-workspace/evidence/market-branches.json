@@ -1,0 +1,278 @@
+{
+  "checks": [
+    {
+      "name": "one player",
+      "result": "rejected"
+    },
+    {
+      "name": "five players",
+      "result": "rejected"
+    },
+    {
+      "name": "duplicate identity",
+      "result": "rejected"
+    },
+    {
+      "name": "blank identity",
+      "result": "rejected"
+    },
+    {
+      "name": "long identity",
+      "result": "rejected"
+    },
+    {
+      "name": "fractional seed",
+      "result": "rejected"
+    },
+    {
+      "name": "seed deterministic three distinct options",
+      "result": "pass"
+    },
+    {
+      "name": "malformed/stale expected version",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "malformed/stale expected version",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "malformed/stale expected version",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "malformed/stale expected version",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "malformed/stale expected version",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "finished command",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "outsider",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "wrong turn",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "movement invalid choice/type",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "movement invalid choice/type",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "movement invalid choice/type",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "movement invalid choice/type",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "move allowed no fee and immutable original",
+      "result": "pass"
+    },
+    {
+      "name": "visit fee capped by empty wallet owner capped at99",
+      "result": "pass"
+    },
+    {
+      "name": "buy occupied a",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "buy occupied b",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "buy insufficient cash",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "upgrade insufficient cash",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "supplies insufficient cash",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "buy exact cost",
+      "result": "pass"
+    },
+    {
+      "name": "upgrade non-owner null",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "upgrade non-owner b",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "upgrade maximum",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "upgrade reaches level3 at exact cash",
+      "result": "pass"
+    },
+    {
+      "name": "supply capacity",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "supply exact12 limit",
+      "result": "pass"
+    },
+    {
+      "name": "commission supply shortage",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "commission scoring cashcap",
+      "result": "pass"
+    },
+    {
+      "name": "bank invalid capacity/supplies",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "bank invalid capacity/supplies",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "bank exact99 wallet",
+      "result": "pass"
+    },
+    {
+      "name": "pass keeps assets",
+      "result": "pass"
+    },
+    {
+      "name": "business invalid action",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "offer self",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "offer outsider",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "offer empty side",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "offer negative",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "offer 21 coins",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "offer 7 supplies",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "offer fraction",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "offer badstall",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "offer unownedstall",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "offer unavailablecash",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "offer unavailablesupplies",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "offer cash overflow",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "offer supplies overflow",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "duplicate offer",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "accept sender",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "accept nooffer",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "accept wrong phase",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "trade invalid action",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "accept exact two-sided transfer with ownership",
+      "result": "pass"
+    },
+    {
+      "name": "accept asset unavailable recheck",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "accept capacity recheck",
+      "result": "reject; input unchanged"
+    },
+    {
+      "name": "decline drops offer no transfer",
+      "result": "pass"
+    },
+    {
+      "name": "end drops offer no transfer",
+      "result": "pass"
+    },
+    {
+      "name": "round event 0 income caps and supply caps",
+      "result": "pass"
+    },
+    {
+      "name": "round event 1 income caps and supply caps",
+      "result": "pass"
+    },
+    {
+      "name": "round event 2 income caps and supply caps",
+      "result": "pass"
+    },
+    {
+      "name": "round event 3 income caps and supply caps",
+      "result": "pass"
+    },
+    {
+      "name": "final ten round state score and log bounded",
+      "result": "pass"
+    }
+  ],
+  "count": 68,
+  "fixture": "in-memory isolated engine states; no database mutations"
+}

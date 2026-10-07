@@ -1,0 +1,346 @@
+{
+  "results": [
+    {
+      "case": "HTTP500 retained complete daily with retry",
+      "attempts": 1
+    },
+    {
+      "case": "HTTP429 retained complete daily with retry",
+      "attempts": 2
+    },
+    {
+      "case": "regular daily retry success and reload idempotent",
+      "gamesPlayed": 1
+    },
+    {
+      "case": "late response after new practice does not overwrite status"
+    }
+  ],
+  "events": [
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/?_rsc=_H_fFy2_Q06N8BA7",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/register?_rsc=_H_fFy2_Q06N8BA7",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/games?_rsc=_H_fFy2_Q06N8BA7",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/login?next=%2Fleaderboard&_rsc=_H_fFy2_Q06N8BA7",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/forgot-password?_rsc=_H_fFy2_Q06N8BA7",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/login?next=%2Frooms%2Fjoin&_rsc=_H_fFy2_Q06N8BA7",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/?_rsc=sW2A7HEmFQnSVIMx",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/register?_rsc=sW2A7HEmFQnSVIMx",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/games?_rsc=sW2A7HEmFQnSVIMx",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/login?next=%2Fleaderboard&_rsc=sW2A7HEmFQnSVIMx",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/report?_rsc=sW2A7HEmFQnSVIMx",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/login?next=%2Frooms&_rsc=sW2A7HEmFQnSVIMx",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/themes?_rsc=sW2A7HEmFQnSVIMx",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/login?next=%2Frooms%2Fjoin&_rsc=sW2A7HEmFQnSVIMx",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/forgot-password?_rsc=sW2A7HEmFQnSVIMx",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/games?_rsc=488hfA3MUa4s4Pzd",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/games?_rsc=Eue1u3GLt-9xfYoR",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/games?_rsc=6gO8HHaWeajJtmyo",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/?_rsc=yqkVbsjkW66TZV8T",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/rooms?_rsc=yqkVbsjkW66TZV8T",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/profile?_rsc=yqkVbsjkW66TZV8T",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/games?_rsc=yqkVbsjkW66TZV8T",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/themes?_rsc=yqkVbsjkW66TZV8T",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/leaderboard?_rsc=yqkVbsjkW66TZV8T",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/report?_rsc=yqkVbsjkW66TZV8T",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/rooms/join?_rsc=yqkVbsjkW66TZV8T",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/games?_rsc=O4kNrkNzk7KIascM",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/?_rsc=O4kNrkNzk7KIascM",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/profile?_rsc=O4kNrkNzk7KIascM",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/rooms?_rsc=O4kNrkNzk7KIascM",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/leaderboard?_rsc=O4kNrkNzk7KIascM",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/themes?_rsc=O4kNrkNzk7KIascM",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/report?_rsc=O4kNrkNzk7KIascM",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/friends?_rsc=O4kNrkNzk7KIascM",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/rooms/join?_rsc=O4kNrkNzk7KIascM",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "http",
+      "url": "http://127.0.0.1:3199/api/pocket-paradise",
+      "status": 500
+    },
+    {
+      "type": "http",
+      "url": "http://127.0.0.1:3199/api/pocket-paradise",
+      "status": 429
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/?_rsc=yqkVbsjkW66TZV8T",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/profile?_rsc=yqkVbsjkW66TZV8T",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/games?_rsc=yqkVbsjkW66TZV8T",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/leaderboard?_rsc=yqkVbsjkW66TZV8T",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/?_rsc=O4kNrkNzk7KIascM",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/profile?_rsc=O4kNrkNzk7KIascM",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/themes?_rsc=O4kNrkNzk7KIascM",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/leaderboard?_rsc=O4kNrkNzk7KIascM",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/report?_rsc=O4kNrkNzk7KIascM",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "type": "failed",
+      "url": "http://127.0.0.1:3199/friends?_rsc=O4kNrkNzk7KIascM",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    }
+  ]
+}

@@ -1,0 +1,295 @@
+{
+  "checks": [
+    {
+      "name": "injected response observed",
+      "status": 500,
+      "alert": "",
+      "http": []
+    }
+  ],
+  "screenshots": [],
+  "axe": [],
+  "errors": [],
+  "network": [
+    {
+      "tag": "fixture0",
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/register",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/register",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/register",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    }
+  ],
+  "http": [
+    {
+      "tag": "errors-and-zoom",
+      "path": "/api/rooms/RKKRG8/market",
+      "status": 500
+    }
+  ],
+  "cleanup": [
+    {
+      "kind": "room",
+      "id": "f08d5b4a-4d80-4d6a-943c-abb385ef9d48"
+    },
+    {
+      "kind": "user",
+      "id": "9926083d-5381-4fb4-8ada-0e11aff95ad7"
+    },
+    {
+      "kind": "user",
+      "id": "f1e53084-75ee-44a1-a2ba-2c1e44516674"
+    }
+  ],
+  "failure": {
+    "message": "The expression evaluated to a falsy value:\n\n  assert(alert.includes(status===500?'QA simulated save unavailable':'Something went wrong'))\n",
+    "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(alert.includes(status===500?'QA simulated save unavailable':'Something went wrong'))\n\n    at file:///Users/blaze/Documents/Claude%20Code/gamehub/qa-workspace/market-visual-final.mjs:8:954"
+  }
+}

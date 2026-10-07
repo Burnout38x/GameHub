@@ -1,0 +1,2 @@
+PASS simultaneous different legal destinations commit exactly one
+PASS simultaneous buy versus pass commits only winning action and cash effect

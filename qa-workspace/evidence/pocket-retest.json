@@ -1,0 +1,52 @@
+[
+  {
+    "engine": "chromium",
+    "case": "corrupt",
+    "result": "expected warning and playable"
+  },
+  {
+    "engine": "chromium",
+    "case": "fixed main/navigation axe",
+    "violations": []
+  },
+  {
+    "engine": "chromium",
+    "case": "unsupported",
+    "result": "expected warning and playable"
+  },
+  {
+    "engine": "chromium",
+    "case": "read-denied",
+    "result": "expected warning and playable"
+  },
+  {
+    "engine": "chromium",
+    "case": "write-denied",
+    "result": "expected warning and playable"
+  },
+  {
+    "engine": "webkit",
+    "case": "corrupt",
+    "result": "expected warning and playable"
+  },
+  {
+    "engine": "webkit",
+    "case": "fixed main/navigation axe",
+    "violations": []
+  },
+  {
+    "engine": "webkit",
+    "case": "unsupported",
+    "result": "expected warning and playable"
+  },
+  {
+    "engine": "webkit",
+    "case": "read-denied",
+    "result": "expected warning and playable"
+  },
+  {
+    "engine": "webkit",
+    "case": "write-denied",
+    "result": "expected warning and playable"
+  }
+]

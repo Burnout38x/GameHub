@@ -1,0 +1,342 @@
+{
+  "checks": [],
+  "fixtures": [
+    {
+      "kind": "user",
+      "id": "5a516f57-24eb-4fcc-8fcf-aafcb0b8f35a"
+    },
+    {
+      "kind": "user",
+      "id": "61257c26-4e68-4533-a7d9-9e4736c7d4a9"
+    },
+    {
+      "kind": "room",
+      "id": "f9929967-3d0e-4867-b134-4e91477a31e5"
+    }
+  ],
+  "cleaned": [
+    {
+      "kind": "room",
+      "id": "f9929967-3d0e-4867-b134-4e91477a31e5"
+    },
+    {
+      "kind": "user",
+      "id": "5a516f57-24eb-4fcc-8fcf-aafcb0b8f35a"
+    },
+    {
+      "kind": "user",
+      "id": "61257c26-4e68-4533-a7d9-9e4736c7d4a9"
+    }
+  ],
+  "errors": [],
+  "failedRequests": [
+    {
+      "n": 0,
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/register",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/register",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/register",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/register",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/rooms/new",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 1,
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "n": 0,
+      "path": "/room/X4JJK7",
+      "error": "net::ERR_ABORTED"
+    }
+  ],
+  "httpErrors": [],
+  "screenshots": [],
+  "axe": [],
+  "states": [],
+  "failure": {
+    "message": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Join with a code', exact: true })\u001b[22m\n",
+    "stack": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Join with a code', exact: true })\u001b[22m\n\n    at /Users/blaze/Documents/Claude Code/gamehub/qa-workspace/market-browser.mjs:21:795"
+  }
+}

@@ -1,0 +1,22 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Focused skip link must not be clipped
++ actual - expected
+
++ 'inset(50%)'
+- 'none'
+
+    at file:///Users/blaze/Documents/Claude%20Code/gamehub/qa-workspace/evidence/regression-focus.mjs:1:1222
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:472:9) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'inset(50%)',
+  expected: 'none',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.18.0

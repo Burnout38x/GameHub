@@ -1,0 +1,21 @@
+PASS injected response observed
+PASS recoverable HTTP500 leaves state unchanged
+PASS injected response observed
+PASS recoverable HTTP503 leaves state unchanged
+PASS CSS200 percent emulation remains playable; native zoom not claimed
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.getAttribute: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('group', { name: 'You give', exact: true }).getByLabel('Stall', { exact: true }).locator('option').nth(1)[22m
+
+    at /Users/blaze/Documents/Claude Code/gamehub/qa-workspace/market-visual-final.mjs:10:271 {
+  log: [
+    "  - waiting for getByRole('group', { name: 'You give', exact: true }).getByLabel('Stall', { exact: true }).locator('option').nth(1)"
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v24.18.0

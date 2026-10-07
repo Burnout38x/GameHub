@@ -1,0 +1,46 @@
+{
+  "results": [
+    {
+      "engine": "chromium",
+      "case": "flat preference write denial",
+      "observed": "Flat board toggles in memory and gameplay remains usable; run save restores1move; denied preference absent and reload uses dimensional default."
+    },
+    {
+      "engine": "chromium",
+      "case": "HTTP200 malformed JSON",
+      "observed": "Completion remains saved locally; recoverable retry message, no false success, retry enabled. Removing fault yields actual guest401/signin guidance; complete save unchanged."
+    },
+    {
+      "engine": "webkit",
+      "case": "flat preference write denial",
+      "observed": "Flat board toggles in memory and gameplay remains usable; run save restores1move; denied preference absent and reload uses dimensional default."
+    },
+    {
+      "engine": "webkit",
+      "case": "HTTP200 malformed JSON",
+      "observed": "Completion remains saved locally; recoverable retry message, no false success, retry enabled. Removing fault yields actual guest401/signin guidance; complete save unchanged."
+    }
+  ],
+  "events": [
+    {
+      "engine": "chromium",
+      "type": "response",
+      "status": 200
+    },
+    {
+      "engine": "chromium",
+      "type": "response",
+      "status": 401
+    },
+    {
+      "engine": "webkit",
+      "type": "response",
+      "status": 200
+    },
+    {
+      "engine": "webkit",
+      "type": "response",
+      "status": 401
+    }
+  ]
+}

@@ -1,0 +1,358 @@
+{
+  "checks": [
+    "existing quiz leave UI removes participant and returns library",
+    "all four theme controls keyboard activate and persist"
+  ],
+  "errors": [],
+  "console": [],
+  "http": [],
+  "failed": [
+    {
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/register",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/register",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/rooms",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/leaderboard",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/rooms/join",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/leaderboard",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/rooms",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/rooms/join",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/leaderboard",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/rooms",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/leaderboard",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/rooms/join",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/rooms",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/leaderboard",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/rooms/join",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    }
+  ],
+  "layouts": [],
+  "screenshots": [],
+  "fixtures": [
+    {
+      "user": "9ed01755-1626-4b1d-8244-bae0cd7e3237"
+    },
+    {
+      "user": "991600bb-f050-4b40-9181-a9d18e1db8f0"
+    },
+    {
+      "room": "bb4935c3-0754-4e42-b3c1-d4361f90ab2a"
+    }
+  ],
+  "cleanup": [
+    {
+      "room": "bb4935c3-0754-4e42-b3c1-d4361f90ab2a",
+      "error": null
+    },
+    {
+      "user": "9ed01755-1626-4b1d-8244-bae0cd7e3237",
+      "error": null
+    },
+    {
+      "user": "991600bb-f050-4b40-9181-a9d18e1db8f0",
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+PASS solo catalog launch and room-creation guard
+PASS 2–4 capacity, fixed ten rounds, outsider and wrong-turn rejection
+PASS Market board initial viewport matrix
+PASS simultaneous duplicate move applies exactly once
+PASS concurrent trade acceptance transfers assets once
+PASS full four-player forty-turn completion, reconnect and exactly four results
+PASS results and rematch create fresh lobby
+PASS explicit departure safely aborts fixed-player economy without results
+PASS solo server replay rejects forged moves and duplicate result, progress increments once
+PASS zero browser page errors

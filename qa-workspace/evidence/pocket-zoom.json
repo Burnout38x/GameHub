@@ -1,0 +1,34 @@
+[
+  {
+    "case": "native keyboard zoom attempt",
+    "before": {
+      "dpr": 1,
+      "inner": 1440
+    },
+    "after": {
+      "dpr": 1,
+      "inner": 1440
+    }
+  },
+  {
+    "case": "CSS200 scroll top",
+    "header": {
+      "y": 0,
+      "bottom": 268
+    },
+    "scroll": 0
+  },
+  {
+    "case": "CSS200 confirm dock",
+    "box": {
+      "x": 142,
+      "y": 762,
+      "width": 898.328125,
+      "height": 96
+    }
+  },
+  {
+    "case": "CSS200 confirmed placement",
+    "result": "pass"
+  }
+]

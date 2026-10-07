@@ -1,0 +1,16 @@
+{
+  "checks": [
+    {
+      "width": 390,
+      "name": "Join ↗",
+      "destination": "/login"
+    },
+    {
+      "width": 1440,
+      "name": "Join with code ↗",
+      "destination": "/login"
+    }
+  ],
+  "errors": [],
+  "http": []
+}

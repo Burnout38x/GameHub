@@ -1,0 +1,645 @@
+{
+  "results": [
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 0,
+      "result": "real touch center placement pass",
+      "width": 49.77522659301758,
+      "height": 46.49945068359375
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 1,
+      "result": "real touch center placement pass",
+      "width": 49.929595947265625,
+      "height": 45.9515380859375
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 2,
+      "result": "real touch center placement pass",
+      "width": 50.076934814453125,
+      "height": 45.41314697265625
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 3,
+      "result": "real touch center placement pass",
+      "width": 50.21746826171875,
+      "height": 44.884124755859375
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 4,
+      "result": "real touch center placement pass",
+      "width": 50.351348876953125,
+      "height": 44.364288330078125
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 5,
+      "result": "real touch center placement pass",
+      "width": 51.042327880859375,
+      "height": 48.526611328125
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 6,
+      "result": "real touch center placement pass",
+      "width": 51.201011657714844,
+      "height": 47.942626953125
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 7,
+      "result": "real touch center placement pass",
+      "width": 51.352264404296875,
+      "height": 47.36895751953125
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 8,
+      "result": "real touch center placement pass",
+      "width": 51.49627685546875,
+      "height": 46.8055419921875
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 9,
+      "result": "real touch center placement pass",
+      "width": 51.633270263671875,
+      "height": 46.2520751953125
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 10,
+      "result": "real touch center placement pass",
+      "width": 52.3740234375,
+      "height": 50.68939208984375
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 11,
+      "result": "real touch center placement pass",
+      "width": 52.537139892578125,
+      "height": 50.06610107421875
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 12,
+      "result": "real touch center placement pass",
+      "width": 52.6923828125,
+      "height": 49.4539794921875
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 13,
+      "result": "real touch center placement pass",
+      "width": 52.83995056152344,
+      "height": 48.852996826171875
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 14,
+      "result": "real touch center placement pass",
+      "width": 52.98008728027344,
+      "height": 48.262939453125
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 15,
+      "result": "real touch center placement pass",
+      "width": 53.77528381347656,
+      "height": 53
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 16,
+      "result": "real touch center placement pass",
+      "width": 53.94294738769531,
+      "height": 52.333709716796875
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 17,
+      "result": "real touch center placement pass",
+      "width": 54.102264404296875,
+      "height": 51.679718017578125
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 18,
+      "result": "real touch center placement pass",
+      "width": 54.253448486328125,
+      "height": 51.037841796875
+    },
+    {
+      "engine": "chromium",
+      "mode": "dimensional",
+      "cell": 19,
+      "result": "real touch center placement pass",
+      "width": 54.396728515625,
+      "height": 50.40789794921875
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 0,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 1,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 2,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 3,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 4,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 5,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 6,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 7,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 8,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 9,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 10,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 11,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 12,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 13,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 14,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 15,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 16,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 17,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 18,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "chromium",
+      "mode": "flat",
+      "cell": 19,
+      "result": "real touch center placement pass",
+      "width": 55,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 0,
+      "result": "real touch center placement pass",
+      "width": 43.838623046875,
+      "height": 44.70709228515625
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 1,
+      "result": "real touch center placement pass",
+      "width": 44.07500457763672,
+      "height": 44.18359375
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 2,
+      "result": "real touch center placement pass",
+      "width": 44.29142761230469,
+      "height": 43.6656494140625
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 3,
+      "result": "real touch center placement pass",
+      "width": 44.499786376953125,
+      "height": 43.15673828125
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 4,
+      "result": "real touch center placement pass",
+      "width": 44.70033264160156,
+      "height": 42.65667724609375
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 5,
+      "result": "real touch center placement pass",
+      "width": 44.99253845214844,
+      "height": 46.6571044921875
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 6,
+      "result": "real touch center placement pass",
+      "width": 45.236351013183594,
+      "height": 46.0989990234375
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 7,
+      "result": "real touch center placement pass",
+      "width": 45.45945739746094,
+      "height": 45.547119140625
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 8,
+      "result": "real touch center placement pass",
+      "width": 45.674041748046875,
+      "height": 45.005126953125
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 9,
+      "result": "real touch center placement pass",
+      "width": 45.88035583496094,
+      "height": 44.47265625
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 10,
+      "result": "real touch center placement pass",
+      "width": 46.20672607421875,
+      "height": 48.73760986328125
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 11,
+      "result": "real touch center placement pass",
+      "width": 46.45826721191406,
+      "height": 48.141845703125
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 12,
+      "result": "real touch center placement pass",
+      "width": 46.68833923339844,
+      "height": 47.552978515625
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 13,
+      "result": "real touch center placement pass",
+      "width": 46.90937805175781,
+      "height": 46.97479248046875
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 14,
+      "result": "real touch center placement pass",
+      "width": 47.12165832519531,
+      "height": 46.40716552734375
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 15,
+      "result": "real touch center placement pass",
+      "width": 47.48590850830078,
+      "height": 50.96044921875
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 16,
+      "result": "real touch center placement pass",
+      "width": 47.74549865722656,
+      "height": 50.323486328125
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 17,
+      "result": "real touch center placement pass",
+      "width": 47.982818603515625,
+      "height": 49.69427490234375
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 18,
+      "result": "real touch center placement pass",
+      "width": 48.210540771484375,
+      "height": 49.07672119140625
+    },
+    {
+      "engine": "webkit",
+      "mode": "dimensional",
+      "cell": 19,
+      "result": "real touch center placement pass",
+      "width": 48.428955078125,
+      "height": 48.470703125
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 0,
+      "result": "real touch center placement pass",
+      "width": 41.1875,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 1,
+      "result": "real touch center placement pass",
+      "width": 41.203125,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 2,
+      "result": "real touch center placement pass",
+      "width": 41.203125,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 3,
+      "result": "real touch center placement pass",
+      "width": 41.203125,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 4,
+      "result": "real touch center placement pass",
+      "width": 41.203125,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 5,
+      "result": "real touch center placement pass",
+      "width": 41.1875,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 6,
+      "result": "real touch center placement pass",
+      "width": 41.203125,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 7,
+      "result": "real touch center placement pass",
+      "width": 41.203125,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 8,
+      "result": "real touch center placement pass",
+      "width": 41.203125,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 9,
+      "result": "real touch center placement pass",
+      "width": 41.203125,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 10,
+      "result": "real touch center placement pass",
+      "width": 41.1875,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 11,
+      "result": "real touch center placement pass",
+      "width": 41.203125,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 12,
+      "result": "real touch center placement pass",
+      "width": 41.203125,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 13,
+      "result": "real touch center placement pass",
+      "width": 41.203125,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 14,
+      "result": "real touch center placement pass",
+      "width": 41.203125,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 15,
+      "result": "real touch center placement pass",
+      "width": 41.1875,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 16,
+      "result": "real touch center placement pass",
+      "width": 41.203125,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 17,
+      "result": "real touch center placement pass",
+      "width": 41.203125,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 18,
+      "result": "real touch center placement pass",
+      "width": 41.203125,
+      "height": 55
+    },
+    {
+      "engine": "webkit",
+      "mode": "flat",
+      "cell": 19,
+      "result": "real touch center placement pass",
+      "width": 41.203125,
+      "height": 55
+    }
+  ],
+  "events": []
+}

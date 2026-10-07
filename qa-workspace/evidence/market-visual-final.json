@@ -1,0 +1,737 @@
+{
+  "checks": [
+    {
+      "name": "chromium dark 320 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "chromium dark 390 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "chromium keyboard flat toggle and reduced motion",
+      "reduced": true,
+      "transition": "1e-05s"
+    },
+    {
+      "name": "chromium dark 820 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "chromium dark 1440 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "chromium light 320 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "chromium light 390 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "chromium light 820 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "chromium light 1440 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "chromium arcade 320 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "chromium arcade 390 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "chromium arcade 820 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "chromium arcade 1440 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "chromium ocean 320 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "chromium ocean 390 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "chromium ocean 820 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "chromium ocean 1440 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "webkit dark 320 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "webkit dark 390 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "webkit keyboard flat toggle and reduced motion",
+      "reduced": true,
+      "transition": "0.00001s"
+    },
+    {
+      "name": "webkit dark 820 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "webkit dark 1440 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "webkit light 320 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "webkit light 390 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "webkit light 820 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "webkit light 1440 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "webkit arcade 320 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "webkit arcade 390 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "webkit arcade 820 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "webkit arcade 1440 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "webkit ocean 320 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "webkit ocean 390 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "webkit ocean 820 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "webkit ocean 1440 fixed context",
+      "axe": 0
+    },
+    {
+      "name": "injected response observed",
+      "status": 500,
+      "alert": "QA simulated save unavailable",
+      "http": [
+        {
+          "tag": "errors-and-zoom",
+          "path": "/api/rooms/FVQYK6/market",
+          "status": 500
+        }
+      ]
+    },
+    {
+      "name": "recoverable HTTP500 leaves state unchanged"
+    },
+    {
+      "name": "injected response observed",
+      "status": 503,
+      "alert": "Something went wrong",
+      "http": [
+        {
+          "tag": "errors-and-zoom",
+          "path": "/api/rooms/FVQYK6/market",
+          "status": 500
+        },
+        {
+          "tag": "errors-and-zoom",
+          "path": "/api/rooms/FVQYK6/market",
+          "status": 503
+        }
+      ]
+    },
+    {
+      "name": "recoverable HTTP503 leaves state unchanged"
+    },
+    {
+      "name": "CSS200 percent emulation remains playable; native zoom not claimed"
+    },
+    {
+      "name": "all-rule axe business"
+    },
+    {
+      "name": "all-rule axe trade form"
+    },
+    {
+      "name": "all-rule axe offered trade recipient"
+    },
+    {
+      "name": "real UI stall ownership trade selectable and accepted by peer"
+    },
+    {
+      "name": "Market leave cancellation prompt",
+      "message": "End this Market Day for everyone? No result will be recorded. To take a break and return, close this tab instead."
+    },
+    {
+      "name": "Market leave accepted prompt",
+      "message": "End this Market Day for everyone? No result will be recorded. To take a break and return, close this tab instead."
+    },
+    {
+      "name": "real Market Leave room dialog aborts without awarding results"
+    }
+  ],
+  "screenshots": [
+    "qa-workspace/evidence/market-final-chromium-dark-320.png",
+    "qa-workspace/evidence/market-final-chromium-dark-390.png",
+    "qa-workspace/evidence/market-final-chromium-dark-820.png",
+    "qa-workspace/evidence/market-final-chromium-dark-1440.png",
+    "qa-workspace/evidence/market-final-chromium-light-320.png",
+    "qa-workspace/evidence/market-final-chromium-light-390.png",
+    "qa-workspace/evidence/market-final-chromium-light-820.png",
+    "qa-workspace/evidence/market-final-chromium-light-1440.png",
+    "qa-workspace/evidence/market-final-chromium-arcade-320.png",
+    "qa-workspace/evidence/market-final-chromium-arcade-390.png",
+    "qa-workspace/evidence/market-final-chromium-arcade-820.png",
+    "qa-workspace/evidence/market-final-chromium-arcade-1440.png",
+    "qa-workspace/evidence/market-final-chromium-ocean-320.png",
+    "qa-workspace/evidence/market-final-chromium-ocean-390.png",
+    "qa-workspace/evidence/market-final-chromium-ocean-820.png",
+    "qa-workspace/evidence/market-final-chromium-ocean-1440.png",
+    "qa-workspace/evidence/market-final-webkit-dark-320.png",
+    "qa-workspace/evidence/market-final-webkit-dark-390.png",
+    "qa-workspace/evidence/market-final-webkit-dark-820.png",
+    "qa-workspace/evidence/market-final-webkit-dark-1440.png",
+    "qa-workspace/evidence/market-final-webkit-light-320.png",
+    "qa-workspace/evidence/market-final-webkit-light-390.png",
+    "qa-workspace/evidence/market-final-webkit-light-820.png",
+    "qa-workspace/evidence/market-final-webkit-light-1440.png",
+    "qa-workspace/evidence/market-final-webkit-arcade-320.png",
+    "qa-workspace/evidence/market-final-webkit-arcade-390.png",
+    "qa-workspace/evidence/market-final-webkit-arcade-820.png",
+    "qa-workspace/evidence/market-final-webkit-arcade-1440.png",
+    "qa-workspace/evidence/market-final-webkit-ocean-320.png",
+    "qa-workspace/evidence/market-final-webkit-ocean-390.png",
+    "qa-workspace/evidence/market-final-webkit-ocean-820.png",
+    "qa-workspace/evidence/market-final-webkit-ocean-1440.png"
+  ],
+  "axe": [
+    {
+      "engine": "chromium",
+      "theme": "dark",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "theme": "dark",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "theme": "dark",
+      "width": 820,
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "theme": "dark",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "theme": "light",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "theme": "light",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "theme": "light",
+      "width": 820,
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "theme": "light",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "theme": "arcade",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "theme": "arcade",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "theme": "arcade",
+      "width": 820,
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "theme": "arcade",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "theme": "ocean",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "theme": "ocean",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "theme": "ocean",
+      "width": 820,
+      "violations": []
+    },
+    {
+      "engine": "chromium",
+      "theme": "ocean",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "theme": "dark",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "theme": "dark",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "theme": "dark",
+      "width": 820,
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "theme": "dark",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "theme": "light",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "theme": "light",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "theme": "light",
+      "width": 820,
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "theme": "light",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "theme": "arcade",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "theme": "arcade",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "theme": "arcade",
+      "width": 820,
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "theme": "arcade",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "theme": "ocean",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "theme": "ocean",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "theme": "ocean",
+      "width": 820,
+      "violations": []
+    },
+    {
+      "engine": "webkit",
+      "theme": "ocean",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "phase": "business",
+      "violations": []
+    },
+    {
+      "phase": "trade form",
+      "violations": []
+    },
+    {
+      "phase": "offered trade recipient",
+      "violations": []
+    }
+  ],
+  "errors": [],
+  "network": [
+    {
+      "tag": "fixture0",
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/register",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/register",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/register",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "ownership-trade-peer",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "ownership-trade-peer",
+      "path": "/play/pocket-paradise",
+      "error": "net::ERR_ABORTED"
+    }
+  ],
+  "http": [
+    {
+      "tag": "errors-and-zoom",
+      "path": "/api/rooms/FVQYK6/market",
+      "status": 500
+    },
+    {
+      "tag": "errors-and-zoom",
+      "path": "/api/rooms/FVQYK6/market",
+      "status": 503
+    }
+  ],
+  "cleanup": [
+    {
+      "kind": "room",
+      "id": "740b6ea5-9554-4fad-acdf-959f35fbc461"
+    },
+    {
+      "kind": "user",
+      "id": "d79f9e2c-7c13-4bb0-b7c1-d6b5e47f6f6e"
+    },
+    {
+      "kind": "user",
+      "id": "6862dc51-32f9-4cec-9fec-a85b2effa440"
+    }
+  ]
+}

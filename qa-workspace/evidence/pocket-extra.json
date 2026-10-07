@@ -1,0 +1,77 @@
+[
+  {
+    "case": "daily UTC seed same-day offers repeat",
+    "seed": "2026-10-07"
+  },
+  {
+    "case": "axe active game",
+    "violations": [
+      {
+        "id": "label-content-name-mismatch",
+        "impact": "serious",
+        "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+        "nodes": [
+          {
+            "target": [
+              ".ml-auto"
+            ],
+            "summary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+          }
+        ]
+      },
+      {
+        "id": "landmark-main-is-top-level",
+        "impact": "moderate",
+        "description": "Ensure the main landmark is at top level",
+        "nodes": [
+          {
+            "target": [
+              ".py-8"
+            ],
+            "summary": "Fix any of the following:\n  The main landmark is contained in another landmark."
+          }
+        ]
+      },
+      {
+        "id": "landmark-no-duplicate-main",
+        "impact": "moderate",
+        "description": "Ensure the document has at most one main landmark",
+        "nodes": [
+          {
+            "target": [
+              "#main-content"
+            ],
+            "summary": "Fix any of the following:\n  Document has more than one main landmark"
+          }
+        ]
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "description": "Ensure landmarks are unique",
+        "nodes": [
+          {
+            "target": [
+              "#main-content"
+            ],
+            "summary": "Fix any of the following:\n  The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "reduced motion computed styles",
+    "transition": "1e-05s",
+    "animation": "1e-05s"
+  },
+  {
+    "case": "200 percent CSS zoom",
+    "scroll": 1440,
+    "width": 1440
+  },
+  {
+    "case": "daily completion restores",
+    "moves": 20
+  }
+]

@@ -1,0 +1,82 @@
+▲ Next.js 16.4.0 (webpack)
+✓ Running next.config.mjs took 8ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.5s
+  Running TypeScript ...
+  Finished TypeScript in 1655ms ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/28) ...
+  Generating static pages using 11 workers (7/28) 
+  Generating static pages using 11 workers (14/28) 
+  Generating static pages using 11 workers (21/28) 
+✓ Generating static pages using 11 workers (28/28) in 116ms
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /admin/games
+├ ƒ /admin/prompts
+├ ƒ /admin/reports
+├ ƒ /admin/reports/inbox
+├ ƒ /admin/users
+├ ƒ /api/admin/reports
+├ ƒ /api/pocket-paradise
+├ ƒ /api/progress
+├ ƒ /api/reports
+├ ƒ /api/rooms
+├ ƒ /api/rooms/[code]
+├ ƒ /api/rooms/[code]/advance
+├ ƒ /api/rooms/[code]/answer
+├ ƒ /api/rooms/[code]/chain
+├ ƒ /api/rooms/[code]/crack
+├ ƒ /api/rooms/[code]/guess
+├ ƒ /api/rooms/[code]/join
+├ ƒ /api/rooms/[code]/leave
+├ ƒ /api/rooms/[code]/market
+├ ƒ /api/rooms/[code]/memory
+├ ƒ /api/rooms/[code]/predict
+├ ƒ /api/rooms/[code]/rule
+├ ƒ /api/rooms/[code]/start
+├ ƒ /api/rooms/[code]/timer
+├ ƒ /api/social
+├ ○ /apple-icon.png
+├ ƒ /forgot-password
+├ ƒ /friends
+├ ƒ /games
+├ ƒ /games/local/code-crackers
+├ ƒ /games/local/know-your-partner
+├ ƒ /games/local/mental-math-duel
+├ ƒ /games/local/mystery-card
+├ ƒ /games/local/reverse-definition
+├ ƒ /games/local/rule-discoverer
+├ ƒ /games/local/who-remembers
+├ ƒ /games/local/word-chain
+├ ○ /icon.png
+├ ƒ /leaderboard
+├ ƒ /login
+├ ƒ /play/pocket-paradise
+├ ƒ /profile
+├ ƒ /register
+├ ƒ /report
+├ ƒ /reset-password
+├ ƒ /room/[code]
+├ ƒ /rooms
+├ ƒ /rooms/join
+├ ƒ /rooms/new
+└ ƒ /themes
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+▲ Next.js 16.4.0
+- Local:         http://localhost:3199
+- Network:       http://10.126.246.82:3199
+✓ Ready in 184ms
+✓ Running next.config.mjs took 16ms

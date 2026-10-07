@@ -1,0 +1,327 @@
+{
+  "checks": [
+    {
+      "name": "injected response observed",
+      "status": 500,
+      "alert": "QA simulated save unavailable",
+      "http": [
+        {
+          "tag": "errors-and-zoom",
+          "path": "/api/rooms/RS6326/market",
+          "status": 500
+        }
+      ]
+    },
+    {
+      "name": "recoverable HTTP500 leaves state unchanged"
+    },
+    {
+      "name": "injected response observed",
+      "status": 503,
+      "alert": "Something went wrong",
+      "http": [
+        {
+          "tag": "errors-and-zoom",
+          "path": "/api/rooms/RS6326/market",
+          "status": 500
+        },
+        {
+          "tag": "errors-and-zoom",
+          "path": "/api/rooms/RS6326/market",
+          "status": 503
+        }
+      ]
+    },
+    {
+      "name": "recoverable HTTP503 leaves state unchanged"
+    },
+    {
+      "name": "CSS200 percent emulation remains playable; native zoom not claimed"
+    },
+    {
+      "name": "real UI stall ownership trade selectable and accepted by peer"
+    },
+    {
+      "name": "Market leave cancellation prompt",
+      "message": "End this Market Day for everyone? No result will be recorded. To take a break and return, close this tab instead."
+    },
+    {
+      "name": "Market leave accepted prompt",
+      "message": "End this Market Day for everyone? No result will be recorded. To take a break and return, close this tab instead."
+    },
+    {
+      "name": "real Market Leave room dialog aborts without awarding results"
+    }
+  ],
+  "screenshots": [],
+  "axe": [],
+  "errors": [],
+  "network": [
+    {
+      "tag": "fixture0",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/register",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture0",
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/register",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/register",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/login",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/forgot-password",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/profile",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/themes",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/friends",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "fixture1",
+      "path": "/report",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "tag": "ownership-trade-peer",
+      "path": "/games",
+      "error": "net::ERR_ABORTED"
+    }
+  ],
+  "http": [
+    {
+      "tag": "errors-and-zoom",
+      "path": "/api/rooms/RS6326/market",
+      "status": 500
+    },
+    {
+      "tag": "errors-and-zoom",
+      "path": "/api/rooms/RS6326/market",
+      "status": 503
+    }
+  ],
+  "cleanup": [
+    {
+      "kind": "room",
+      "id": "12174277-6c30-49df-a74b-16f83148b9af"
+    },
+    {
+      "kind": "user",
+      "id": "5c20b5dd-0d11-4650-9e77-70df5f4c07a9"
+    },
+    {
+      "kind": "user",
+      "id": "0c7f0655-ab04-4196-a4d3-b003d3368e4c"
+    }
+  ]
+}

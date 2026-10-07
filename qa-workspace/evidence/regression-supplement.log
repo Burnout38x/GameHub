@@ -1,0 +1,3 @@
+PASS existing quiz leave UI removes participant and returns library
+PASS all four theme controls keyboard activate and persist
+{"checks":["existing quiz leave UI removes participant and returns library","all four theme controls keyboard activate and persist"],"errors":[],"http":[],"console":[],"cleanup":[{"room":"bb4935c3-0754-4e42-b3c1-d4361f90ab2a","error":null},{"user":"9ed01755-1626-4b1d-8244-bae0cd7e3237","error":null},{"user":"991600bb-f050-4b40-9181-a9d18e1db8f0","error":null}]}

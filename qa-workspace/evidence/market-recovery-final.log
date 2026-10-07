@@ -1,0 +1,7 @@
+PASS injected response observed
+PASS recoverable HTTP500 leaves state unchanged
+PASS injected response observed
+PASS recoverable HTTP503 leaves state unchanged
+PASS CSS200 percent emulation remains playable; native zoom not claimed
+PASS real UI stall ownership trade selectable and accepted by peer
+PASS real Market Leave room dialog aborts without awarding results

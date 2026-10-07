@@ -1,0 +1,125 @@
+[
+  {
+    "name": "home park edge",
+    "expected": 2,
+    "actual": 2
+  },
+  {
+    "name": "home park diagonal",
+    "expected": 0,
+    "actual": 0
+  },
+  {
+    "name": "stall path edge",
+    "expected": 2,
+    "actual": 2
+  },
+  {
+    "name": "park edge counted once",
+    "expected": 1,
+    "actual": 1
+  },
+  {
+    "name": "path edge counted once",
+    "expected": 1,
+    "actual": 1
+  },
+  {
+    "name": "row wrap not adjacency",
+    "expected": 0,
+    "actual": 0
+  },
+  {
+    "name": "corner/interior/end neighbor boundaries"
+  },
+  {
+    "name": "nominated request threshold",
+    "n": 4,
+    "bonus": 0
+  },
+  {
+    "name": "nominated request threshold",
+    "n": 5,
+    "bonus": 8
+  },
+  {
+    "name": "nominated request threshold",
+    "n": 6,
+    "bonus": 8
+  },
+  {
+    "name": "all-kind threshold below/at and both bonuses once"
+  },
+  {
+    "name": "200 seeds x20 turns three valid unique deterministic offers; request family variation",
+    "requestFamilies": [
+      "stall",
+      "park",
+      "path",
+      "home"
+    ]
+  },
+  {
+    "name": "20-turn varied-offer deterministic replay"
+  },
+  {
+    "name": "invalid seed "
+  },
+  {
+    "name": "invalid seed null"
+  },
+  {
+    "name": "invalid seed <script>"
+  },
+  {
+    "name": "invalid seed xxxxxxxxxx"
+  },
+  {
+    "name": "invalid mode"
+  },
+  {
+    "name": "invalid moves array/length"
+  },
+  {
+    "name": "invalid moves array/length"
+  },
+  {
+    "name": "invalid moves array/length"
+  },
+  {
+    "name": "invalid move null"
+  },
+  {
+    "name": "invalid move {}"
+  },
+  {
+    "name": "invalid move {\"cell\":-1,\"offer\":0}"
+  },
+  {
+    "name": "invalid move {\"cell\":20,\"offer\":0}"
+  },
+  {
+    "name": "invalid move {\"cell\":0.5,\"offer\":0}"
+  },
+  {
+    "name": "invalid move {\"cell\":0,\"offer\":-1}"
+  },
+  {
+    "name": "invalid move {\"cell\":0,\"offer\":3}"
+  },
+  {
+    "name": "invalid move {\"cell\":0,\"offer\":0.5}"
+  },
+  {
+    "name": "invalid move {\"cell\":\"0\",\"offer\":0}"
+  },
+  {
+    "name": "occupied rejection"
+  },
+  {
+    "name": "complete run rejection"
+  },
+  {
+    "name": "invalid saves rejected, saved board replay ignores tampering"
+  }
+]

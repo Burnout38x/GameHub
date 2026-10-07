@@ -1,0 +1,51 @@
+{
+  "results": [
+    {
+      "theme": "dark",
+      "text": "Skip to content",
+      "visible": true,
+      "outline": "solid",
+      "color": "rgb(247, 189, 120)",
+      "rect": {
+        "x": 15,
+        "y": 15,
+        "width": 144.625,
+        "height": 56,
+        "top": 15,
+        "right": 159.625,
+        "bottom": 71,
+        "left": 15
+      },
+      "clip": "auto",
+      "clipPath": "none",
+      "position": "fixed",
+      "overflow": "visible",
+      "opacity": "1",
+      "skipTarget": "main-content"
+    },
+    {
+      "theme": "light",
+      "text": "Skip to content",
+      "visible": true,
+      "outline": "solid",
+      "color": "rgb(36, 49, 54)",
+      "rect": {
+        "x": 15,
+        "y": 15,
+        "width": 112.625,
+        "height": 24,
+        "top": 15,
+        "right": 127.625,
+        "bottom": 39,
+        "left": 15
+      },
+      "clip": "auto",
+      "clipPath": "none",
+      "position": "fixed",
+      "overflow": "visible",
+      "opacity": "1",
+      "skipTarget": "main-content"
+    }
+  ],
+  "errors": []
+}

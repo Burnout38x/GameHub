@@ -1,0 +1,14 @@
+PASS TC-M01 create/join/start real controls, minimum and host denial
+PASS TC-M06 movement sixteen theme/width screenshots and full-page axe
+PASS TC-M06 keyboard flat toggle and tutorial
+PASS TC-M06 trade sixteen theme/width screenshots and full-page axe
+PASS TC-M03 UI trade accepted
+PASS TC-M03 UI trade declined
+PASS TC-M04 peer goes offline
+PASS TC-M04 offline peer converges after reconnect
+PASS TC-M03 UI trade expired
+PASS TC-M04 lost successful response recovers committed state without duplicate
+PASS TC-M04 refresh resume preserves entire state
+PASS TC-M02/05 full twenty UI turns, both results, exact score and once-only records
+PASS TC-M06 results sixteen theme/width screenshots and full-page axe
+PASS TC-M05 rematch join and restart fresh

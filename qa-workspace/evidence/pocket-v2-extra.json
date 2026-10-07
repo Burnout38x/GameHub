@@ -1,0 +1,24 @@
+[
+  {
+    "case": "daily UTC seed same-day offers repeat",
+    "seed": "2026-10-07"
+  },
+  {
+    "case": "axe active game",
+    "violations": []
+  },
+  {
+    "case": "reduced motion computed styles",
+    "transition": "1e-05s",
+    "animation": "1e-05s"
+  },
+  {
+    "case": "200 percent CSS zoom",
+    "scroll": 1440,
+    "width": 1440
+  },
+  {
+    "case": "daily completion restores",
+    "moves": 20
+  }
+]

@@ -1,0 +1,32 @@
+{
+  "goal": "Independently verify the complete new-game flows, multiplayer synchronization, UI and regressions with a synergy-qa subagent, fix findings, and release the verified games.",
+  "conditions": 3,
+  "mode": "rerun",
+  "blocked": false,
+  "problems": [],
+  "hedges": [],
+  "reruns": [
+    {
+      "n": "1",
+      "cmd": "cat qa-workspace/test-plan/traceability.md",
+      "status": "ok",
+      "exit": 0,
+      "output": "# Traceability v3 (closed)\nAll evidence paths below are relative to qa-workspace/evidence. Runs are pocket.md, market.md, regression.md. No prior .forge pass claims are counted as independent observations.\n\n| Criterion | Cases | Evidence | Result |\n| --- | --- | --- | --- |\n| AC-01a | TC-P01 | pocke"
+    },
+    {
+      "n": "2",
+      "cmd": "cat qa-workspace/report/QA-REPORT.md",
+      "status": "ok",
+      "exit": 0,
+      "output": "QA REPORT: Independent GameHub expansion acceptance\nMODE: Autonomous and Regression\nSCOPE: Complete Pocket Paradise and Market Day flows, multiplayer synchronization, new-game UI, and affected existing games, navigation, social, progress and themes.\nENVIRONMENT: Commit `1f9dd09`, isolated production"
+    },
+    {
+      "n": "3",
+      "cmd": "cat qa-workspace/evidence/root-production-smoke.log",
+      "status": "ok",
+      "exit": 0,
+      "output": "PASS 10 live library/solo checks, zero page errors; no production accounts, rooms or results created."
+    }
+  ],
+  "superseded": []
+}

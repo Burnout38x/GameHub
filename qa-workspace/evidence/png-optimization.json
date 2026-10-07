@@ -1,0 +1,1394 @@
+[
+  {
+    "file": "market-movement-arcade-820.png",
+    "before": 231475,
+    "after": 215210,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-guess-result-dark.png",
+    "before": 109712,
+    "after": 101922,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-results-arcade-390.png",
+    "before": 144324,
+    "after": 125934,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-dark-820-flat.png",
+    "before": 354307,
+    "after": 325809,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-trade-light-1440.png",
+    "before": 313045,
+    "after": 296770,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-trade-dark-320.png",
+    "before": 215412,
+    "after": 210629,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-prompt-result-dark.png",
+    "before": 97528,
+    "after": 89078,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-ocean-1440-flat.png",
+    "before": 497021,
+    "after": 443614,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-focus-light.png",
+    "before": 125708,
+    "after": 116277,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-result-code-crackers.png",
+    "before": 77340,
+    "after": 69247,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-predict-result-light.png",
+    "before": 119436,
+    "after": 104499,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-webkit-fixed.png",
+    "before": 953374,
+    "after": 654563,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-chromium-complete-dimensional.png",
+    "before": 498639,
+    "after": 449123,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-arcade-820-dimensional.png",
+    "before": 440515,
+    "after": 389807,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-light-contact.png",
+    "before": 497850,
+    "after": 482289,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-chromium-arcade-390.png",
+    "before": 207803,
+    "after": 199491,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-attempt1-online-prompt-shared-timer-light.png",
+    "before": 118999,
+    "after": 104306,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-ocean-820-dimensional.png",
+    "before": 446888,
+    "after": 397057,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-csszoom200-trade.png",
+    "before": 591192,
+    "after": 559984,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-ocean-1440-dimensional.png",
+    "before": 495364,
+    "after": 442337,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-result-know-your-partner.png",
+    "before": 97544,
+    "after": 89899,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-arcade-1440-flat.png",
+    "before": 496663,
+    "after": 442097,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-chromium-light-390.png",
+    "before": 199771,
+    "after": 191504,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-dark-1440-dimensional.png",
+    "before": 485128,
+    "after": 439405,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-webkit-dark-1440.png",
+    "before": 792710,
+    "after": 556098,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-results-ocean-390.png",
+    "before": 145280,
+    "after": 126188,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-prompt-shared-timer-dark.png",
+    "before": 102800,
+    "after": 94041,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-zoom-top.png",
+    "before": 260877,
+    "after": 232246,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-rule-result-light.png",
+    "before": 125091,
+    "after": 110582,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-movement-dark-390.png",
+    "before": 194686,
+    "after": 188569,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-webkit-complete-dimensional.png",
+    "before": 1208173,
+    "after": 873898,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-memory-result-dark.png",
+    "before": 103095,
+    "after": 95722,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-guess-play-light.png",
+    "before": 119378,
+    "after": 105031,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-trade-ocean-390.png",
+    "before": 212838,
+    "after": 208495,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-result-mental-math-duel.png",
+    "before": 69759,
+    "after": 62963,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-results-dark-320.png",
+    "before": 108710,
+    "after": 101458,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-movement-ocean-320.png",
+    "before": 186969,
+    "after": 179814,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-prompt-shared-timer-light.png",
+    "before": 118643,
+    "after": 103932,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-trade-arcade-820.png",
+    "before": 255833,
+    "after": 242548,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-memory-play-dark.png",
+    "before": 152450,
+    "after": 139637,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-profile-arcade-1440.png",
+    "before": 584845,
+    "after": 496852,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-light-820-dimensional.png",
+    "before": 502850,
+    "after": 452443,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-light-390-flat.png",
+    "before": 297691,
+    "after": 275058,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-chromium-dark-1440.png",
+    "before": 316776,
+    "after": 288807,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-code-play-light.png",
+    "before": 142262,
+    "after": 128825,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-dark-390-flat.png",
+    "before": 276505,
+    "after": 261672,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-ocean-820-flat.png",
+    "before": 448585,
+    "after": 398280,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-webkit-light-390.png",
+    "before": 343518,
+    "after": 279188,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-touch-webkit-dimensional.png",
+    "before": 692913,
+    "after": 536327,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-final-branches-webkit.png",
+    "before": 693690,
+    "after": 537744,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-movement-light-820.png",
+    "before": 223003,
+    "after": 205746,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-code-play-dark.png",
+    "before": 120827,
+    "after": 113504,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-movement-arcade-1440.png",
+    "before": 333635,
+    "after": 310421,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-quiz-result-light.png",
+    "before": 118610,
+    "after": 103655,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-movement-light-1440.png",
+    "before": 276651,
+    "after": 255199,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-light-390-dimensional.png",
+    "before": 301226,
+    "after": 278167,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-dark-contact.png",
+    "before": 479175,
+    "after": 466751,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-dark-390-dimensional.png",
+    "before": 306596,
+    "after": 287849,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-light-390-flat.png",
+    "before": 298686,
+    "after": 275906,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-webkit-ocean-820.png",
+    "before": 530335,
+    "after": 404068,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-arcade-1440-dimensional.png",
+    "before": 571691,
+    "after": 508355,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-games-ocean-390.png",
+    "before": 1860899,
+    "after": 1610714,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-ocean-820-flat.png",
+    "before": 449881,
+    "after": 399947,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-chromium-fixed.png",
+    "before": 378740,
+    "after": 345941,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-webkit-dark-820.png",
+    "before": 523190,
+    "after": 397369,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-themes-light-768.png",
+    "before": 186127,
+    "after": 182224,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-webkit-light-320.png",
+    "before": 331979,
+    "after": 271069,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-attempt1-online-quiz-result-light.png",
+    "before": 119269,
+    "after": 104398,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-movement-ocean-390.png",
+    "before": 190576,
+    "after": 184379,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-arcade-390-flat.png",
+    "before": 345558,
+    "after": 311301,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-results-dark-390.png",
+    "before": 110827,
+    "after": 103383,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-light-1440-flat.png",
+    "before": 413007,
+    "after": 376136,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-webkit-light-1440.png",
+    "before": 800541,
+    "after": 562406,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-results-light-820.png",
+    "before": 195706,
+    "after": 172836,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-trade-ocean-320.png",
+    "before": 216799,
+    "after": 211240,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-rule-play-dark.png",
+    "before": 197678,
+    "after": 184536,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-chromium-arcade-1440.png",
+    "before": 327745,
+    "after": 300577,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-chromium-ocean-820.png",
+    "before": 258140,
+    "after": 238632,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-memory-play-light.png",
+    "before": 160241,
+    "after": 145328,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-result-word-chain.png",
+    "before": 85924,
+    "after": 77067,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-trade-light-820.png",
+    "before": 250553,
+    "after": 237617,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-rooms-ocean-390.png",
+    "before": 124539,
+    "after": 109455,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-results-ocean-320.png",
+    "before": 137973,
+    "after": 121155,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-rule-result-dark.png",
+    "before": 102826,
+    "after": 95400,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-movement-dark-320.png",
+    "before": 188125,
+    "after": 181757,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-rooms-arcade-1440.png",
+    "before": 214274,
+    "after": 179640,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-arcade-390-dimensional.png",
+    "before": 375886,
+    "after": 338612,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-chromium-light-320.png",
+    "before": 196759,
+    "after": 188575,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-chromium-dark-820.png",
+    "before": 251510,
+    "after": 233319,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-attempt1-online-prompt-shared-timer-dark.png",
+    "before": 103377,
+    "after": 94997,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-ocean-contact.png",
+    "before": 741948,
+    "after": 715931,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-attempt1-online-quiz-play-light.png",
+    "before": 108176,
+    "after": 92493,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-memory-result-light.png",
+    "before": 125191,
+    "after": 110593,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-guess-play-dark.png",
+    "before": 97324,
+    "after": 90272,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-chromium-arcade-320.png",
+    "before": 203621,
+    "after": 194623,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-webkit-arcade-820.png",
+    "before": 528338,
+    "after": 397212,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-ocean-390-dimensional.png",
+    "before": 376260,
+    "after": 339794,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-zoom-preview.png",
+    "before": 256505,
+    "after": 233052,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-profile-ocean-390.png",
+    "before": 425387,
+    "after": 368034,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-chromium-ocean-1440.png",
+    "before": 324007,
+    "after": 297522,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-friends-dark-390.png",
+    "before": 173880,
+    "after": 165094,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-games-dark-390.png",
+    "before": 1216361,
+    "after": 1158942,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-light-1440-dimensional.png",
+    "before": 491308,
+    "after": 444934,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-result-who-remembers.png",
+    "before": 92039,
+    "after": 86323,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-dark-390-dimensional.png",
+    "before": 279985,
+    "after": 265320,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-trade-dark-390.png",
+    "before": 212166,
+    "after": 209159,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-dark-contact.png",
+    "before": 650124,
+    "after": 632999,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-final-branches-chromium.png",
+    "before": 307273,
+    "after": 294593,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-results-arcade-320.png",
+    "before": 136845,
+    "after": 120488,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-friends-light-768.png",
+    "before": 273333,
+    "after": 234882,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-result-reverse-definition.png",
+    "before": 79718,
+    "after": 71332,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-arcade-820-flat.png",
+    "before": 443876,
+    "after": 392854,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-results-ocean-1440.png",
+    "before": 278838,
+    "after": 231397,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-movement-contact.png",
+    "before": 1369097,
+    "after": 1334179,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-quiz-play-dark.png",
+    "before": 96438,
+    "after": 87188,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-trade-dark-820.png",
+    "before": 251904,
+    "after": 238009,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-movement-ocean-1440.png",
+    "before": 333568,
+    "after": 310109,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-touch-chromium-dimensional.png",
+    "before": 295050,
+    "after": 279536,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-trade-contact.png",
+    "before": 1088122,
+    "after": 1060423,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-dark-1440-flat.png",
+    "before": 413416,
+    "after": 375017,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-movement-arcade-320.png",
+    "before": 186640,
+    "after": 179760,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-light-1440-flat.png",
+    "before": 411878,
+    "after": 374971,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-arcade-390-flat.png",
+    "before": 346603,
+    "after": 312510,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-chain-final-review-dark.png",
+    "before": 112089,
+    "after": 103486,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-arcade-contact.png",
+    "before": 546645,
+    "after": 529033,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-light-390-dimensional.png",
+    "before": 330931,
+    "after": 305430,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-daily-complete.png",
+    "before": 437685,
+    "after": 398976,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-rooms-dark-390.png",
+    "before": 107360,
+    "after": 97441,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-themes-dark-390.png",
+    "before": 174882,
+    "after": 172824,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-ocean-contact.png",
+    "before": 547834,
+    "after": 529570,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-webkit-arcade-390.png",
+    "before": 352096,
+    "after": 284972,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-light-1440-dimensional.png",
+    "before": 412300,
+    "after": 375011,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-attempt1-online-quiz-result-dark.png",
+    "before": 99463,
+    "after": 91045,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-profile-dark-390.png",
+    "before": 288216,
+    "after": 269942,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-touch-chromium-flat.png",
+    "before": 250379,
+    "after": 239365,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-results-light-390.png",
+    "before": 132660,
+    "after": 117498,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-zoom200.png",
+    "before": 332124,
+    "after": 301781,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-retry-success.png",
+    "before": 373431,
+    "after": 347169,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-chromium-ocean-390.png",
+    "before": 206676,
+    "after": 197956,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-predict-memory-result-light.png",
+    "before": 119825,
+    "after": 105036,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-result-rule-discoverer.png",
+    "before": 90032,
+    "after": 80960,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-trade-light-390.png",
+    "before": 210941,
+    "after": 207729,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-chromium-dark-390.png",
+    "before": 202718,
+    "after": 195090,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-quiz-results-390.png",
+    "before": 97498,
+    "after": 89518,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-focus-before-fix-dark.png",
+    "before": 130639,
+    "after": 121000,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-ocean-390-flat.png",
+    "before": 347021,
+    "after": 314082,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-webkit-ocean-390.png",
+    "before": 352404,
+    "after": 286627,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-zoom200.png",
+    "before": 774260,
+    "after": 705185,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-themes-arcade-1440.png",
+    "before": 283555,
+    "after": 263774,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-webkit-dark-390.png",
+    "before": 349952,
+    "after": 284719,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-movement-light-320.png",
+    "before": 184115,
+    "after": 177589,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-arcade-1440-dimensional.png",
+    "before": 496424,
+    "after": 442009,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-arcade-390-dimensional.png",
+    "before": 349914,
+    "after": 316017,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-light-820-flat.png",
+    "before": 375170,
+    "after": 340811,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-results-dark-1440.png",
+    "before": 233483,
+    "after": 200019,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-ocean-390-dimensional.png",
+    "before": 350278,
+    "after": 317351,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-chain-final-review-light.png",
+    "before": 148949,
+    "after": 130980,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-trade-ocean-1440.png",
+    "before": 315234,
+    "after": 295208,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-arcade-820-flat.png",
+    "before": 442345,
+    "after": 391099,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-focus-dark.png",
+    "before": 129579,
+    "after": 120090,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-results-dark-820.png",
+    "before": 164786,
+    "after": 148406,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-result-mystery-card.png",
+    "before": 67554,
+    "after": 61845,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-movement-ocean-820.png",
+    "before": 226559,
+    "after": 212930,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-trade-dark-1440.png",
+    "before": 322766,
+    "after": 302060,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-trade-arcade-320.png",
+    "before": 215296,
+    "after": 210051,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-results-contact.png",
+    "before": 1339184,
+    "after": 1280718,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-predict-memory-result-dark.png",
+    "before": 98129,
+    "after": 90130,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-trade-arcade-390.png",
+    "before": 213245,
+    "after": 209430,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-dark-820-flat.png",
+    "before": 355658,
+    "after": 327333,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-ocean-390-flat.png",
+    "before": 345920,
+    "after": 312854,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-games-arcade-1440.png",
+    "before": 1672961,
+    "after": 1535955,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-webkit-light-820.png",
+    "before": 533839,
+    "after": 405236,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-light-820-flat.png",
+    "before": 373529,
+    "after": 339257,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-arcade-1440-flat.png",
+    "before": 497909,
+    "after": 443300,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-rooms-light-768.png",
+    "before": 138385,
+    "after": 117443,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-chain-result-light.png",
+    "before": 136498,
+    "after": 121183,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-webkit-dark-320.png",
+    "before": 334324,
+    "after": 273834,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-movement-light-390.png",
+    "before": 186936,
+    "after": 181667,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-ocean-820-dimensional.png",
+    "before": 574256,
+    "after": 506082,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-prompt-result-light.png",
+    "before": 118689,
+    "after": 104167,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-chain-result-dark.png",
+    "before": 115580,
+    "after": 107025,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-ocean-1440-flat.png",
+    "before": 495875,
+    "after": 442533,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-webkit-ocean-320.png",
+    "before": 336303,
+    "after": 274401,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-webkit-arcade-1440.png",
+    "before": 792231,
+    "after": 553662,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-results-light-1440.png",
+    "before": 250079,
+    "after": 217994,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-code-result-dark.png",
+    "before": 111943,
+    "after": 103869,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-chromium-light-820.png",
+    "before": 253521,
+    "after": 235021,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-dark-820-dimensional.png",
+    "before": 353517,
+    "after": 325661,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-chromium-dark-320.png",
+    "before": 200118,
+    "after": 191722,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-results-arcade-1440.png",
+    "before": 283348,
+    "after": 238009,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-trade-light-320.png",
+    "before": 212476,
+    "after": 207549,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-themes-ocean-390.png",
+    "before": 175809,
+    "after": 173531,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-results-ocean-820.png",
+    "before": 208846,
+    "after": 175250,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-movement-dark-820.png",
+    "before": 278642,
+    "after": 254995,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-games-light-768.png",
+    "before": 1409062,
+    "after": 1292327,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-chromium-ocean-320.png",
+    "before": 202845,
+    "after": 193557,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-quiz-playing-390.png",
+    "before": 92028,
+    "after": 82826,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-focus-before-fix-light.png",
+    "before": 127204,
+    "after": 117611,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-quiz-play-light.png",
+    "before": 107755,
+    "after": 91886,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-results-light-320.png",
+    "before": 128409,
+    "after": 114784,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-light-contact.png",
+    "before": 675590,
+    "after": 655072,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-movement-dark-1440.png",
+    "before": 300480,
+    "after": 274075,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-trade-ocean-820.png",
+    "before": 247435,
+    "after": 232639,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-chromium-light-1440.png",
+    "before": 302534,
+    "after": 278495,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-arcade-contact.png",
+    "before": 740691,
+    "after": 716040,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-friends-arcade-1440.png",
+    "before": 389061,
+    "after": 329144,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-dark-820-dimensional.png",
+    "before": 477183,
+    "after": 429507,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-light-820-dimensional.png",
+    "before": 372118,
+    "after": 337819,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-touch-webkit-flat.png",
+    "before": 660375,
+    "after": 511797,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-webkit-ocean-1440.png",
+    "before": 794965,
+    "after": 563312,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-predict-private-dark.png",
+    "before": 103986,
+    "after": 94854,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-daily-complete.png",
+    "before": 549792,
+    "after": 502250,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-chromium-arcade-820.png",
+    "before": 259343,
+    "after": 240163,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-webkit-arcade-320.png",
+    "before": 337849,
+    "after": 276430,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-friends-ocean-390.png",
+    "before": 262125,
+    "after": 226141,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-predict-private-light.png",
+    "before": 116192,
+    "after": 100948,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-movement-arcade-390.png",
+    "before": 191292,
+    "after": 185373,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-dark-1440-dimensional.png",
+    "before": 411277,
+    "after": 374067,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-attempt1-online-quiz-play-dark.png",
+    "before": 97076,
+    "after": 87788,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-ocean-1440-dimensional.png",
+    "before": 569786,
+    "after": 507877,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-results-arcade-820.png",
+    "before": 207075,
+    "after": 173563,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-trade-arcade-1440.png",
+    "before": 328215,
+    "after": 309633,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-quiz-result-dark.png",
+    "before": 100489,
+    "after": 91837,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-code-result-light.png",
+    "before": 125889,
+    "after": 111710,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-guess-result-light.png",
+    "before": 127359,
+    "after": 112739,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-dark-390-flat.png",
+    "before": 275578,
+    "after": 260644,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-dark-1440-flat.png",
+    "before": 412249,
+    "after": 374294,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-predict-result-dark.png",
+    "before": 99790,
+    "after": 91489,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "pocket-v2-arcade-820-dimensional.png",
+    "before": 566560,
+    "after": 497886,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "market-final-csszoom200.png",
+    "before": 604094,
+    "after": 558365,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-online-rule-play-light.png",
+    "before": 242615,
+    "after": 214976,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  },
+  {
+    "file": "regression-profile-light-768.png",
+    "before": 418344,
+    "after": 366242,
+    "pixels": "unchanged; lossless PNG re-encoding"
+  }
+]

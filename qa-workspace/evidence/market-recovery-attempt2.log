@@ -1,0 +1,19 @@
+PASS injected response observed
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert(alert.includes(status===500?'QA simulated save unavailable':'Something went wrong'))
+
+    at file:///Users/blaze/Documents/Claude%20Code/gamehub/qa-workspace/market-visual-final.mjs:8:954 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.18.0
