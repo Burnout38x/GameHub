@@ -4,7 +4,7 @@
 - `src/app/api/rooms` contains authoritative multiplayer actions; browsers must not mutate scores or room state directly.
 - `src/lib/server` holds room lifecycle helpers. `src/components/room` renders online game types.
 - `src/app/games/local` contains eight same-device games; shared validators/content live in `src/lib/local-games`.
-- Fortress Feud: deterministic battle engine in `src/lib/fortress` (shared by browser and server replay; never use Math.random/Date/trig in the sim), UI in `src/components/fortress`, online orders via `/api/rooms/[code]/battle`.
+- Fortress Feud: drag-aim-launch siege on planck.js physics in `src/lib/fortress` (`design.ts` block fortress model + validation, `missions.ts` campaign/AI levels, `world.ts` terrain/craters, `physics.ts` shot sim). Online shots are simulated on the server and stored as keyframe replays (served only by `GET /api/rooms/[code]/battle?since=`); room snapshots use `publicSiege` (no replay, designs hidden). UI and canvas art in `src/components/fortress`.
 - `supabase/schema.sql` is initial setup, not a repeatable migration. Do not run it over an existing project.
 - Never print `.env.local` or service-role keys. Use test identities for integration checks.
 - UI uses shared classes in `src/app/globals.css`; preserve responsive, keyboard, loading and error states.

@@ -1,9 +1,11 @@
 'use client';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { AMMO, AMMO_ORDER, BUILD_MATERIALS, DEFAULT_DESIGN, MATERIALS, MISSIONS, SKIRMISH_LEVELS, type FortressDesign } from '@/lib/fortress/content';
+import { AMMO, AMMO_ORDER, BUILD_MATERIALS, MATERIALS, START_GOLD } from '@/lib/fortress/content';
+import { DEFAULT_DESIGN, parseDesign, type FortressDesign } from '@/lib/fortress/design';
+import { MISSIONS, SKIRMISH_LEVELS } from '@/lib/fortress/missions';
 import { CAMPAIGN_STORAGE_KEY, MAX_STARS, campaignRank, mergeProgress, missionUnlocked, parseProgress, totalStars, type CampaignProgress } from '@/lib/fortress/campaign';
-import { parseDesign, setupRules, type MatchSetup } from '@/lib/fortress/match';
+import { setupRules, type MatchSetup } from '@/lib/fortress/match';
 import BuildScreen from './BuildScreen';
 import LocalSiege, { enemyLabel, type LocalResult } from './LocalSiege';
 import hub from './FortressHub.module.css';
@@ -13,7 +15,7 @@ type View =
   | { phase: 'build'; setup: MatchSetup }
   | { phase: 'battle'; setup: MatchSetup; design: FortressDesign; seed: number; key: number };
 const EMPTY: CampaignProgress = { stars: {}, best: {} };
-const DESIGN_KEY = 'gamehub:fortress-feud:design';
+const DESIGN_KEY = 'gamehub:fortress-feud:design:v2';
 const newSeed = () => Math.floor(Math.random() * 2_000_000_000) + 1;
 
 function readLocal(): CampaignProgress {
@@ -23,7 +25,7 @@ function writeLocal(progress: CampaignProgress) {
   try { localStorage.setItem(CAMPAIGN_STORAGE_KEY, JSON.stringify(progress)); } catch { /* Private mode: progress lasts for this visit. */ }
 }
 function readDesign(): FortressDesign {
-  try { return parseDesign(JSON.parse(localStorage.getItem(DESIGN_KEY) ?? 'null')) ?? DEFAULT_DESIGN; } catch { return DEFAULT_DESIGN; }
+  try { return parseDesign(JSON.parse(localStorage.getItem(DESIGN_KEY) ?? 'null'), Infinity) ?? DEFAULT_DESIGN; } catch { return DEFAULT_DESIGN; }
 }
 function writeDesign(design: FortressDesign) {
   try { localStorage.setItem(DESIGN_KEY, JSON.stringify(design)); } catch { /* Storage blocked: the design lasts for this visit. */ }
@@ -164,7 +166,7 @@ export default function FortressFeud() {
             <ul className="mt-4 grid grid-cols-2 gap-2 text-sm">
               <li className="glass-sm p-3">🤖 Gunner <strong className="block">{SKIRMISH_LEVELS[briefing.aiLevel - 1].label}</strong></li>
               <li className="glass-sm p-3">🌬️ Wind <strong className="block">{briefing.windMax === 0 ? 'Calm' : briefing.windMax >= 2.2 ? 'Gale' : briefing.windMax >= 1.2 ? 'Breezy' : 'Light'}</strong></li>
-              <li className="glass-sm p-3">🪙 War chest <strong className="block">{briefing.gold ?? 450} gold</strong></li>
+              <li className="glass-sm p-3">🪙 War chest <strong className="block">{briefing.gold ?? START_GOLD} gold</strong></li>
               <li className="glass-sm p-3">⭐ Best <strong className="block">{progress.stars[briefing.id] ? `${progress.stars[briefing.id]} stars${progress.best[briefing.id] ? ` · ${progress.best[briefing.id]} shots` : ''}` : 'Not cleared'}</strong></li>
             </ul>
             <p className="mt-4 text-sm text-[#9cddd2]">💡 {briefing.tip}</p>
@@ -204,7 +206,7 @@ export default function FortressFeud() {
         <h2 id="howto-heading" className="text-2xl font-bold">How to play</h2>
         <ol className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            ['🏗️', 'Build', 'Pick a layout and build each part from timber, stone or steel. Gold you save buys ammo.'],
+            ['🏗️', 'Build', 'Place posts, floors, walls, roofs and windows block by block — or start from a template. Stress-test it, then hide your King and Knights inside.'],
             ['🎯', 'Aim', 'Drag back anywhere on the field — the dots show your launch — then let go. Or use the sliders.'],
             ['🌬️', 'Read the wind', 'The flags and clouds show the wind. It bends long, high shots the most.'],
             ['👑', 'Win', 'Knock out the King and both Knights. Out of shots? The fortress with more standing wins.'],
@@ -217,7 +219,7 @@ export default function FortressFeud() {
           </div>
           <div>
             <h3 className="font-bold">Building materials</h3>
-            <ul className="mt-3 grid gap-2">{BUILD_MATERIALS.map(id => { const material = MATERIALS[id]; return <li key={id} className="glass-sm flex items-center gap-3 p-3"><span aria-hidden="true" className="text-2xl">{{ wood: '🪵', stone: '🧱', steel: '⛓️', glass: '🪟' }[id]}</span><span className="min-w-0 flex-1"><strong>{material.name}</strong> <span className="text-sm text-white/65">· {id === 'wood' ? 'Light and free, but it splinters and burns.' : id === 'stone' ? 'Heavy and solid. Shrugs off small hits.' : 'Nearly unbreakable. Expensive.'}</span></span><span className="shrink-0 rounded-full bg-amber-400/20 px-2 py-1 text-xs font-black">{material.costPerArea ? `🪙 ${material.costPerArea}/m²` : 'Free'}</span></li>; })}</ul>
+            <ul className="mt-3 grid gap-2">{BUILD_MATERIALS.map(id => { const material = MATERIALS[id]; return <li key={id} className="glass-sm flex items-center gap-3 p-3"><span aria-hidden="true" className="text-2xl">{{ wood: '🪵', stone: '🧱', steel: '⛓️', glass: '🪟' }[id]}</span><span className="min-w-0 flex-1"><strong>{material.name}</strong> <span className="text-sm text-white/65">· {id === 'wood' ? 'Light and cheap, but it splinters and burns.' : id === 'stone' ? 'Heavy and solid. Shrugs off small hits.' : 'Nearly unbreakable. Expensive.'}</span></span><span className="shrink-0 rounded-full bg-amber-400/20 px-2 py-1 text-xs font-black">🪙 {material.costPerArea}/m²</span></li>; })}</ul>
             <p className="mt-3 text-sm text-white/65">Each turn you earn 🪙 30 plus a cut of the damage you deal, and 🪙 80 for every royal you knock out. 🩹 Patch up (🪙 100) heals your royals and puts out fires.</p>
           </div>
         </div>

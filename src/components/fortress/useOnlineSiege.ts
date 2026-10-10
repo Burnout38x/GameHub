@@ -4,7 +4,8 @@ import { activePlayer } from '@/lib/fortress/match';
 import type { MatchAction, MatchState } from '@/lib/fortress/match';
 import type { PublicSiege } from '@/lib/fortress/online';
 import type { Replay } from '@/lib/fortress/physics';
-import { ONLINE_TURN_SECONDS, type FortressDesign } from '@/lib/fortress/content';
+import { ONLINE_TURN_SECONDS } from '@/lib/fortress/content';
+import type { FortressDesign } from '@/lib/fortress/design';
 import type { SiegePlayback } from './SiegeBattle';
 
 interface Payload { siege: PublicSiege; replay: Replay | null; status: string; serverNow: number; error?: string }

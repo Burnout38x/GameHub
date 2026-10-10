@@ -1,4 +1,4 @@
-import { MISSIONS } from '@/lib/fortress/content';
+import { MISSIONS } from '@/lib/fortress/missions';
 import type { MatchSetup } from '@/lib/fortress/match';
 import type { Theme } from './scene/art';
 
@@ -7,8 +7,9 @@ export function themeFor(setup: MatchSetup, seed: number): Theme {
   if (setup.kind === 'mission') {
     const mission = MISSIONS.find(entry => entry.id === setup.mission);
     if (mission && mission.windMax >= 2.2) return 'storm';
-    return mission && mission.id >= 7 ? 'dusk' : 'day';
+    if (mission && mission.id >= 10) return 'night';
+    return mission && mission.id >= 6 ? 'dusk' : 'day';
   }
-  if (setup.kind === 'skirmish') return setup.level >= 5 ? 'storm' : setup.level >= 4 ? 'dusk' : 'day';
-  return (['day', 'dusk', 'storm'] as const)[Math.abs(seed) % 3];
+  if (setup.kind === 'skirmish') return (['day', 'day', 'dusk', 'storm', 'night'] as const)[Math.min(4, Math.max(0, setup.level - 1))];
+  return (['day', 'dusk', 'storm', 'night'] as const)[Math.abs(seed) % 4];
 }

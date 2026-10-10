@@ -1,10 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { AI_LEVELS, DEFAULT_DESIGN, MISSIONS, REPAIR_COST, SHOTS_PER_PLAYER, START_GOLD, TURN_INCOME, designCost } from '@/lib/fortress/content';
-import { createWorld, royalsOf } from '@/lib/fortress/world';
+import { REPAIR_COST, SHOTS_PER_PLAYER, START_GOLD, TURN_INCOME } from '@/lib/fortress/content';
+import { DEFAULT_DESIGN, TEMPLATE_ORDER, designCost, designProblem, dropPiece, parseDesign, templateDesign } from '@/lib/fortress/design';
+import { AI_LEVELS, MISSIONS } from '@/lib/fortress/missions';
+import { createWorld, crater, groundAt, royalsOf } from '@/lib/fortress/world';
 import { simulateShot } from '@/lib/fortress/physics';
 import { planAiShot, solvePower } from '@/lib/fortress/ai';
-import { activePlayer, activePlayerIndex, applyAction, createMatch, forfeit, missionStars, parseDesign, shotAllowance, type MatchState } from '@/lib/fortress/match';
+import { activePlayer, activePlayerIndex, applyAction, createMatch, forfeit, missionStars, shotAllowance, type MatchState } from '@/lib/fortress/match';
 import { advanceSiege, createOnlineSiege, forfeitSiege, parseOnlineSiege, playerOrder, publicSiege, settleSiege, submitDesign } from '@/lib/fortress/online';
 import { verifyMissionRun } from '@/lib/fortress/campaign';
 
@@ -23,17 +25,36 @@ function play(match: MatchState, guard = 80): MatchState {
   return state;
 }
 
-test('every fortress blueprint stands still until something hits it', () => {
-  for (const blueprint of ['keep', 'bastion', 'spire'] as const) {
-    const design = { blueprint, materials: { frame: 'wood', floors: 'wood', walls: 'wood' } } as const;
+test('every template stands still once it settles, in every material', () => {
+  for (const template of TEMPLATE_ORDER) for (const material of ['wood', 'stone', 'steel'] as const) {
+    const design = templateDesign(template, { frame: material, floors: material, walls: material });
+    assert.equal(designProblem(design, Infinity), null, `${template} ${material} is a valid design`);
     const world = createWorld(10, [design, design]);
-    const result = simulateShot(world, { side: 0, angle: 85, power: 0.05, ammo: 'stone' }, 0, { record: false, maxSeconds: 6 });
-    assert.deepEqual(result.damage, [0, 0]);
-    for (const body of result.world.bodies) {
+    const settled = simulateShot(world, null, 0, { record: false });
+    assert.deepEqual(settled.damage, [0, 0], 'settling never hurts anything');
+    assert.equal(settled.world.bodies.length, world.bodies.length);
+    for (const body of settled.world.bodies) {
       const before = world.bodies.find(entry => entry.id === body.id)!;
-      assert.ok(Math.hypot(body.x - before.x, body.y - before.y) < 0.2, `${blueprint} body ${body.id} drifted`);
+      assert.ok(Math.hypot(body.x - before.x, body.y - before.y) < 0.2, `${template}/${material} body ${body.id} drifted`);
     }
   }
+});
+
+test('blasts dig craters into the ground', () => {
+  const world = createWorld(10, [DEFAULT_DESIGN, DEFAULT_DESIGN]);
+  const before = groundAt(world.terrain, 70);
+  const dug = crater(world.terrain, 70, before + 0.3, 3)!;
+  assert.ok(groundAt(dug, 70) < before - 0.5, 'the middle sinks');
+  assert.equal(groundAt(dug, 80), groundAt(world.terrain, 80), 'far ground is untouched');
+  assert.equal(crater(world.terrain, 70, before + 10, 3), null, 'an airburst leaves the ground alone');
+});
+
+test('builder pieces drop onto whatever is below them', () => {
+  const empty = { pieces: [], royals: [] };
+  assert.equal(dropPiece(empty, 'block', 5), 0.6, 'a block lands on the ground');
+  const stacked = { pieces: [{ kind: 'block' as const, material: 'stone' as const, x: 5, y: 0.6 }], royals: [] };
+  assert.equal(dropPiece(stacked, 'block', 5.4), 1.8, 'and on top of another block');
+  assert.equal(dropPiece(stacked, 'block', 7), 0.6, 'but not on a block it misses');
 });
 
 test('an aimed shot lands on the enemy fortress and records a replay', () => {
@@ -107,10 +128,16 @@ test('mission stars reward a win, a full court and finishing within par', () => 
 });
 
 test('designs from the network are validated', () => {
-  assert.deepEqual(parseDesign({ blueprint: 'spire', materials: { frame: 'steel', floors: 'stone', walls: 'wood' } }), { blueprint: 'spire', materials: { frame: 'steel', floors: 'stone', walls: 'wood' } });
-  assert.equal(parseDesign({ blueprint: 'toString', materials: { frame: 'wood', floors: 'wood', walls: 'wood' } }), null);
-  assert.equal(parseDesign({ blueprint: 'keep', materials: { frame: 'glass', floors: 'wood', walls: 'wood' } }), null);
-  assert.equal(parseDesign(null), null);
+  const valid = JSON.parse(JSON.stringify(DEFAULT_DESIGN));
+  assert.deepEqual(parseDesign(valid, START_GOLD), DEFAULT_DESIGN);
+  assert.equal(parseDesign({ ...valid, pieces: [...valid.pieces, { kind: 'toString', material: 'wood', x: 1, y: 1 }] }, START_GOLD), null, 'unknown pieces');
+  assert.equal(parseDesign({ ...valid, pieces: [{ ...valid.pieces[0], material: 'glass' }, ...valid.pieces.slice(1)] }, START_GOLD), null, 'glass posts');
+  assert.equal(parseDesign({ ...valid, pieces: [...valid.pieces, valid.pieces[0]] }, START_GOLD), null, 'overlapping pieces');
+  assert.equal(parseDesign({ ...valid, pieces: [{ ...valid.pieces[0], x: 40 }, ...valid.pieces.slice(1)] }, START_GOLD), null, 'outside the plot');
+  assert.equal(parseDesign({ ...valid, royals: valid.royals.slice(1) }, START_GOLD), null, 'missing a royal');
+  assert.equal(parseDesign({ ...valid, royals: [...valid.royals.slice(0, 2), { role: 'king', x: 15, y: 0.7 }] }, START_GOLD), null, 'two kings');
+  assert.equal(parseDesign(valid, designCost(DEFAULT_DESIGN) - 1), null, 'over budget');
+  assert.equal(parseDesign(null, START_GOLD), null);
 });
 
 test('online duel: build, take turns, refuse out-of-turn shots, settle the result', () => {
@@ -121,7 +148,7 @@ test('online duel: build, take turns, refuse out-of-turn shots, settle the resul
   assert.ok(!('error' in first));
   siege = first.siege;
   assert.ok('error' in submitDesign(siege, HOST, DEFAULT_DESIGN, now), 'cannot rebuild');
-  const second = submitDesign(siege, GUEST, { blueprint: 'bastion', materials: { frame: 'stone', floors: 'stone', walls: 'stone' } }, now);
+  const second = submitDesign(siege, GUEST, templateDesign('bastion', { frame: 'stone', floors: 'stone', walls: 'stone' }), now);
   assert.ok(!('error' in second));
   siege = second.siege;
   assert.equal(siege.stage, 'battle');
@@ -153,9 +180,14 @@ test('online duel: build, take turns, refuse out-of-turn shots, settle the resul
 
 test('idle accounts earn nothing and over-budget fortresses are refused', () => {
   const siege = createOnlineSiege('duel', 3, [HOST, GUEST], 4, 0);
-  const steel = { blueprint: 'keep', materials: { frame: 'steel', floors: 'steel', walls: 'steel' } };
-  assert.ok(designCost(steel as never) > START_GOLD);
-  assert.ok('error' in submitDesign(siege, HOST, steel, 0));
+  const steel = templateDesign('bastion', { frame: 'steel', floors: 'steel', walls: 'steel' });
+  assert.ok(designCost(steel) > START_GOLD);
+  const refused = submitDesign(siege, HOST, steel, 0);
+  assert.ok('error' in refused && /more gold/.test(refused.error));
+  // Malformed designs are refused cleanly, never thrown.
+  for (const junk of [{}, { pieces: 'x' }, { pieces: [null] }, { pieces: [{ kind: 'zzz' }], royals: [] }, []]) {
+    assert.ok('error' in submitDesign(siege, HOST, junk, 0), JSON.stringify(junk));
+  }
   const idle = advanceSiege(siege, siege.deadline + 1);
   assert.ok(!('error' in idle));
   let state = idle.siege;

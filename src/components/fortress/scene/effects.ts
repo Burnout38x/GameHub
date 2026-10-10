@@ -1,14 +1,18 @@
 import type { MaterialId } from '@/lib/fortress/content';
 
 /** Short-lived visual flourishes: smoke, sparks, splinters, fire and floating numbers. */
-type Kind = 'smoke' | 'spark' | 'chunk' | 'flame' | 'flash' | 'ring' | 'text' | 'drop' | 'star';
+type Kind = 'smoke' | 'spark' | 'chunk' | 'flame' | 'flash' | 'ring' | 'text' | 'drop' | 'star' | 'dust' | 'ember';
 interface Particle {
   kind: Kind; x: number; y: number; vx: number; vy: number;
   life: number; max: number; size: number; color: string;
   rot: number; spin: number; gravity: number; text?: string;
+  /** Rubble that has come to rest on the ground. */
+  resting?: boolean;
 }
 
-const MAX_PARTICLES = 700;
+const MAX_PARTICLES = 900;
+/** Rubble lingers on the ground, then fades over its last second. */
+const RUBBLE_SECONDS = 6;
 const DEBRIS_COLORS: Record<MaterialId, string[]> = {
   wood: ['#a06a35', '#7a4b22', '#c08a52'],
   stone: ['#9e9a90', '#7d7a72', '#b8b4aa'],
@@ -68,12 +72,24 @@ export class Effects {
       this.add({
         kind: material === 'glass' ? 'star' : 'chunk',
         x: x + (this.random() - 0.5) * w, y: y + (this.random() - 0.5) * h,
-        vx: Math.cos(a) * s, vy: Math.abs(Math.sin(a)) * s + 1, life: 0, max: 1 + this.random() * 0.8,
+        vx: Math.cos(a) * s, vy: Math.abs(Math.sin(a)) * s + 1, life: 0, max: material === 'glass' ? 1.2 + this.random() * 0.6 : RUBBLE_SECONDS + this.random() * 2,
         size: material === 'glass' ? 0.12 : 0.12 + this.random() * 0.22, color: colors[i % colors.length], gravity: 12,
         rot: this.random() * 6, spin: (this.random() - 0.5) * 14,
       });
     }
     this.puff(x, y, 5, material === 'wood' ? 'rgba(190,160,120,0.6)' : 'rgba(200,196,188,0.6)', 0.5, 1.2);
+  }
+
+  /** A low rolling cloud where something heavy hits the ground. */
+  dust(x: number, y: number, size: number): void {
+    for (let i = 0; i < 4 + Math.round(size * 3); i++) {
+      const dir = this.random() < 0.5 ? -1 : 1;
+      this.add({ kind: 'dust', x: x + (this.random() - 0.5) * size, y: y + 0.1, vx: dir * (0.6 + this.random() * 1.6) * size, vy: 0.2 + this.random() * 0.5, life: 0, max: 1.2 + this.random() * 1.2, size: 0.4 + this.random() * 0.5 * size, color: 'rgba(196,176,140,0.55)', gravity: -0.15 });
+    }
+  }
+
+  ember(x: number, y: number): void {
+    this.add({ kind: 'ember', x, y, vx: (this.random() - 0.5) * 0.8, vy: 1 + this.random() * 1.5, life: 0, max: 1 + this.random(), size: 0.05, color: '#ffb347', gravity: -0.2 });
   }
 
   splash(x: number, y: number): void {
@@ -100,15 +116,29 @@ export class Effects {
     this.add({ kind: 'text', x, y, vx: 0, vy: 1.6, life: 0, max: 1.4, size, color, gravity: 0, text });
   }
 
-  update(dt: number): void {
+  /** Advances everything; with `ground`, rubble bounces and comes to rest on the terrain. */
+  update(dt: number, ground?: (x: number) => number): void {
     this.shake = Math.max(0, this.shake - dt * 2.2);
     for (const p of this.particles) {
       p.life += dt;
+      if (p.resting) continue;
       p.vy -= p.gravity * dt;
-      if (p.kind === 'smoke' || p.kind === 'flame') { p.vx *= 1 - dt * 1.5; p.vy *= 1 - dt * 0.8; }
+      if (p.kind === 'smoke' || p.kind === 'flame' || p.kind === 'dust') { p.vx *= 1 - dt * 1.5; p.vy *= 1 - dt * 0.8; }
+      if (p.kind === 'ember') p.vx += Math.sin(p.life * 7 + p.x) * dt;
       p.x += p.vx * dt;
       p.y += p.vy * dt;
       p.rot += p.spin * dt;
+      if (ground && (p.kind === 'chunk' || p.kind === 'drop' || p.kind === 'spark')) {
+        const floor = ground(p.x) + p.size * 0.6;
+        if (p.y < floor && p.vy < 0) {
+          p.y = floor;
+          if (p.kind !== 'chunk') { p.life = p.max; continue; }
+          p.vy = -p.vy * 0.28;
+          p.vx *= 0.55;
+          p.spin *= 0.5;
+          if (Math.abs(p.vy) < 0.6 && Math.abs(p.vx) < 0.4) { p.resting = true; p.vx = 0; p.vy = 0; }
+        }
+      }
     }
     this.particles = this.particles.filter(p => p.life < p.max);
   }
@@ -117,12 +147,20 @@ export class Effects {
   draw(ctx: CanvasRenderingContext2D, pixel: number): void {
     for (const p of this.particles) {
       const t = p.life / p.max;
-      const fade = 1 - t;
+      const fade = p.kind === 'chunk' ? Math.min(1, p.max - p.life) : 1 - t;
       ctx.globalAlpha = Math.max(0, fade);
       switch (p.kind) {
         case 'smoke':
           ctx.fillStyle = p.color;
           ctx.beginPath(); ctx.arc(p.x, p.y, p.size * (1 + t * 1.5), 0, Math.PI * 2); ctx.fill();
+          break;
+        case 'dust':
+          ctx.fillStyle = p.color;
+          ctx.beginPath(); ctx.ellipse(p.x, p.y, p.size * (1 + t * 2), p.size * (0.6 + t), 0, 0, Math.PI * 2); ctx.fill();
+          break;
+        case 'ember':
+          ctx.fillStyle = Math.sin(p.life * 20) > 0 ? '#ffd27a' : p.color;
+          ctx.fillRect(p.x - Math.max(p.size, pixel), p.y - Math.max(p.size, pixel), Math.max(p.size, pixel) * 2, Math.max(p.size, pixel) * 2);
           break;
         case 'flame':
           ctx.fillStyle = t < 0.3 ? '#fff3c4' : p.color;

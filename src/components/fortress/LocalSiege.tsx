@@ -1,7 +1,8 @@
 'use client';
 import { useCallback, useState } from 'react';
 import Link from 'next/link';
-import { MISSIONS, SKIRMISH_LEVELS, type FortressDesign } from '@/lib/fortress/content';
+import type { FortressDesign } from '@/lib/fortress/design';
+import { MISSIONS, SKIRMISH_LEVELS } from '@/lib/fortress/missions';
 import { missionStars, sideScore, type MatchSetup, type MatchState } from '@/lib/fortress/match';
 import { royalsOf } from '@/lib/fortress/world';
 import SiegeBattle from './SiegeBattle';

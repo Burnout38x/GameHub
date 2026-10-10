@@ -1,4 +1,5 @@
-import { MISSIONS, SHOTS_PER_PLAYER } from './content';
+import { SHOTS_PER_PLAYER } from './content';
+import { MISSIONS } from './missions';
 
 export const CAMPAIGN_STORAGE_KEY = 'gamehub:fortress-feud:v2';
 export const MAX_STARS = MISSIONS.length * 3;

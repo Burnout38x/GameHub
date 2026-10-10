@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { aiPlanner } from '@/lib/fortress/ai';
-import type { FortressDesign } from '@/lib/fortress/content';
+import type { FortressDesign } from '@/lib/fortress/design';
 import { activePlayer, applyAction, createMatch, type MatchAction, type MatchSetup, type MatchState } from '@/lib/fortress/match';
 import type { ShotInput } from '@/lib/fortress/physics';
 import type { SiegePlayback } from './SiegeBattle';

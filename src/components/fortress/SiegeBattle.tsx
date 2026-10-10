@@ -5,7 +5,7 @@ import { AMMO, MAX_ANGLE, MIN_ANGLE, REPAIR_COST, type AmmoId } from '@/lib/fort
 import { activePlayer, activePlayerIndex, canAfford, type MatchAction, type MatchState } from '@/lib/fortress/match';
 import type { Replay } from '@/lib/fortress/physics';
 import type { Side } from '@/lib/fortress/world';
-import { Stage, type CameraMode, type SoundCue } from './scene/stage';
+import { Stage, type CameraMode, type SoundCue, type SoundMaterial } from './scene/stage';
 import type { Theme } from './scene/art';
 import { BattleSound, readMuted, writeMuted, type SoundKind } from './sound';
 import { AmmoTray, SideCard, WindGauge, describeShot } from './SiegeHud';
@@ -36,7 +36,10 @@ interface Props {
   overlay?: ReactNode;
 }
 
-const SOUNDS: Record<SoundCue, SoundKind> = { launch: 'deploy', hit: 'hit', boom: 'boom', break: 'hit', ko: 'bigBoom', split: 'meteor', splash: 'build' };
+const SOUNDS: Record<SoundCue, SoundKind> = { launch: 'launch', hit: 'thud', boom: 'boom', break: 'thud', ko: 'ko', split: 'split', splash: 'splash', thud: 'thud', thunder: 'thunder' };
+/** Impacts are voiced by what was hit. */
+const soundFor = (cue: SoundCue, material: SoundMaterial): SoundKind => ((cue === 'hit' || cue === 'break') && material ? material : SOUNDS[cue]);
+const WHEEL_STEP = 1.12;
 const GUIDE_SECONDS = 0.9;
 const MIN_PULL_PX = 14;
 
@@ -52,6 +55,8 @@ function SiegeScreen({ match, playback, onPlaybackDone, mine, viewSide, sideName
   const stageRef = useRef<Stage | null>(null);
   const soundRef = useRef<BattleSound | null>(null);
   const dragRef = useRef<{ x: number; y: number; id: number } | null>(null);
+  const pointersRef = useRef(new Map<number, { x: number; y: number }>());
+  const pinchRef = useRef<number | null>(null);
   const [angle, setAngle] = useState(45);
   const [power, setPower] = useState(0.62);
   const [ammo, setAmmo] = useState<AmmoId>('stone');
@@ -73,7 +78,7 @@ function SiegeScreen({ match, playback, onPlaybackDone, mine, viewSide, sideName
     const sound = new BattleSound();
     sound.muted = readMuted();
     stage.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    stage.onSound = cue => sound.play(SOUNDS[cue]);
+    stage.onSound = (cue, strength, material) => sound.play(soundFor(cue, material), strength);
     stageRef.current = stage;
     soundRef.current = sound;
     return () => { stage.destroy(); sound.close(); stageRef.current = null; soundRef.current = null; };
@@ -106,6 +111,26 @@ function SiegeScreen({ match, playback, onPlaybackDone, mine, viewSide, sideName
 
   useEffect(() => { if (rush) stageRef.current?.skip(); }, [rush, playKey]);
 
+  // A fanfare or a dirge when the dust settles on the last shot.
+  const outcome = playback ? null : match.result;
+  useEffect(() => {
+    if (!outcome) return;
+    const mySide = match.players[mine[0]]?.side;
+    soundRef.current?.play(outcome.winner === null ? 'thud' : outcome.winner === mySide ? 'win' : 'lose');
+  }, [outcome]); // eslint-disable-line react-hooks/exhaustive-deps -- play once per result
+
+  // Mouse wheel zooms the battlefield; the listener must be non-passive to stop page scroll.
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const onWheel = (event: WheelEvent) => {
+      event.preventDefault();
+      stageRef.current?.zoomBy(event.deltaY > 0 ? WHEEL_STEP : 1 / WHEEL_STEP);
+    };
+    canvas.addEventListener('wheel', onWheel, { passive: false });
+    return () => canvas.removeEventListener('wheel', onWheel);
+  }, []);
+
   useEffect(() => {
     if (!deadline) return;
     const timer = setInterval(() => setNow(Date.now()), 500);
@@ -130,7 +155,20 @@ function SiegeScreen({ match, playback, onPlaybackDone, mine, viewSide, sideName
     return { angle: nextAngle, power: Math.round(Math.min(1, distance / full) * 100) / 100, distance };
   };
 
+  const pinchDistance = () => {
+    const [a, b] = [...pointersRef.current.values()];
+    return a && b ? Math.hypot(a.x - b.x, a.y - b.y) : null;
+  };
+  const endDrag = () => {
+    dragRef.current = null;
+    if (stageRef.current) stageRef.current.drag = null;
+    setPulling(false);
+  };
+
   const onPointerDown = (event: PointerEvent<HTMLCanvasElement>) => {
+    pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    // A second finger turns the gesture into a pinch-zoom and cancels any pull.
+    if (pointersRef.current.size === 2) { endDrag(); pinchRef.current = pinchDistance(); return; }
     if (!canAct || event.button > 0) return;
     soundRef.current?.unlock();
     // Capture keeps the drag alive off the canvas; aiming still works if a browser refuses it.
@@ -139,19 +177,34 @@ function SiegeScreen({ match, playback, onPlaybackDone, mine, viewSide, sideName
     setPulling(true);
   };
   const onPointerMove = (event: PointerEvent<HTMLCanvasElement>) => {
+    if (pointersRef.current.has(event.pointerId)) pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (pointersRef.current.size === 2 && pinchRef.current) {
+      const distance = pinchDistance();
+      if (distance) { stageRef.current?.zoomBy(pinchRef.current / distance); pinchRef.current = distance; }
+      return;
+    }
     const aim = aimFrom(event);
     if (!aim || aim.distance < MIN_PULL_PX) return;
     setAngle(aim.angle);
     setPower(aim.power);
+    const rect = event.currentTarget.getBoundingClientRect();
+    const drag = dragRef.current;
+    if (stageRef.current && drag) stageRef.current.drag = { ax: drag.x - rect.left, ay: drag.y - rect.top, px: event.clientX - rect.left, py: event.clientY - rect.top, power: aim.power };
   };
   const onPointerUp = (event: PointerEvent<HTMLCanvasElement>) => {
+    pointersRef.current.delete(event.pointerId);
+    if (pointersRef.current.size < 2) pinchRef.current = null;
     const aim = aimFrom(event);
-    dragRef.current = null;
-    setPulling(false);
-    if (!aim || aim.distance < MIN_PULL_PX || !canAct) return;
+    const own = dragRef.current?.id === event.pointerId;
+    endDrag();
+    if (!own || !aim || aim.distance < MIN_PULL_PX || !canAct) return;
     onAction({ type: 'fire', angle: aim.angle, power: aim.power, ammo: pick });
   };
-  const onPointerCancel = () => { dragRef.current = null; setPulling(false); };
+  const onPointerCancel = (event: PointerEvent<HTMLCanvasElement>) => {
+    pointersRef.current.delete(event.pointerId);
+    pinchRef.current = null;
+    endDrag();
+  };
 
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.target !== event.currentTarget) return;
@@ -186,7 +239,7 @@ function SiegeScreen({ match, playback, onPlaybackDone, mine, viewSide, sideName
   };
 
   const secondsLeft = deadline ? Math.max(0, Math.ceil((deadline - (now + clockOffset)) / 1000)) : null;
-  const status = playback ? 'Incoming…'
+  const status = playback ? (playback.side === viewSide ? 'Shot away…' : 'Incoming!')
     : match.result ? 'Battle over'
       : myTurn ? (busy ? 'Launching…' : pulling ? 'Let go to launch · drag back to cancel' : 'Your turn — drag back on the field to aim')
         : waiting ?? `${shooter.name} is aiming…`;
@@ -224,11 +277,16 @@ function SiegeScreen({ match, playback, onPlaybackDone, mine, viewSide, sideName
         <div className={s.cams}>
           {playback
             ? <button type="button" className={s.camButton} onClick={() => stageRef.current?.skip()} aria-label="Skip to the result">⏩</button>
+            : null}
+          <button type="button" className={s.camButton} onClick={() => stageRef.current?.zoomBy(1 / 1.25)} aria-label="Zoom in">＋</button>
+          <button type="button" className={s.camButton} onClick={() => stageRef.current?.zoomBy(1.25)} aria-label="Zoom out">－</button>
+          {playback
+            ? null
             : ([['overview', '🔭', 'Whole battlefield'], ['home', '🏰', 'Your fortress'], ['enemy', '🎯', 'Enemy fortress']] as const).map(([mode, icon, label]) => (
               <button key={mode} type="button" className={s.camButton} aria-pressed={camera === mode} aria-label={label} onClick={() => setCamera(current => (current === mode ? 'auto' : mode))}>{icon}</button>
             ))}
         </div>
-        {canAct && <div className={s.pull} aria-hidden="true"><span>📐 {angle}°</span><span>💪 {Math.round(power * 100)}%</span></div>}
+        {canAct && <div className={`${s.pull} ${viewSide === 0 ? s.pullFar : ''}`} aria-hidden="true"><span>📐 {angle}°</span><span>💪 {Math.round(power * 100)}%</span></div>}
         {error ? <p key={error} className={`${s.toast} ${s.error}`} role="alert">{error}</p>
           : last && <p key={match.turn} className={s.toast} aria-live="polite">{last}</p>}
       </div>

@@ -1,10 +1,12 @@
-import { AMMO, DEFAULT_DESIGN, ONLINE_TURN_SECONDS, START_GOLD, designCost, type AmmoId, type FortressDesign } from './content';
+import { AMMO, ONLINE_TURN_SECONDS, START_GOLD, type AmmoId } from './content';
+import { DEFAULT_DESIGN, designCost, parseDesign, type FortressDesign } from './design';
 import { planAiShot } from './ai';
-import { activePlayer, activePlayerIndex, applyAction, createMatch, forfeit, parseDesign, type MatchAction, type MatchResult, type MatchState } from './match';
+import { activePlayer, activePlayerIndex, applyAction, createMatch, forfeit, type MatchAction, type MatchResult, type MatchState } from './match';
 import type { Replay } from './physics';
 import type { Side } from './world';
 
-export const BUILD_SECONDS = 75;
+/** Long enough to build block by block on a phone. */
+export const BUILD_SECONDS = 150;
 /** Pause after a shot lands before the Machine may answer, so both phones see the hit. */
 export const AFTER_SHOT_MS = 1500;
 
@@ -68,7 +70,8 @@ export function submitDesign(siege: OnlineSiege, userId: string, input: unknown,
   const seat = seatOf(siege, userId);
   if (seat < 0) return { error: 'You are not in this battle.' };
   if (siege.stage !== 'build') return { error: 'The battle has already begun.' };
-  const design = parseDesign(input);
+  // Shape-check the untrusted design first; only then is it safe to price it.
+  const design = parseDesign(input, Infinity);
   if (!design) return { error: 'That fortress design is not valid.' };
   if (designCost(design) > START_GOLD) return { error: 'That fortress costs more gold than you have.' };
   const slot = siege.mode === 'coop' ? 0 : seat;

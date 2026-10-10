@@ -1,4 +1,5 @@
-import { AI_LEVELS, AMMO, GRAVITY, MAX_ANGLE, MIN_ANGLE, type AmmoId } from './content';
+import { AMMO, GRAVITY, MAX_ANGLE, MIN_ANGLE, type AmmoId } from './content';
+import { AI_LEVELS } from './missions';
 import { launchVelocity, simulateShot, type ShotInput } from './physics';
 import { launcherPosition, royalsOf, blocksOf, type Side, type WorldState } from './world';
 

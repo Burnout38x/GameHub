@@ -69,3 +69,50 @@ Player feedback: the lane battler felt unrealistic; they wanted the classic "dra
 - `main` fast-forwarded to ee87d41. Vercel Production was live about 75 s after the push, and `/play/fortress-feud` returns 200.
 - Migration `fortress_feud_siege` (library description) was applied after the deploy. Readback confirms the new description, and `fortress-feud` is still active.
 - Live public smoke test (Chrome at 390×844, 1440×900 and 844×390; no accounts created): quick battle → build → drag-launch → a hit topples the enemy keep → the Machine replies. 0 page errors, 0 horizontal overflow.
+
+## v3: block builder and detail pass (2026-10-10)
+Request: "make it more DETAILED AND BETTER BUILT".
+
+### What changed
+- Block-by-block builder (`src/lib/fortress/design.ts`, `BuildScreen.tsx`).
+  - Pieces: post, column, beam, long floor, block, wall, triangle roof, spire and glass window.
+  - Materials: timber, stone and steel. A plot is 18 × 15 m with up to 36 pieces.
+  - You place a King and two Knights yourself.
+  - Tools: undo, a stress test that replays gravity on your design, clear, keyboard placement, and four templates: Timber Outpost, Royal Keep, Iron Bastion and Sky Spire.
+- Server validation: `parseDesign(input, budget)` checks shape, grid zone, overlaps, royal set and cost. Untrusted JSON is shape-checked before it is priced. The battle route body cap rose from 1024 to 8192 bytes; a full design is about 2.7 KB.
+- Physics:
+  - Fortresses settle under gravity before the first shot.
+  - Blasts and heavy impacts dig craters into the terrain.
+  - Ground hits raise dust.
+  - Blast velocity is capped at 16 m/s, so light timber and royals are shoved, not launched across the map.
+  - Anything thrown more than 6 m off either edge is destroyed, which counts as a knockout for royals.
+- Art and feel:
+  - Day, dusk, storm (rain) and night (moon, fireflies, torches and lit windows) themes.
+  - Detailed royals, plus a trebuchet with crew.
+  - Slow motion on knockouts, with falling royals.
+  - Rubble that bounces and settles.
+  - Material-specific impact sounds.
+  - Wheel, pinch and button zoom.
+  - A "Shot away…" or "Incoming!" banner depending on whose shot is flying.
+  - A tighter camera on upright phones. The camera eases the bottom edge, so the ground never leaves the frame.
+- Campaign: missions 1 and 2 face the new Timber Outpost, and mission 4's spire is all timber.
+
+### Verification
+- `npm run lint` clean; `npm test` 139/139 (15 Fortress tests). New tests cover:
+  - every template settling in every material;
+  - craters;
+  - piece drop placement;
+  - network design validation;
+  - malformed designs refused without throwing.
+- `npm run build` passes.
+- Balance probe: a bot plays the campaign at two skill levels, 4 seeds per mission.
+  - Before the blast cap, blasts threw royals 35–45 m to the map edge and battles stalled to the shot limit.
+  - Now almost every battle ends in a knockout. The skill-3 bot wins missions 1–2 4/4 and missions 11–12 1/4.
+- Browser QA against an isolated local stack and a production build: all solo, duel, co-op and Truth or Dare flows pass at 390×844, 1440×900, 320×640 and 844×390. 41 checks, 0 axe violations, 0 overflow, 0 page errors.
+- WebKit iPhone 13 emulation: touch drag-to-launch works and the turn comes back, with no errors.
+- Independent review found 1 high and 3 medium issues, all fixed:
+  - High: a malformed design threw on the server before validation.
+  - Medium: the builder crashed after a nudge followed by Clear.
+  - Medium: editing during the stress test left a stale canvas.
+  - Medium: Enter on the builder tool buttons placed a piece instead of pressing the button.
+- No database migration was needed; the library description is unchanged.

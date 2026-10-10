@@ -85,11 +85,20 @@ async function soloChecks() {
     await audit(page, `briefing-${tag}`);
     await page.getByRole('button', { name: 'Build my fortress →' }).click();
     await page.getByRole('heading', { name: /Fortify for/ }).waitFor();
-    // Steel walls cost gold: the ammo money must drop.
+    // Every block placed costs gold: the ammo money must drop, and a cheaper template gives it back.
     const money = async () => Number((await page.getByText(/^🪙 -?\d+$/).nth(1).textContent()).replace(/[^\d-]/g, ''));
     const before = await money();
-    await page.getByRole('radiogroup', { name: 'Front walls' }).getByRole('radio', { name: /Steel/ }).click();
-    assert.ok(await money() < before, 'steel costs gold');
+    await page.getByRole('radiogroup', { name: 'Material' }).getByRole('radio', { name: /Stone/ }).click();
+    await page.getByRole('button', { name: /^Block/ }).click();
+    await page.getByLabel(/^Building plot\./).focus();
+    await page.keyboard.press('Enter');
+    await page.getByText('15/36').waitFor();
+    assert.ok(await money() < before, 'a stone block costs gold');
+    await page.getByRole('tab', { name: /Templates/ }).click();
+    await page.getByRole('button', { name: /Timber Outpost/ }).click();
+    assert.ok(await money() > before, 'the outpost is cheaper than the keep');
+    await page.getByRole('button', { name: 'Undo' }).click();
+    await page.getByText('15/36').waitFor();
     await audit(page, `build-${tag}`);
     await page.getByRole('button', { name: '⚔️ To battle!' }).click();
     await field(page).waitFor();
@@ -111,7 +120,7 @@ async function soloChecks() {
       for (let i = 1; i <= 8; i++) await page.mouse.move(x - i * 12, y + i * 10);
       await page.mouse.up();
     }
-    await page.getByText('Incoming…').waitFor();
+    await page.getByText('Shot away…').waitFor();
     await sleep(1200);
     await audit(page, `flight-${tag}`, { axe: false });
     // The Machine answers, then it is our turn again with one shot fewer.
@@ -167,6 +176,7 @@ async function buildAndStart(host, guest, { coop = false } = {}) {
   await host.page.getByRole('button', { name: /Lock in my fortress/ }).click();
   if (!coop) {
     await host.page.getByRole('heading', { name: 'Fortress ready' }).waitFor();
+    await guest.page.getByRole('tab', { name: /Templates/ }).click();
     await guest.page.getByRole('button', { name: /Iron Bastion/ }).click();
     await guest.page.getByRole('button', { name: /Lock in my fortress/ }).click();
   }
@@ -181,7 +191,7 @@ async function onlineDuel(host, guest) {
   await buildAndStart(host, guest);
   const started = await roomRow(code);
   assert.equal(started.round_state.stage, 'battle');
-  assert.equal(started.round_state.match.world.bodies.filter(b => b.side === 1 && b.kind === 'block').length, 12, 'guest built the bastion');
+  assert.equal(started.round_state.match.world.bodies.filter(b => b.side === 1 && b.kind === 'block').length, 16, 'guest built the 16-piece bastion');
   await guest.page.getByText(/Waiting for/).waitFor();
   // Out-of-turn orders are refused by the server.
   const refused = await guest.page.request.post(`${app}/api/rooms/${code}/battle`, { data: { action: 'order', order: { type: 'fire', angle: 45, power: 0.7, ammo: 'stone' } } });
@@ -189,7 +199,7 @@ async function onlineDuel(host, guest) {
   await launch(host.page).click();
   await poll(async () => (await roomRow(code)).round_state.replayTurn === 0, 'Host shot never reached the server');
   // The guest's phone replays the same shot, then it is their turn.
-  await guest.page.getByText('Incoming…').waitFor({ timeout: 10000 });
+  await guest.page.getByText('Incoming!').waitFor({ timeout: 10000 });
   await audit(guest.page, 'online-duel-guest-flight-1440', { axe: false });
   await guest.page.getByText('Your turn — drag back on the field to aim').waitFor({ timeout: 30000 });
   await guest.page.getByRole('button', { name: /Iron Ball/ }).click();

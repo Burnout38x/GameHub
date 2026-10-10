@@ -7,6 +7,8 @@ export const maxDuration = 30;
 export const dynamic = 'force-dynamic';
 
 const NO_STORE = { 'Cache-Control': 'private, no-store' };
+/** A full fortress design (36 pieces plus royals) fits well inside this. */
+const MAX_ORDER_BYTES = 8192;
 
 function payload(siege: OnlineSiege, status: string, since: number | null) {
   // The replay only travels to phones that have not seen this shot yet.
@@ -60,7 +62,7 @@ async function save(ctx: RoomContext, before: OnlineSiege, after: OnlineSiege, s
 export async function POST(req: Request, context: { params: Promise<{ code: string }> }) {
   if (!isSameOriginRequest(req)) return jsonError('Request origin not allowed', 403);
   const raw = await req.text();
-  if (raw.length > 1024) return jsonError('Order is too large', 413);
+  if (raw.length > MAX_ORDER_BYTES) return jsonError('Order is too large', 413);
   let body: { action?: unknown; design?: unknown; order?: unknown; since?: unknown };
   try { body = JSON.parse(raw); } catch { return jsonError('Invalid order'); }
   if (body?.action !== 'design' && body?.action !== 'order' && body?.action !== 'advance') return jsonError('Unknown battle action');

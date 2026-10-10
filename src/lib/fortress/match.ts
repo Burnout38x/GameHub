@@ -1,7 +1,6 @@
-import {
-  AMMO, DAMAGE_GOLD_PERCENT, DEFAULT_DESIGN, MAX_ELIXIR, MISSIONS, REPAIR_COST, ROYAL_BOUNTY, ROYALS, SHOTS_PER_PLAYER, START_GOLD, TURN_INCOME,
-  AI_LEVELS, BLUEPRINTS, BUILD_MATERIALS, designCost, type AmmoId, type FortressDesign, type Mission, type PartId,
-} from './content';
+import { AMMO, DAMAGE_GOLD_PERCENT, MAX_ELIXIR, REPAIR_COST, ROYAL_BOUNTY, ROYALS, SHOTS_PER_PLAYER, START_GOLD, TURN_INCOME, type AmmoId } from './content';
+import { DEFAULT_DESIGN, designCost, type FortressDesign } from './design';
+import { AI_LEVELS, MISSIONS, type Mission } from './missions';
 import { seededRandom } from './ai';
 import { simulateShot, type Replay, type ShotInput } from './physics';
 import { blocksOf, createWorld, royalHealth, royalsOf, type Side, type WorldState } from './world';
@@ -49,20 +48,6 @@ export function setupRules(setup: MatchSetup, seed: number): { aiLevel: number; 
   return { aiLevel: level, hill: 8 + level + Math.round(random() * 4), windMax: 0.4 * level, gold: START_GOLD, par: SHOTS_PER_PLAYER, enemy: AI_LEVELS[level].design };
 }
 
-/** Untrusted design input becomes a valid design, or null. */
-export function parseDesign(value: unknown): FortressDesign | null {
-  if (!value || typeof value !== 'object') return null;
-  const raw = value as { blueprint?: unknown; materials?: Record<string, unknown> };
-  if (typeof raw.blueprint !== 'string' || !Object.hasOwn(BLUEPRINTS, raw.blueprint)) return null;
-  const materials = {} as Record<PartId, FortressDesign['materials'][PartId]>;
-  for (const part of ['frame', 'floors', 'walls'] as PartId[]) {
-    const material = raw.materials?.[part];
-    if (typeof material !== 'string' || !BUILD_MATERIALS.includes(material as never)) return null;
-    materials[part] = material as FortressDesign['materials'][PartId];
-  }
-  return { blueprint: raw.blueprint as FortressDesign['blueprint'], materials };
-}
-
 const maxRoyal = (world: WorldState, side: Side) => royalsOf(world, side).reduce((sum, royal) => sum + ROYALS[royal.role].hp, 0);
 const structure = (world: WorldState, side: Side) => blocksOf(world, side).reduce((sum, block) => sum + block.hp, 0);
 
@@ -73,7 +58,8 @@ const structure = (world: WorldState, side: Side) => blocksOf(world, side).reduc
 export function createMatch(setup: MatchSetup, seed: number, designs: [FortressDesign, FortressDesign | null], names: string[]): MatchState {
   const rules = setupRules(setup, seed);
   const enemyDesign = setup.kind === 'duel' ? designs[1] ?? DEFAULT_DESIGN : rules.enemy ?? DEFAULT_DESIGN;
-  const world = createWorld(rules.hill, [designs[0], enemyDesign]);
+  // Freshly built fortresses settle under gravity before the first shot.
+  const world = simulateShot(createWorld(rules.hill, [designs[0], enemyDesign]), null, 0, { record: false }).world;
   const purse = (design: FortressDesign | null) => Math.max(0, rules.gold - (design ? designCost(design) : 0));
   let players: MatchPlayer[];
   let order: number[];
