@@ -1,0 +1,119 @@
+/* Fortress Feud war room: an animated diorama hero and a mission map. */
+.hero {
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  border: 1px solid rgb(var(--ink-rgb) / .12);
+  border-radius: 32px;
+  background: linear-gradient(160deg, var(--surface), var(--surface-end));
+  box-shadow: inset 0 1px 0 rgb(var(--ink-rgb) / .06), 0 14px 36px var(--control-shadow);
+}
+.scene {
+  position: relative;
+  height: 150px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, #7dd3fc 0%, #bae6fd 38%, transparent 38%),
+    linear-gradient(180deg, #4d9b4f, #3f8a43);
+}
+.river {
+  position: absolute;
+  top: 38%;
+  bottom: 0;
+  left: 50%;
+  width: 46px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #2b7fc0, #4fb3e8, #2b7fc0);
+}
+.castleLeft, .castleRight {
+  position: absolute;
+  bottom: 18px;
+  font-size: 64px;
+  line-height: 1;
+  filter: drop-shadow(0 6px 4px #0005);
+}
+.castleLeft { left: 6%; }
+.castleRight { right: 6%; }
+.marcher, .marcherBack {
+  position: absolute;
+  bottom: 26px;
+  font-size: 26px;
+  line-height: 1;
+  filter: drop-shadow(0 3px 2px #0005);
+}
+.marcher { left: 18%; animation: march 6s linear infinite; }
+.marcherBack { right: 18%; animation: marchBack 6.5s linear infinite; }
+.m1 { animation-delay: 0s; bottom: 34px; }
+.m2 { animation-delay: -2s; bottom: 16px; font-size: 32px; }
+.m3 { animation-delay: -4s; bottom: 42px; }
+.m4 { animation-delay: -1s; bottom: 24px; }
+.m5 { animation-delay: -3.5s; bottom: 40px; }
+.heroCopy { padding: 22px; }
+@media (min-width: 768px) {
+  .hero { grid-template-columns: 1fr 1.2fr; align-items: stretch; }
+  .scene { height: auto; min-height: 280px; order: 2; }
+  .heroCopy { padding: 36px; }
+}
+.rank {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgb(var(--ink-rgb) / .14);
+  border-radius: 20px;
+  background: rgb(0 0 0 / .16);
+  padding: 8px 14px;
+}
+.missions {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+.mission {
+  position: relative;
+  display: grid;
+  width: 100%;
+  min-height: 132px;
+  justify-items: center;
+  align-content: center;
+  gap: 6px;
+  border: 1px solid rgb(var(--ink-rgb) / .14);
+  border-top: 3px solid color-mix(in srgb, var(--accent) 55%, var(--surface));
+  border-radius: 24px;
+  background: linear-gradient(160deg, var(--surface), var(--surface-end));
+  padding: 14px 10px;
+  text-align: center;
+  box-shadow: 0 4px 0 var(--control-shadow);
+  transition: transform 160ms var(--ease-play), border-color 160ms ease-out;
+}
+.mission:hover:not(:disabled) { transform: translateY(-3px); border-color: var(--accent-cool); }
+.mission:disabled { opacity: .45; cursor: not-allowed; }
+.cleared { border-top-color: #facc15; }
+.missionNumber {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font-size: 11px;
+  font-weight: 900;
+  color: rgb(var(--ink-rgb) / .5);
+}
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  background: rgb(0 0 0 / .55);
+  padding: 16px;
+}
+.briefing { width: min(520px, 100%); padding: 24px; }
+@keyframes march { from { transform: translateX(0); } to { transform: translateX(32vw); } }
+@keyframes marchBack { from { transform: translateX(0) scaleX(-1); } to { transform: translateX(-32vw) scaleX(-1); } }
+@media (min-width: 768px) {
+  @keyframes march { from { transform: translateX(0); } to { transform: translateX(18vw); } }
+  @keyframes marchBack { from { transform: translateX(0) scaleX(-1); } to { transform: translateX(-18vw) scaleX(-1); } }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marcher, .marcherBack { animation: none; }
+  .mission { transition: none; }
+}

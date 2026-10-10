@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { loadRoomContext, jsonError } from '@/lib/server/room-actions';
 import { activeAnswers, allowedAnswers } from '@/lib/server/multiplayer-rules';
 import { isTurnBased, deadlinePassed } from '@/lib/game-utils';
+import { hasPicked, pickPoints } from '@/lib/truth-or-dare';
 
 /** POST /api/rooms/[code]/answer — submit an answer for the current round (quiz + prompt games). */
 async function handlePost(req: NextRequest, { params }: { params: { code: string } }) {
@@ -22,6 +23,8 @@ async function handlePost(req: NextRequest, { params }: { params: { code: string
 
   const turnBased = isTurnBased(game.slug, game.type, room.mode);
   if (turnBased && room.turn_player_id !== userId) return jsonError('Not your turn', 403);
+  const picking = !!game.config?.pickTruthOrDare;
+  if (picking && !hasPicked(room.round_state, room.current_round)) return jsonError('Pick truth or dare first', 409);
 
   // Timed rooms: late answers are rejected and the round reveals as-is.
   if (room.answer_seconds && deadlinePassed(room.round_state?.deadline)) {
@@ -52,7 +55,7 @@ async function handlePost(req: NextRequest, { params }: { params: { code: string
     points = isCorrect ? 1 : 0;
   } else {
     const cfg = game.config ?? {};
-    if (cfg.scoreChoice) points = answer === cfg.scoreChoice ? 1 : 0; // Truth-or-Dare / 2-Min Challenge
+    if (cfg.scoreChoice) points = answer === cfg.scoreChoice ? (picking ? pickPoints(room.round_state.pick.kind) : 1) : 0; // Truth-or-Dare / 2-Min Challenge
     else if (cfg.countLabel) points = answer === cfg.countLabel ? 1 : 0; // Never Have I Ever counts "I Have"
     // Would You Rather: match bonus handled below once everyone answered
   }

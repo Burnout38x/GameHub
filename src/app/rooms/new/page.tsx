@@ -4,6 +4,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { Game } from '@/lib/types';
 import { spotlightEligible } from '@/lib/game-utils';
+import { TRUTH_OR_DARE_VIBES } from '@/lib/truth-or-dare';
+import { BATTLE_DIFFICULTY_LABELS } from '@/lib/fortress/rooms';
 
 function NewRoomForm() {
   const router = useRouter();
@@ -13,7 +15,8 @@ function NewRoomForm() {
   const [retry, setRetry] = useState(0);
   const [games, setGames] = useState<Game[]>([]);
   const [gameSlug, setGameSlug] = useState(params.get('game') ?? '');
-  const [difficulty, setDifficulty] = useState('mixed');
+  const [difficultyChoice, setDifficultyChoice] = useState<{ slug: string; value: string } | null>(null);
+  const [battleMode, setBattleMode] = useState<'duel' | 'coop'>('duel');
   const [rounds, setRounds] = useState('10');
   const [mode, setMode] = useState('classic');
   const [isPublic, setIsPublic] = useState(false);
@@ -52,9 +55,14 @@ function NewRoomForm() {
   const isCode = game?.type === 'code';
   const isRule = game?.type === 'rule';
   const isChain = game?.type === 'chain';
+  const isBattle = game?.type === 'battle';
+  const isTruthOrDare = !!game?.config?.pickTruthOrDare;
+  // Truth or Dare defaults to the everyone-friendly deck; adult decks are an explicit choice.
+  const difficulty = difficultyChoice?.slug === gameSlug ? difficultyChoice.value : isTruthOrDare ? 'easy' : 'mixed';
+  const setDifficulty = (value: string) => setDifficultyChoice({ slug: gameSlug, value });
   const canSpotlight = game ? spotlightEligible(game.slug, game.type) : false;
   const effectiveMode = canSpotlight ? mode : 'classic';
-  const roundOptions = isMarket ? ['10'] : isMemory
+  const roundOptions = isMarket || isBattle ? ['1'] : isMemory
     ? ['6', '8', '10', '12', '15', '20']
     : isPredict
       ? ['6', '10', '14', '20']
@@ -79,7 +87,7 @@ function NewRoomForm() {
           gameId: game.id,
           difficulty,
           totalRounds: Number(selectedRounds),
-          mode: effectiveMode,
+          mode: isBattle ? battleMode : effectiveMode,
           isPublic,
           answerSeconds:
             (game.type === 'quiz' || game.type === 'chain') && timer !== 'off' ? Number(timer) : null,
@@ -120,7 +128,21 @@ function NewRoomForm() {
           ))}
         </select>
         {game && <p className="mt-2 text-sm text-white/65">{game.description}</p>}
-        {game && !isPredict && <p className="mt-2 text-xs text-indigo-200">{isMarket ? "2–4 rivals. Build district sets and claim shared contracts. Highest prosperity after ten equal turns wins; ties share the victory." : isRule || isChain ? "For 2–10 players. Invite someone to play before starting." : "Play solo or invite up to 9 more players."}</p>}
+        {isBattle && <>
+          <label className="field-label" htmlFor="battle-mode">Battle mode</label>
+          <select id="battle-mode" className="input" value={battleMode} onChange={(e) => setBattleMode(e.target.value === 'coop' ? 'coop' : 'duel')}>
+            <option value="duel">⚔️ Duel — you vs a friend</option>
+            <option value="coop">🤝 Co-op — you and a friend vs the Machine</option>
+          </select>
+          <p className="mt-2 text-xs text-indigo-200">Exactly 2 players. Three-minute real-time battle; destroy the enemy keep or lead on keep health when time runs out.</p>
+          {battleMode === 'coop' && <>
+            <label className="field-label" htmlFor="difficulty">Machine difficulty</label>
+            <select id="difficulty" className="input" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+              {(['easy', 'mixed', 'hard'] as const).map(level => <option key={level} value={level}>{BATTLE_DIFFICULTY_LABELS[level]}</option>)}
+            </select>
+          </>}
+        </>}
+        {game && !isPredict && !isBattle && <p className="mt-2 text-xs text-indigo-200">{isMarket ? "2–4 rivals. Build district sets and claim shared contracts. Highest prosperity after ten equal turns wins; ties share the victory." : isRule || isChain ? "For 2–10 players. Invite someone to play before starting." : "Play solo or invite up to 9 more players."}</p>}
         {isPredict && (
           <p className="mt-2 text-xs font-bold text-indigo-200">
             💞 For exactly 2 players — question count is evened out so you both get equal turns.
@@ -142,7 +164,16 @@ function NewRoomForm() {
           </>
         )}
 
-        {game?.type !== 'guess' && game?.type !== 'memory' && !isPredict && !isCode && !isRule && !isChain && !isMarket && (
+        {isTruthOrDare && (
+          <>
+            <label className="field-label" htmlFor="difficulty">Vibe</label>
+            <select id="difficulty" className="input" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+              {(['easy', 'hard', 'mixed'] as const).map(level => <option key={level} value={level}>{TRUTH_OR_DARE_VIBES[level].label}</option>)}
+            </select>
+            {difficulty !== 'easy' && <p className="mt-2 text-xs text-white/60">Adults only. Agree on boundaries first — anyone can skip any card.</p>}
+          </>
+        )}
+        {game?.type !== 'guess' && game?.type !== 'memory' && !isPredict && !isCode && !isRule && !isChain && !isMarket && !isBattle && !isTruthOrDare && (
           <>
             <label className="field-label" htmlFor="difficulty">Difficulty</label>
             <select id="difficulty" className="input" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
@@ -164,8 +195,9 @@ function NewRoomForm() {
           </>
         )}
 
+        {!isBattle && <>
         <label className="field-label" htmlFor="rounds">
-          {isMarket ? 'Market days (one turn each per day)' : isMemory
+          {isTruthOrDare ? 'Number of turns' : isMarket ? 'Market days (one turn each per day)' : isMemory
             ? 'Number of pairs'
             : isCode
               ? 'Codes to crack'
@@ -184,6 +216,7 @@ function NewRoomForm() {
             </option>
           ))}
         </select>
+        </>}
 
         {(game?.type === 'quiz' || isChain) && (
           <>

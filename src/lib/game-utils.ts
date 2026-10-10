@@ -39,6 +39,12 @@ export function deadlinePassed(deadline: string | null | undefined, now: number 
   return Number.isFinite(t) && now > t;
 }
 
+/** Most players a room of this game type can hold. Mirrored by the social invitation SQL. */
+export function roomCapacity(gameType: string | null | undefined): number {
+  if (gameType === 'predict' || gameType === 'battle') return 2;
+  return gameType === 'market' ? 4 : 10;
+}
+
 /** Games where one player acts per round instead of everyone answering at once. */
 export function isTurnBased(gameSlug: string, gameType: string, mode: string = 'classic'): boolean {
   if (mode === 'spotlight') return true;

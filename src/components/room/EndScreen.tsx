@@ -15,7 +15,10 @@ export default function EndScreen({ room, game, players, userId, controlsOnly = 
   const solo = players.length === 1;
   const isHost = room.host_id === userId;
 
-  const title = solo
+  const coopBattle = game.type === 'battle' && room.mode === 'coop';
+  const title = coopBattle
+    ? (room.winner_ids.length ? 'Team victory! The Machine falls 🏆' : 'The Machine wins this time 🤖')
+    : solo
     ? 'Solo round complete 🎉'
     : winners.length > 1
       ? "It's a tie! 🤝"
@@ -55,7 +58,7 @@ export default function EndScreen({ room, game, players, userId, controlsOnly = 
         <div className="pill">{game.emoji} {game.name} · Complete</div>
         <h1 className="min-w-0 max-w-full text-3xl font-black sm:text-4xl leading-tight tracking-tight [overflow-wrap:anywhere]">{title}</h1>
         {!solo && (
-          <p className="max-w-sm text-sm text-white/70">{iWon ? 'You took the crown 👑' : 'Better luck next round!'}</p>
+          <p className="max-w-sm text-sm text-white/70">{coopBattle ? (iWon ? 'Teamwork makes the dream work 🤝' : 'Regroup and storm it again!') : iWon ? 'You took the crown 👑' : 'Better luck next round!'}</p>
         )}
         <section className="w-full min-w-0" aria-labelledby="final-scores-title">
           <h2 id="final-scores-title" className="mb-3 text-left text-sm font-bold text-white/70">Final scores</h2>

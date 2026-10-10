@@ -1,6 +1,6 @@
-export type GameType = 'quiz' | 'prompt' | 'memory' | 'guess' | 'predict' | 'code' | 'rule' | 'chain' | 'market' | 'solo';
+export type GameType = 'quiz' | 'prompt' | 'memory' | 'guess' | 'predict' | 'code' | 'rule' | 'chain' | 'market' | 'solo' | 'battle';
 export type Difficulty = 'easy' | 'hard' | 'mixed';
-export type RoomMode = 'classic' | 'spotlight';
+export type RoomMode = 'classic' | 'spotlight' | 'duel' | 'coop';
 export type RoomStatus = 'lobby' | 'playing' | 'finished';
 export type RoundPhase = 'answering' | 'revealed';
 

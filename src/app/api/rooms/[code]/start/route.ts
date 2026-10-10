@@ -6,6 +6,8 @@ import { shuffle, spotlightRoundCount, roundDeadline, isTurnBased } from '@/lib/
 import { createMarketDay } from '@/lib/market-day';
 import { randomInt } from 'node:crypto';
 import { buildRuleRound } from '@/lib/server/rule-round';
+import { createOnlineBattle } from '@/lib/fortress/online';
+import { battleAiLevel } from '@/lib/fortress/rooms';
 
 /** POST /api/rooms/[code]/start — host starts the game. */
 async function handlePost(_req: Request, { params }: { params: { code: string } }) {
@@ -23,6 +25,7 @@ async function handlePost(_req: Request, { params }: { params: { code: string } 
 
   if (game.type === 'solo') return jsonError('This is a solo game', 409);
   if (game.type === 'market' && (players.length < 2 || players.length > 4)) return jsonError('Market Day needs 2–4 players', 409);
+  if (game.type === 'battle' && players.length !== 2) return jsonError('Fortress Feud needs exactly 2 players', 409);
 
   const firstTurn = players[0].profile_id;
   const update: Record<string, any> = {
@@ -32,7 +35,10 @@ async function handlePost(_req: Request, { params }: { params: { code: string } 
     turn_player_id: firstTurn,
   };
 
-  if (game.type === 'market') {
+  if (game.type === 'battle') {
+    update.total_rounds = 1;
+    update.round_state = createOnlineBattle(room.mode === 'coop' ? 'coop' : 'duel', battleAiLevel(room.difficulty), players.map(p => p.profile_id), randomInt(1, 2147483647), Date.now());
+  } else if (game.type === 'market') {
     update.total_rounds = 10;
     update.round_state = createMarketDay(players.map(p => p.profile_id), randomInt(1, 2147483647));
   } else if (game.type === 'quiz' || game.type === 'prompt' || game.type === 'predict') {
@@ -45,10 +51,13 @@ async function handlePost(_req: Request, { params }: { params: { code: string } 
       isTurnBased(game.slug, game.type, room.mode) && players.length > 1
         ? spotlightRoundCount(room.total_rounds, players.length, prompts.length) // equal turns each
         : room.total_rounds;
-    const ids = shuffle(prompts.map((p) => p.id)).slice(0, target);
+    const deck = shuffle(prompts.map((p) => p.id));
+    const ids = deck.slice(0, target);
     update.prompt_ids = ids;
     update.total_rounds = ids.length;
-    if (game.type === 'predict') update.round_state = { stage: game.config?.freeText ? 'collect' : 'subject' };
+    // Truth or Dare keeps the rest of the deck so each pick can draw the chosen kind.
+    if (game.config?.pickTruthOrDare) update.round_state = { reserve: deck.slice(target, target + 200) };
+    else if (game.type === 'predict') update.round_state = { stage: game.config?.freeText ? 'collect' : 'subject' };
     else if (room.answer_seconds) update.round_state = { deadline: roundDeadline(room.answer_seconds) };
   } else if (game.type === 'memory') {
     const themes: Record<string, [string, string][]> = game.config?.themes ?? {};

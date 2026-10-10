@@ -14,6 +14,7 @@ import CodePlay from './CodePlay';
 import RulePlay from './RulePlay';
 import MarketPlay from './MarketPlay';
 import ChainPlay from './ChainPlay';
+import BattlePlay, { BattleResultBanner } from './BattlePlay';
 import Scoreboard from './Scoreboard';
 import LeaveButton from './LeaveButton';
 
@@ -34,6 +35,7 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
   const requestRef = useRef<AbortController | null>(null);
   const generationRef = useRef(0);
   const wasInRoomRef = useRef(false);
+  const battleLiveRef = useRef(false);
 
   const load = useCallback(async () => {
     const generation = ++generationRef.current;
@@ -58,7 +60,8 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
     let timer: ReturnType<typeof setTimeout>;
     async function poll() {
       if (document.visibilityState === 'visible') await load();
-      if (!stopped) timer = setTimeout(poll, 1500);
+      // Live battles sync through their own fast order poll; the room snapshot can relax.
+      if (!stopped) timer = setTimeout(poll, battleLiveRef.current ? 4000 : 1500);
     }
     const resume = () => { if (document.visibilityState === 'visible') void load(); };
     void poll();
@@ -74,6 +77,7 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
   // Kick players back to /games when the room closes under them (host left / too few players).
   useEffect(() => {
     if (!bundle) return;
+    battleLiveRef.current = bundle.game.type === 'battle' && bundle.room.status === 'playing';
     const { room, players } = bundle;
     const amIn = players.some((p) => p.profile_id === userId);
     const closedReason = room.status === 'finished' ? room.round_state?.closedReason : null;
@@ -105,6 +109,7 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
   const connectionNotice = error ? <div role="alert" className="glass-sm mx-auto mb-4 max-w-xl p-4 text-sm text-red-200">{error}<button className="btn-secondary mt-3 !py-2" onClick={() => void load()}>Retry connection</button></div> : null;
   if (room.status === 'finished' && room.round_state?.closedReason) return <div className="glass mx-auto max-w-xl p-6" role="status">This match has closed. No results were awarded. <Link href="/games" className="btn-secondary mt-4">Back to games</Link></div>;
   if (room.status === 'lobby') return <>{connectionNotice}<Lobby {...full} code={code} inRoom={inRoom} /></>;
+  if (room.status === 'finished' && game.type === 'battle') return <>{connectionNotice}<BattleResultBanner room={room} players={bundle.players} /><EndScreen {...full} /></>;
   if (room.status === 'finished') return game.type === 'market'
     ? <div className="mx-auto flex w-full max-w-6xl flex-col gap-4">{connectionNotice}<MarketPlay {...full} /><EndScreen {...full} controlsOnly /></div>
     : <>{connectionNotice}<EndScreen {...full} /></>;
@@ -116,6 +121,8 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
         <p className="mt-3 text-white/70">This game already started without you. Ask for a rematch!</p><Link href="/games" className="btn-secondary mt-5">Back to games</Link>
       </div>
     );
+
+  if (game.type === 'battle') return <>{connectionNotice}<BattlePlay {...full} /></>;
 
   return (
     <div className={`mx-auto flex w-full ${game.type === 'market' ? 'max-w-6xl' : 'max-w-xl'} flex-col gap-4`}>

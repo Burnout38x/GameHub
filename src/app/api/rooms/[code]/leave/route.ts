@@ -5,6 +5,7 @@ import { NextResponse } from 'next/server';
 import { loadRoomContext, jsonError, nextTurnPlayer } from '@/lib/server/room-actions';
 import { activeAnswers } from '@/lib/server/multiplayer-rules';
 import { isTurnBased, roundDeadline } from '@/lib/game-utils';
+import { forfeitBattle, parseOnlineBattle } from '@/lib/fortress/online';
 
 /** POST /api/rooms/[code]/leave — leave the room; closes it if too few players remain. */
 async function handlePost(_req: Request, { params }: { params: { code: string } }) {
@@ -37,6 +38,21 @@ async function handlePost(_req: Request, { params }: { params: { code: string } 
     if (error) return jsonError('Could not leave the market. Please retry.', 500);
     if (!data) return jsonError('This room changed. Please refresh.', 409);
     return NextResponse.json({ ok: true, closed: true });
+  }
+
+  // Walking out of a duel concedes it, so rage-quitting cannot protect a streak.
+  if (game.type === 'battle') {
+    const battle = parseOnlineBattle(room.round_state);
+    const settled = battle ? forfeitBattle(battle, userId, Date.now()) : null;
+    if (battle && settled) {
+      const { data, error } = await admin.rpc('finish_battle_room', {
+        target_room_id: room.id, expected_version: battle.version, next_state: settled.battle,
+        scores: settled.scores, winners: settled.winners,
+      });
+      if (error) return jsonError('Could not leave the battle. Please retry.', 500);
+      if (!data) return jsonError('This battle changed. Please refresh.', 409);
+      return NextResponse.json({ ok: true, closed: true });
+    }
   }
 
   // Playing: remove the player (their answers/score history stays), then keep the game sane.

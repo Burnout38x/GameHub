@@ -211,8 +211,14 @@ async function main() {
   for (const [difficulty, text, a, b] of WOULD_YOU_RATHER)
     add('would-you-rather', difficulty, { text, category: 'Would You Rather', choices: [a, b] });
 
+  // One combined Truth or Dare deck: easy = Classic, hard = After Dark (18+), mixed = both.
+  const dareKind = (label) => (/^dare/i.test(label) ? 'dare' : 'truth');
   for (const [difficulty, text, category] of TRUTH_OR_DARE)
-    add('truth-or-dare', difficulty, { text, category });
+    add('truth-or-dare', 'easy', { text, category, kind: dareKind(category), deck: 'classic', heat: difficulty === 'hard' ? 'Deep' : 'Chill' });
+  for (const { kind, heat, text } of JSON.parse(readFileSync(new URL('./content/truth-or-dare-extra.json', import.meta.url), 'utf8')))
+    add('truth-or-dare', 'easy', { text, category: kind === 'dare' ? 'Dare' : 'Truth', kind, deck: 'classic', heat });
+  for (const { difficulty, ...content } of JSON.parse(readFileSync(new URL('./content/after-dark.json', import.meta.url), 'utf8')))
+    add('truth-or-dare', 'hard', { ...content, kind: dareKind(content.category), deck: 'after-dark', heat: difficulty === 'hard' ? 'Bold' : 'Flirty' });
 
   for (const [difficulty, question, answer, options] of MOVIE_TRIVIA)
     add('movie-trivia', difficulty, { question, answer, options });

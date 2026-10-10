@@ -24,7 +24,6 @@ export async function POST(req: NextRequest) {
   } = body;
   if (!gameId) return jsonError('gameId is required');
   if (!['easy', 'hard', 'mixed'].includes(difficulty)) return jsonError('Bad difficulty');
-  if (!['classic', 'spotlight'].includes(mode)) return jsonError('Bad mode');
   const rounds = Math.min(100, Math.max(1, Math.floor(Number(totalRounds) || 10)));
   const timer =
     answerSeconds == null ? null : Math.min(120, Math.max(5, Math.floor(Number(answerSeconds) || 0))) || null;
@@ -37,6 +36,10 @@ export async function POST(req: NextRequest) {
     .single();
   if (game?.type === 'solo') return jsonError('Open this game from the solo library');
   if (!game || !game.is_active) return jsonError('Game not found', 404);
+  const isBattle = game.type === 'battle';
+  // Battles default to a head-to-head duel when a client sends the generic mode.
+  const roomMode = isBattle && mode === 'classic' ? 'duel' : mode;
+  if (!(isBattle ? ['duel', 'coop'] : ['classic', 'spotlight']).includes(roomMode)) return jsonError('Bad mode');
   if (mode === 'spotlight' && !spotlightEligible(game.slug, game.type))
     return jsonError('Spotlight mode is not available for this game');
   if (timer && game.type !== 'quiz' && game.type !== 'chain')
@@ -58,10 +61,10 @@ export async function POST(req: NextRequest) {
         host_id: user.id,
         game_id: gameId,
         difficulty,
-        mode,
+        mode: roomMode,
         is_public: !!isPublic,
         answer_seconds: timer,
-        total_rounds: game.type === 'market' ? 10 : rounds,
+        total_rounds: game.type === 'market' ? 10 : isBattle ? 1 : rounds,
       })
       .select()
       .single();

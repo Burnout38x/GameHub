@@ -19,6 +19,7 @@ export type LibraryFilters = { search: string; category: GameCategory | 'all'; a
 const taxonomy: Record<string, { category: GameCategory; audiences: GameAudience[] }> = {
   'pocket-paradise': { category: 'strategy', audiences: ['family', 'groups', 'couples'] },
   'market-day': { category: 'strategy', audiences: ['family', 'groups', 'couples'] },
+  'fortress-feud': { category: 'strategy', audiences: ['family', 'groups', 'couples'] },
   'doctor-dash': { category: 'trivia', audiences: ['groups', 'couples'] },
   'riddle-rush': { category: 'words', audiences: ['groups', 'couples'] },
   'emoji-movie': { category: 'trivia', audiences: ['groups', 'couples'] },
@@ -26,6 +27,7 @@ const taxonomy: Record<string, { category: GameCategory; audiences: GameAudience
   'never-have-i-ever': { category: 'conversation', audiences: ['groups', 'couples'] },
   'would-you-rather': { category: 'conversation', audiences: ['groups', 'couples'] },
   'truth-or-dare': { category: 'party', audiences: ['groups', 'couples'] },
+  // Retired: merged into Truth or Dare as the After Dark vibe.
   'truth-or-dare-after-dark': { category: 'couples', audiences: ['couples', 'groups'] },
   'two-minute-challenge': { category: 'party', audiences: ['groups', 'couples'] },
   'memory-match': { category: 'memory', audiences: ['groups', 'couples', 'family'] },

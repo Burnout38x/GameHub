@@ -5,6 +5,9 @@ import type { RoomBundle } from './RoomClient';
 import { callRoomApi } from '@/lib/room-api';
 import LeaveButton from './LeaveButton';
 import RoomFriendsInvite from '@/components/social/RoomFriendsInvite';
+import { TRUTH_OR_DARE_VIBES } from '@/lib/truth-or-dare';
+import { roomCapacity } from '@/lib/game-utils';
+import { BATTLE_DIFFICULTY_LABELS } from '@/lib/fortress/rooms';
 
 export default function Lobby(props: RoomBundle & { code: string; inRoom: boolean }) {
   const { room, game, players, userId, code, inRoom, refresh } = props;
@@ -13,9 +16,11 @@ export default function Lobby(props: RoomBundle & { code: string; inRoom: boolea
   const [error, setError] = useState('');
   const [copyMessage, setCopyMessage] = useState('');
   const isPredict = game.type === 'predict';
+  const isBattle = game.type === 'battle';
+  const exactlyTwo = isPredict || isBattle;
   const needsPartner = isPredict || game.type === 'market' || game.type === 'rule' || game.type === 'chain';
-  const canStart = isPredict ? players.length === 2 : players.length >= (needsPartner ? 2 : 1);
-  const capacity = isPredict ? 2 : game.type === 'market' ? 4 : 10;
+  const canStart = exactlyTwo ? players.length === 2 : players.length >= (needsPartner ? 2 : 1);
+  const capacity = roomCapacity(game.type);
   const countLabel = game.type === 'memory' ? 'pairs'
     : game.type === 'code' ? 'codes'
     : game.type === 'rule' ? 'rules'
@@ -57,8 +62,15 @@ export default function Lobby(props: RoomBundle & { code: string; inRoom: boolea
           <p className="mt-2 text-sm text-white/70">Buy businesses, build district sets and fulfill shared contracts before your rivals. Trade to complete a set or secure supplies. Everyone gets ten turns; equal final scores share the win.</p>
           <p className="mt-2 text-xs text-white/60">Each turn: choose a route, take one business action, then trade or finish. First player rotates each round. Nobody is eliminated.</p>
         </div>}
+        {isBattle && <div className="glass-sm mt-4 p-4 text-left">
+          <h2 className="font-bold">{room.mode === 'coop' ? 'Team up and topple the Machine' : 'Smash your rival’s keep'}</h2>
+          <p className="mt-2 text-sm text-white/70">Spend gold on walls, towers and gold mines. Spend elixir on troops that march down three lanes. Destroy the enemy keep — or have the healthier keep when the 3-minute clock runs out.</p>
+          <p className="mt-2 text-xs text-white/60">Elixir doubles in the final minute. Leaving a duel early counts as a loss.</p>
+          <Link href="/play/fortress-feud" className="mt-3 inline-block text-sm font-bold text-indigo-200">Practice against the Machine first →</Link>
+        </div>}
         <div className="mt-4 flex flex-wrap justify-center gap-2 text-xs">
-          <span className="pill">{room.total_rounds} {countLabel}</span>
+          {isBattle ? <span className="pill">{room.mode === 'coop' ? `🤝 Co-op vs Machine · ${BATTLE_DIFFICULTY_LABELS[room.difficulty].split(' — ')[0]}` : '⚔️ 1v1 Duel'}</span> : <span className="pill">{room.total_rounds} {countLabel}</span>}
+          {game.config?.pickTruthOrDare && <span className="pill">{TRUTH_OR_DARE_VIBES[room.difficulty]?.short ?? 'Classic'}</span>}
           <span className="pill">{room.is_public ? 'Public room' : 'Private room'}</span>
           {room.mode === 'spotlight' && <span className="pill">Spotlight mode</span>}
           {['quiz', 'code'].includes(game.type) && <span className="pill">{game.type === 'code' ? `Code length: ${room.difficulty === 'easy' ? 4 : room.difficulty === 'hard' ? 6 : 5} digits` : `${room.difficulty} difficulty`}</span>}
@@ -84,7 +96,7 @@ export default function Lobby(props: RoomBundle & { code: string; inRoom: boolea
           <span className="pill">Waiting room</span>
         </div>
         <p className="mt-1 text-sm text-white/65">
-          {isPredict ? 'Exactly two players. You’ll take turns answering and predicting.' : needsPartner ? 'At least two players are needed to start.' : 'Invite your group or start a solo game.'}
+          {isBattle ? (room.mode === 'coop' ? 'Exactly two players, side by side against the Machine.' : 'Exactly two players. May the best fortress win.') : isPredict ? 'Exactly two players. You’ll take turns answering and predicting.' : needsPartner ? 'At least two players are needed to start.' : 'Invite your group or start a solo game.'}
         </p>
         {players.length === 0 && <p role="status" className="mt-4 text-sm text-white/65">No players have joined yet.</p>}
         <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">

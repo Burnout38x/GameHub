@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import type { RoomBundle } from './RoomClient';
 import { callRoomApi } from '@/lib/room-api';
 import { isTurnBased } from '@/lib/game-utils';
+import { cardText, hasPicked, pickPoints, TRUTH_OR_DARE_VIBES, type DareKind } from '@/lib/truth-or-dare';
 
 function formatTime(s: number) {
   return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
@@ -19,7 +20,11 @@ export default function PromptPlay({ room, game, players, answers, prompt, userI
   const turnPlayer = players.find((p) => p.profile_id === room.turn_player_id);
   const myAnswer = answers.find((a) => a.profile_id === userId);
   const revealed = room.round_phase === 'revealed';
-  const canAnswer = !revealed && !myAnswer && (!turnBased || isMyTurn);
+  const picking = !!cfg.pickTruthOrDare;
+  const picked = !picking || hasPicked(room.round_state, room.current_round);
+  const pickedKind: DareKind | null = picking && picked ? room.round_state.pick.kind : null;
+  const vibe = TRUTH_OR_DARE_VIBES[room.difficulty] ?? TRUTH_OR_DARE_VIBES.easy;
+  const canAnswer = picked && !revealed && !myAnswer && (!turnBased || isMyTurn);
   const choices: string[] = cfg.optionsFromContent ? (content.choices ?? []) : (cfg.choices ?? []);
 
   // The active player controls one shared deadline, preserved across reloads.
@@ -57,6 +62,19 @@ export default function PromptPlay({ room, game, players, answers, prompt, userI
     setBusy(false);
   }
 
+  async function pick(kind: DareKind) {
+    if (busy || !isMyTurn) return;
+    setBusy(true);
+    setError('');
+    try {
+      await callRoomApi(room.code, 'pick', { fromRound: room.current_round, kind });
+      refresh();
+    } catch (e: any) {
+      setError(e.message);
+    }
+    setBusy(false);
+  }
+
   async function next() {
     setBusy(true);
     setError('');
@@ -67,6 +85,25 @@ export default function PromptPlay({ room, game, players, answers, prompt, userI
       setError(e.message);
     }
     setBusy(false);
+  }
+
+  if (picking && !picked) {
+    return (
+      <div className="flex flex-col gap-3">
+        <div className="pill mx-auto">{isMyTurn ? '🎯 Your turn!' : `${turnPlayer?.display_name ?? '…'}'s turn`}</div>
+        <section className="glass flex flex-col items-center gap-4 p-6 text-center sm:p-8" aria-labelledby="pick-title">
+          <span className="pill">{vibe.short}</span>
+          {vibe.adults && <p className="text-sm text-white/65">18+ · Agree on boundaries. Only involve willing adults; you can always skip.</p>}
+          <h2 id="pick-title" className="text-2xl font-black tracking-tight">{isMyTurn ? 'Truth or dare?' : `${turnPlayer?.display_name ?? 'The other player'} is choosing…`}</h2>
+          <p className="text-sm text-white/65">Truths earn 1 point. Dares are braver and earn 2.</p>
+          {isMyTurn && <div className="grid w-full max-w-md grid-cols-2 gap-3">
+            <button className="option-btn !min-h-28 text-center" disabled={busy} onClick={() => pick('truth')}><span aria-hidden="true" className="block text-4xl">😇</span><strong className="mt-2 block text-lg">Truth</strong><span className="text-xs text-white/60">+1 point</span></button>
+            <button className="option-btn !min-h-28 border-pink-400/50 text-center" disabled={busy} onClick={() => pick('dare')}><span aria-hidden="true" className="block text-4xl">😈</span><strong className="mt-2 block text-lg">Dare</strong><span className="text-xs text-white/60">+2 points</span></button>
+          </div>}
+        </section>
+        {error && <p role="alert" className="text-sm font-bold text-red-300">{error}</p>}
+      </div>
+    );
   }
 
   if (!prompt) return <div className="glass p-6 text-white/60">Loading prompt…</div>;
@@ -82,9 +119,10 @@ export default function PromptPlay({ room, game, players, answers, prompt, userI
       )}
 
       <div className="glass flex min-h-[220px] flex-col items-center justify-center gap-4 p-7 text-center">
-        {content.category && <div className="pill">{content.category}</div>}
-        {cfg.adultsOnly && <p className="text-sm text-white/65">18+ · Agree on boundaries. Only involve willing adults; you can always skip.</p>}
-        <div className="text-2xl font-black leading-snug tracking-tight">{content.text}</div>
+        {pickedKind ? <div className="flex flex-wrap justify-center gap-2"><span className="pill">{pickedKind === 'dare' ? '😈 Dare' : '😇 Truth'} · +{pickPoints(pickedKind)}</span>{content.heat && <span className="pill">{content.heat}</span>}</div> : content.category && <div className="pill">{content.category}</div>}
+        {(cfg.adultsOnly || (picking && content.deck === 'after-dark')) && <p className="text-sm text-white/65">18+ · Agree on boundaries. Only involve willing adults; you can always skip.</p>}
+        {picking && room.round_state?.pick?.fallback && <p className="text-sm text-amber-200">That deck ran out, so here is a {pickedKind} instead.</p>}
+        <div className="text-2xl font-black leading-snug tracking-tight">{picking ? cardText(content.text) : content.text}</div>
         {timerLength > 0 && (
           <div
             className={`text-5xl font-black tracking-tight ${
@@ -165,7 +203,7 @@ export default function PromptPlay({ room, game, players, answers, prompt, userI
               return (
                 <p key={a.id}>
                   <strong>{p?.display_name}</strong> said: <strong>{a.answer?.value}</strong>
-                  {a.points > 0 ? ' (+1 point)' : ''}
+                  {a.points > 0 ? ` (+${a.points} ${a.points === 1 ? 'point' : 'points'})` : ''}
                 </p>
               );
             })

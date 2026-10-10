@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { roomCapacity } from '@/lib/game-utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,7 +46,7 @@ function RoomCard({ room, userId }: { room: BrowserRoom; userId: string }) {
       </div>
       <div className="mt-auto flex items-center justify-between pt-2">
         <span className="text-xs font-bold text-white/45">
-          {room.room_players.length}/{room.games?.type === 'predict' ? 2 : room.games?.type === 'market' ? 4 : 10} players
+          {room.room_players.length}/{roomCapacity(room.games?.type)} players
         </span>
         {mine ? (
           <Link
@@ -119,7 +120,7 @@ export default async function RoomsPage() {
     (r) =>
       r.is_public &&
       r.status === 'lobby' &&
-      r.room_players.length < (r.games?.type === 'predict' ? 2 : r.games?.type === 'market' ? 4 : 10) &&
+      r.room_players.length < roomCapacity(r.games?.type) &&
       !r.room_players.some((p) => p.profile_id === user.id)
   );
   const liveNow = rooms.filter(

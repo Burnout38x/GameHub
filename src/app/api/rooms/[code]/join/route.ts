@@ -2,6 +2,7 @@ import { withRoomLock } from '@/lib/server/room-lock';
 export const maxDuration = 30;
 import { NextResponse } from 'next/server';
 import { loadRoomContext, jsonError } from '@/lib/server/room-actions';
+import { roomCapacity } from '@/lib/game-utils';
 
 /** POST /api/rooms/[code]/join */
 async function handlePost(_req: Request, { params }: { params: { code: string } }) {
@@ -11,7 +12,7 @@ async function handlePost(_req: Request, { params }: { params: { code: string } 
 
   if (me) return NextResponse.json({ ok: true }); // already in — rejoin
   if (room.status !== 'lobby') return jsonError('Game already started', 409);
-  const maxPlayers = ctx.game.type === 'predict' ? 2 : ctx.game.type === 'market' ? 4 : 10;
+  const maxPlayers = roomCapacity(ctx.game.type);
   if (ctx.players.length >= maxPlayers)
     return jsonError(maxPlayers === 2 ? 'This game is for exactly 2 players' : `Room is full (max ${maxPlayers})`, 409);
 

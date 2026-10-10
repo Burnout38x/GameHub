@@ -9,18 +9,28 @@ const initialFilters: LibraryFilters = { search: '', category: 'all', audience: 
 const modes: { id: GameMode; label: string }[] = [{ id: 'all', label: 'All ways to play' }, { id: 'online', label: 'Online rooms' }, { id: 'solo', label: 'Solo adventures' }, { id: 'local', label: 'Pass & play' }];
 const categoryIcons: Record<string, string> = { all: '🎮', trivia: '🧠', words: '💬', logic: '🧩', conversation: '🗣️', couples: '💞', party: '🎉', memory: '🃏', strategy: '🏡' };
 const categories = [{ id: 'all', label: 'All games' }, ...GAME_CATEGORIES] as const;
+// Solo-capable games and where they are played. Battles also appear as online rooms.
+const SOLO_ROUTES: Record<string, { href: string; meta: string; cta: string }> = {
+  'pocket-paradise': { href: '/play/pocket-paradise', meta: '1 player · 20 placements · daily & relaxed play', cta: 'Build your paradise →' },
+  'fortress-feud': { href: '/play/fortress-feud', meta: '12 missions · quick battles vs the Machine', cta: 'Enter the war room →' },
+};
+const uniqueCount = (games: { slug: string }[]) => new Set(games.map(game => game.slug)).size;
+const playerLabel = (type: string) => type === 'market' ? '2–4' : type === 'predict' || type === 'battle' ? 'Exactly 2' : type === 'chain' || type === 'rule' ? '2–10' : '1–10';
 
 export default function GameLibrary({ online, local, initialSearch = '' }: { online: OnlineGame[]; local: LocalGame[]; initialSearch?: string }) {
   const [filters, setFilters] = useState<LibraryFilters>({ ...initialFilters, search: initialSearch });
   const roomGames = online.filter(game => game.type !== 'solo');
-  const solo = online.filter(game => game.type === 'solo');
+  const solo = online.filter(game => game.type === 'solo' || (game.type === 'battle' && SOLO_ROUTES[game.slug]));
   const soloGames = solo.filter(game => matchesGame(game, filters, 'solo'));
-  const soloCount = solo.filter(game => matchesGame(game, { ...filters, mode: 'all' }, 'solo')).length;
+  const soloMatches = solo.filter(game => matchesGame(game, { ...filters, mode: 'all' }, 'solo'));
+  const soloCount = soloMatches.length;
   const onlineGames = roomGames.filter(game => matchesGame(game, filters, 'online'));
   const localGames = local.filter(game => matchesGame(game, filters, 'local'));
   const onlineCount = roomGames.filter(game => matchesGame(game, { ...filters, mode: 'all' }, 'online')).length;
   const localCount = local.filter(game => matchesGame(game, { ...filters, mode: 'all' }, 'local')).length;
-  const count = onlineGames.length + localGames.length + soloGames.length;
+  // A battle can match as both a solo and an online game; count each game once.
+  const count = uniqueCount([...onlineGames, ...soloGames]) + localGames.length;
+  const allCount = uniqueCount([...roomGames.filter(game => matchesGame(game, { ...filters, mode: 'all' }, 'online')), ...soloMatches]) + localCount;
   const filtered = Object.keys(initialFilters).some(key => filters[key as keyof LibraryFilters] !== initialFilters[key as keyof LibraryFilters]);
   return <>
     <div className="glass-sm space-y-4 p-4 sm:p-5">
@@ -33,7 +43,7 @@ export default function GameLibrary({ online, local, initialSearch = '' }: { onl
         <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4" role="group" aria-label="Game categories">
           {categories.map(category => {
             const categoryFilters = { ...filters, category: category.id };
-            const total = roomGames.filter(game => matchesGame(game, categoryFilters, 'online')).length + solo.filter(game => matchesGame(game, categoryFilters, 'solo')).length + local.filter(game => matchesGame(game, categoryFilters, 'local')).length;
+            const total = uniqueCount([...roomGames.filter(game => matchesGame(game, categoryFilters, 'online')), ...solo.filter(game => matchesGame(game, categoryFilters, 'solo'))]) + local.filter(game => matchesGame(game, categoryFilters, 'local')).length;
             return <button key={category.id} type="button" className={`${filters.category === category.id ? 'btn' : 'btn-secondary'} !min-h-14 !justify-start !rounded-2xl !px-3 !py-3 !text-left !text-xs sm:!text-sm`} aria-pressed={filters.category === category.id} onClick={() => setFilters({ ...filters, category: category.id })}>
               <span aria-hidden="true" className="shrink-0 text-lg">{categoryIcons[category.id]}</span>
               <span className="min-w-0 flex-1">{category.label}</span>
@@ -42,17 +52,17 @@ export default function GameLibrary({ online, local, initialSearch = '' }: { onl
           })}
         </div>
       </section>
-      <div className="flex flex-wrap gap-2" role="group" aria-label="Ways to play">{modes.map(mode => <button key={mode.id} type="button" className={`${filters.mode === mode.id ? 'btn' : 'btn-secondary'} !min-h-11 !w-auto !px-4 !py-2 !text-sm`} aria-pressed={filters.mode === mode.id} onClick={() => setFilters({ ...filters, mode: mode.id })}>{mode.label} <span className="ml-1 opacity-70">{mode.id === 'online' ? onlineCount : mode.id === 'local' ? localCount : mode.id === 'solo' ? soloCount : onlineCount + localCount + soloCount}</span></button>)}</div>
+      <div className="flex flex-wrap gap-2" role="group" aria-label="Ways to play">{modes.map(mode => <button key={mode.id} type="button" className={`${filters.mode === mode.id ? 'btn' : 'btn-secondary'} !min-h-11 !w-auto !px-4 !py-2 !text-sm`} aria-pressed={filters.mode === mode.id} onClick={() => setFilters({ ...filters, mode: mode.id })}>{mode.label} <span className="ml-1 opacity-70">{mode.id === 'online' ? onlineCount : mode.id === 'local' ? localCount : mode.id === 'solo' ? soloCount : allCount}</span></button>)}</div>
       <div className="flex flex-wrap items-center justify-between gap-2"><p role="status" className="text-sm text-white/65">{count} {count === 1 ? 'game' : 'games'} to explore{filters.mode === 'all' ? ' across all play modes' : ''}.</p>{filtered && <button type="button" className="btn-ghost !min-h-11 !w-auto !px-3 !py-2 !text-sm" onClick={() => setFilters(initialFilters)}>Reset filters</button>}</div>
     </div>
     {count === 0 && <div className="glass-sm p-6 text-center"><h2 className="text-lg font-bold">No games found</h2><p className="mt-2 text-sm text-white/65">Try another search or show all games to explore the library.</p><button className="btn-secondary mx-auto mt-4 !w-auto" onClick={() => setFilters(initialFilters)}>Show all games</button></div>}
     {(filters.mode === 'all' || filters.mode === 'solo') && soloGames.length > 0 && <section aria-labelledby="solo-heading">
       <div className="mb-5"><p className="eyebrow">Your little escape · save your progress</p><h2 id="solo-heading" className="mt-2 text-2xl font-bold">Solo adventures <span className="text-white/50">({soloGames.length})</span></h2><p className="mt-1 text-sm text-white/65">Play at your own pace. Sign in to add completed runs to your progress.</p></div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{soloGames.map(game => <article key={game.id} className="game-card"><div className="flex items-center justify-between gap-2"><span className="game-icon" aria-hidden="true">{game.emoji}</span><span className="pill">{gameCategoryLabel(game)}</span></div><div><h3 className="text-lg font-bold">{game.name}</h3><p className="mt-2 text-sm leading-relaxed text-white/65">{game.description}</p></div><p className="mt-auto text-xs text-white/65">1 player · 20 placements · daily & relaxed play</p><Link href="/play/pocket-paradise" className="btn !min-h-11 !rounded-xl !py-2 !text-sm">Build your paradise →</Link></article>)}</div>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{soloGames.map(game => <article key={game.id} className="game-card"><div className="flex items-center justify-between gap-2"><span className="game-icon" aria-hidden="true">{game.emoji}</span><span className="pill">{gameCategoryLabel(game)}</span></div><div><h3 className="text-lg font-bold">{game.name}</h3><p className="mt-2 text-sm leading-relaxed text-white/65">{game.description}</p></div><p className="mt-auto text-xs text-white/65">{(SOLO_ROUTES[game.slug] ?? SOLO_ROUTES['pocket-paradise']).meta}</p><Link href={(SOLO_ROUTES[game.slug] ?? SOLO_ROUTES['pocket-paradise']).href} className="btn !min-h-11 !rounded-xl !py-2 !text-sm">{(SOLO_ROUTES[game.slug] ?? SOLO_ROUTES['pocket-paradise']).cta}</Link></article>)}</div>
     </section>}
     {(filters.mode === 'all' || filters.mode === 'online') && <section id="online" className="scroll-mt-40" aria-labelledby="online-heading">
       <div className="mb-5"><p className="eyebrow">Your own phones · live scores</p><h2 id="online-heading" className="mt-2 text-2xl font-bold">Meet in a game room <span className="text-white/50">({onlineGames.length})</span></h2><p className="mt-1 text-sm text-white/65">Share a room code and play together, wherever you are. An account is needed for online play.</p></div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{onlineGames.map(game => <article key={game.id} className="game-card"><div className="flex items-center justify-between gap-2"><span className="game-icon" aria-hidden="true">{game.emoji}</span><span className="pill">{gameCategoryLabel(game)}</span></div><div><h3 className="text-lg font-bold">{game.name}</h3><p className="mt-2 text-sm leading-relaxed text-white/65">{game.description}</p></div><div className="mt-auto flex items-center justify-between gap-2 border-t border-white/10 pt-4"><span className="text-xs text-white/60">{game.type === 'market' ? '2–4' : game.type === 'predict' ? 'Exactly 2' : game.type === 'chain' || game.type === 'rule' ? '2–10' : '1–10'} players</span><Link href={`/rooms/new?game=${game.slug}`} className="btn !min-h-11 !w-auto !rounded-xl !px-4 !py-2 !text-sm" aria-label={`Create ${game.name} room`}>Create room ↗</Link></div></article>)}</div>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{onlineGames.map(game => <article key={game.id} className="game-card"><div className="flex items-center justify-between gap-2"><span className="game-icon" aria-hidden="true">{game.emoji}</span><span className="pill">{gameCategoryLabel(game)}</span></div><div><h3 className="text-lg font-bold">{game.name}</h3><p className="mt-2 text-sm leading-relaxed text-white/65">{game.description}</p></div><div className="mt-auto flex items-center justify-between gap-2 border-t border-white/10 pt-4"><span className="text-xs text-white/60">{playerLabel(game.type)} players</span><Link href={`/rooms/new?game=${game.slug}`} className="btn !min-h-11 !w-auto !rounded-xl !px-4 !py-2 !text-sm" aria-label={`Create ${game.name} room`}>Create room ↗</Link></div></article>)}</div>
       {!onlineGames.length && count > 0 && <p className="glass-sm p-6 text-sm text-white/70">{online.length ? 'No online games match these filters. Try a pass-and-play pick below.' : 'Online games are unavailable right now. Try a pass-and-play game below.'}</p>}
     </section>}
     {(filters.mode === 'all' || filters.mode === 'local') && <section id="local" className="scroll-mt-40" aria-labelledby="local-heading">

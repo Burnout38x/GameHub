@@ -6,7 +6,7 @@ turns and answers syncing in real time.
 
 **Stack:** Next.js 16.4 (App Router, React 19.3, TypeScript 7, Tailwind 4.3) · Supabase (Postgres + Auth + Realtime) · Vercel
 
-## Online games (18)
+## Online games (19)
 
 | Game | Type | Source |
 |---|---|---|
@@ -16,7 +16,7 @@ turns and answers syncing in real time.
 | 🍿 Movie Trivia | Quiz | new (24 questions) |
 | 🙈 Never Have I Ever | Prompt — counts "I Have"s | your original file |
 | 🤔 Would You Rather | Prompt — match bonus if everyone agrees | new (25 prompts) |
-| 😈 Truth or Dare | Prompt — turn-based | new (25 prompts) |
+| 😈 Truth or Dare | Pick truth (+1) or dare (+2) each turn; Classic, After Dark (18+) or Mixed vibe | 81 cards (merged with After Dark) |
 | ⏱️ 2-Minute Challenge | Prompt — turn-based with timer | your original file |
 | 🃏 Memory Match | Shared live board, turn-based | your original themes |
 | 🔢 Number Guess Battle | Duel — secret is server-side | new |
@@ -28,8 +28,17 @@ turns and answers syncing in real time.
 | 🔐 Code Crackers | Secret-code deduction | local + online |
 | 🧩 Rule Discoverer | Test examples and guess the rule | local + online |
 | 🔗 Word Association Chain | Word links and challenge votes | local + online |
+| 🏰 Fortress Feud | Real-time lane battle: 1v1 duel or 2-player co-op vs the Machine | new |
 
 Every quiz/prompt game supports **Easy / Hard / Mixed** difficulty, chosen when creating a room.
+
+## Fortress Feud
+
+A three-minute, real-time strategy battle that works in portrait on phones and with side panels on desktop.
+
+- **Gold** builds walls, towers, frost towers, mortars and gold mines on six plots; **elixir** (one every two seconds, doubled in the final minute) sends troops and Meteors down three lanes.
+- **Solo:** a 12-mission campaign with three stars per mission and a rank ladder, plus quick battles against five Machine levels at `/play/fortress-feud`. Signed-in victories are saved only after the server replays the whole battle.
+- **Online:** duel a friend or team up in co-op against a boosted Machine. The deterministic simulation in `src/lib/fortress` runs in both browsers; the server stamps each order slightly in the future, validates it by replay, and decides the result. Leaving a duel early concedes it.
 
 ## Features
 
