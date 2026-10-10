@@ -116,3 +116,9 @@ Request: "make it more DETAILED AND BETTER BUILT".
   - Medium: editing during the stress test left a stale canvas.
   - Medium: Enter on the builder tool buttons placed a piece instead of pressing the button.
 - No database migration was needed; the library description is unchanged.
+
+## v3 production release (2026-10-10)
+- `main` fast-forwarded to fde242b, and Vercel reported success for that commit.
+- Live public smoke test (Chrome at 390×844, 1440×900 and 844×390; no accounts created):
+  - quick battle → builder Templates tab → place a stone block (15/36) → battle → bomb launch shows "Shot away…" → the Machine replies;
+  - 0 page errors, 0 horizontal overflow.
