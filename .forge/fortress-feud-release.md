@@ -28,3 +28,9 @@
 - Online client waits for a server clock sample before simulating, rewinds if it ran ahead, lets rollbacks change a predicted ending, re-syncs immediately when a tab becomes visible, caps catch-up per frame, and sends one finish request at a time; hotkeys pause behind dialogs.
 - Migration refuses to run while any Truth or Dare room is open and fails loudly if the invitation-cap patch would be a no-op.
 - Reviewer replay scripts confirmed identical outcomes for live play vs server replay across all 12 missions and random duel/co-op logs. Worst-case server replay of a full battle: ~2–4 ms.
+
+## Production release (2026-10-10)
+- `main` fast-forwarded to 46e0a70; Vercel Production deployment succeeded; `/play/fortress-feud` returns 200.
+- Migration applied to production after the deploy (no open Truth or Dare rooms). Readback: Truth or Dare has 41 classic + 40 After Dark cards; After Dark game inactive; `fortress-feud` activated (sort order 5, first on the home page).
+- Live public smoke at 390 and 1440 px (no accounts created): library search shows Fortress Feud in solo and online sections, the home page features it, a campaign battle starts and deploys troops, 0 page errors, 0 horizontal overflow.
+- Supabase security advisor: only new item is the expected INFO "RLS enabled, no policy" on server-only `fortress_campaign`.
