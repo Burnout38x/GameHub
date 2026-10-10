@@ -64,3 +64,8 @@ Player feedback: the lane battler felt unrealistic; they wanted the classic "dra
   - Truth or Dare regression.
 - WebKit iPhone 13 emulation: touch drag-to-launch, the replay and the Machine's reply, no errors.
 - Independent review found 2 high, 2 medium and 3 low issues (win farming through skips and forfeits, a missed replay after a skip, designs leaking during build, overlapping replays, client-only cost check, the Machine pausing after a skip, end-screen flicker). All were fixed and are covered by tests and QA.
+
+## v2 production release (2026-10-10)
+- `main` fast-forwarded to ee87d41. Vercel Production was live about 75 s after the push, and `/play/fortress-feud` returns 200.
+- Migration `fortress_feud_siege` (library description) was applied after the deploy. Readback confirms the new description, and `fortress-feud` is still active.
+- Live public smoke test (Chrome at 390×844, 1440×900 and 844×390; no accounts created): quick battle → build → drag-launch → a hit topples the enemy keep → the Machine replies. 0 page errors, 0 horizontal overflow.
