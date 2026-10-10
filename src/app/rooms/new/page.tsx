@@ -134,7 +134,7 @@ function NewRoomForm() {
             <option value="duel">⚔️ Duel — you vs a friend</option>
             <option value="coop">🤝 Co-op — you and a friend vs the Machine</option>
           </select>
-          <p className="mt-2 text-xs text-indigo-200">Exactly 2 players. Three-minute real-time battle; destroy the enemy keep or lead on keep health when time runs out.</p>
+          <p className="mt-2 text-xs text-indigo-200">Exactly 2 players. Build a fortress, then trade shots — knock out every enemy royal, or have the stronger fortress when the ammo runs out.</p>
           {battleMode === 'coop' && <>
             <label className="field-label" htmlFor="difficulty">Machine difficulty</label>
             <select id="difficulty" className="input" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>

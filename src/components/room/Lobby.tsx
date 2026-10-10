@@ -64,8 +64,8 @@ export default function Lobby(props: RoomBundle & { code: string; inRoom: boolea
         </div>}
         {isBattle && <div className="glass-sm mt-4 p-4 text-left">
           <h2 className="font-bold">{room.mode === 'coop' ? 'Team up and topple the Machine' : 'Smash your rival’s keep'}</h2>
-          <p className="mt-2 text-sm text-white/70">Spend gold on walls, towers and gold mines. Spend elixir on troops that march down three lanes. Destroy the enemy keep — or have the healthier keep when the 3-minute clock runs out.</p>
-          <p className="mt-2 text-xs text-white/60">Elixir doubles in the final minute. Leaving a duel early counts as a loss.</p>
+          <p className="mt-2 text-sm text-white/70">{room.mode === 'coop' ? 'Build one fortress together from timber, stone and steel, then take turns launching at the Machine’s.' : 'Each of you builds a fortress from timber, stone and steel in secret, then you take turns launching at each other.'} Drag back to aim, let go to fire, and knock out the enemy King and Knights.</p>
+          <p className="mt-2 text-xs text-white/60">45 seconds a turn and 10 shots each. Gold buys ammo; elixir builds up for Barrages and Titan Boulders. Leaving a duel after both sides have fired counts as a loss.</p>
           <Link href="/play/fortress-feud" className="mt-3 inline-block text-sm font-bold text-indigo-200">Practice against the Machine first →</Link>
         </div>}
         <div className="mt-4 flex flex-wrap justify-center gap-2 text-xs">

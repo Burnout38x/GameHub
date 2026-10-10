@@ -6,7 +6,7 @@ import { shuffle, spotlightRoundCount, roundDeadline, isTurnBased } from '@/lib/
 import { createMarketDay } from '@/lib/market-day';
 import { randomInt } from 'node:crypto';
 import { buildRuleRound } from '@/lib/server/rule-round';
-import { createOnlineBattle } from '@/lib/fortress/online';
+import { createOnlineSiege } from '@/lib/fortress/online';
 import { battleAiLevel } from '@/lib/fortress/rooms';
 
 /** POST /api/rooms/[code]/start — host starts the game. */
@@ -37,7 +37,7 @@ async function handlePost(_req: Request, { params }: { params: { code: string } 
 
   if (game.type === 'battle') {
     update.total_rounds = 1;
-    update.round_state = createOnlineBattle(room.mode === 'coop' ? 'coop' : 'duel', battleAiLevel(room.difficulty), players.map(p => p.profile_id), randomInt(1, 2147483647), Date.now());
+    update.round_state = createOnlineSiege(room.mode === 'coop' ? 'coop' : 'duel', battleAiLevel(room.difficulty), players.map(p => p.profile_id), randomInt(1, 2147483647), Date.now());
   } else if (game.type === 'market') {
     update.total_rounds = 10;
     update.round_state = createMarketDay(players.map(p => p.profile_id), randomInt(1, 2147483647));

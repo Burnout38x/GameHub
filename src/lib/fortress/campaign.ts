@@ -1,27 +1,28 @@
-import { MISSIONS, TICKS_PER_SECOND } from './content';
-import { missionStars, parseBattleLog, replayBattle } from './sim';
-import type { BattleSetup } from './state';
+import { MISSIONS, SHOTS_PER_PLAYER } from './content';
 
-export const CAMPAIGN_STORAGE_KEY = 'gamehub:fortress-feud:v1';
+export const CAMPAIGN_STORAGE_KEY = 'gamehub:fortress-feud:v2';
 export const MAX_STARS = MISSIONS.length * 3;
 
+/** `best` is the fewest shots a mission was won in. */
 export interface CampaignProgress { stars: Record<number, number>; best: Record<number, number> }
-export type VerifiedRun = { mission: number; stars: number; seconds: number } | { error: string };
+export type VerifiedRun = { mission: number; stars: number; shots: number } | { error: string };
 
-/** Replays a submitted mission from its seed and command log; only real victories pass. */
+/**
+ * Checks a reported mission win. Solo physics runs in the browser and cannot be replayed
+ * exactly on the server, so this is trust-limited: the report must be self-consistent, and
+ * the database only pays out for stars not earned before, with an hourly save limit.
+ */
 export function verifyMissionRun(input: unknown): VerifiedRun {
   if (!input || typeof input !== 'object') return { error: 'Invalid battle record' };
   const raw = input as Record<string, unknown>;
-  const mission = raw.mission;
-  if (!Number.isInteger(mission) || !MISSIONS.some(m => m.id === mission)) return { error: 'Unknown mission' };
-  if (!Number.isInteger(raw.seed) || Math.abs(raw.seed as number) > 2_147_483_647) return { error: 'Invalid battle seed' };
-  const setup: BattleSetup = { kind: 'mission', mission: mission as number };
-  const log = parseBattleLog(raw.log, setup);
-  if (!log) return { error: 'This battle could not be verified.' };
-  const state = replayBattle(setup, raw.seed as number, log);
-  const stars = missionStars(state);
-  if (!state.outcome || stars === 0) return { error: 'Only victories can be saved.' };
-  return { mission: mission as number, stars, seconds: Math.floor(state.outcome.tick / TICKS_PER_SECOND) };
+  const mission = MISSIONS.find(entry => entry.id === raw.mission);
+  if (!mission) return { error: 'Unknown mission' };
+  const { stars, shots } = raw;
+  if (!Number.isInteger(stars) || (stars as number) < 1 || (stars as number) > 3) return { error: 'Only victories can be saved.' };
+  if (!Number.isInteger(shots) || (shots as number) < 1 || (shots as number) > SHOTS_PER_PLAYER) return { error: 'This battle could not be verified.' };
+  // The third star is for finishing within par, so a slower win cannot claim it.
+  if ((stars as number) === 3 && (shots as number) > mission.par) return { error: 'This battle could not be verified.' };
+  return { mission: mission.id, stars: stars as number, shots: shots as number };
 }
 
 /** A mission unlocks once the one before it has at least one star. */
@@ -59,7 +60,7 @@ export function parseProgress(value: unknown): CampaignProgress {
     const stars = raw.stars?.[mission.id];
     const best = raw.best?.[mission.id];
     if (Number.isInteger(stars) && (stars as number) >= 1 && (stars as number) <= 3) progress.stars[mission.id] = stars as number;
-    if (Number.isInteger(best) && (best as number) >= 0 && (best as number) <= 600) progress.best[mission.id] = best as number;
+    if (Number.isInteger(best) && (best as number) >= 1 && (best as number) <= SHOTS_PER_PLAYER) progress.best[mission.id] = best as number;
   }
   return progress;
 }

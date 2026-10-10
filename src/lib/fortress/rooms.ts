@@ -8,5 +8,5 @@ export function battleAiLevel(difficulty: Difficulty | string): number {
 export const BATTLE_DIFFICULTY_LABELS: Record<Difficulty, string> = {
   easy: '🛡️ Knight — a fair fight',
   mixed: '⚔️ Captain — smart and steady',
-  hard: '🔥 Warlord — hits hard, builds fast',
+  hard: '🔥 Warlord — deadly accurate',
 };

@@ -109,6 +109,8 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
   const connectionNotice = error ? <div role="alert" className="glass-sm mx-auto mb-4 max-w-xl p-4 text-sm text-red-200">{error}<button className="btn-secondary mt-3 !py-2" onClick={() => void load()}>Retry connection</button></div> : null;
   if (room.status === 'finished' && room.round_state?.closedReason) return <div className="glass mx-auto max-w-xl p-6" role="status">This match has closed. No results were awarded. <Link href="/games" className="btn-secondary mt-4">Back to games</Link></div>;
   if (room.status === 'lobby') return <>{connectionNotice}<Lobby {...full} code={code} inRoom={inRoom} /></>;
+  // Battles stay mounted when they finish so the last shot can land before the results.
+  if (game.type === 'battle' && (room.status === 'playing' || room.status === 'finished') && inRoom) return <>{connectionNotice}<BattlePlay {...full} /></>;
   if (room.status === 'finished' && game.type === 'battle') return <>{connectionNotice}<BattleResultBanner room={room} players={bundle.players} /><EndScreen {...full} /></>;
   if (room.status === 'finished') return game.type === 'market'
     ? <div className="mx-auto flex w-full max-w-6xl flex-col gap-4">{connectionNotice}<MarketPlay {...full} /><EndScreen {...full} controlsOnly /></div>
@@ -122,7 +124,6 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
       </div>
     );
 
-  if (game.type === 'battle') return <>{connectionNotice}<BattlePlay {...full} /></>;
 
   return (
     <div className={`mx-auto flex w-full ${game.type === 'market' ? 'max-w-6xl' : 'max-w-xl'} flex-col gap-4`}>

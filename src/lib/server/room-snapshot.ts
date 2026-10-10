@@ -1,6 +1,7 @@
 import type { Game, Prompt, Room, RoomPlayer, RoundAnswer } from '@/lib/types';
 import { activeAnswers } from './multiplayer-rules';
 import { hasPicked } from '@/lib/truth-or-dare';
+import { parseOnlineSiege, publicSiege } from '@/lib/fortress/online';
 
 export function sanitizeSnapshot(
   input: { room: Room; game: Game; players: RoomPlayer[]; answers: RoundAnswer[]; prompt: Prompt | null },
@@ -12,6 +13,12 @@ export function sanitizeSnapshot(
   // Legacy rooms may still have this field; redact it too.
   delete room.round_state.usedRuleIds;
   delete room.round_state.reserve;
+  // Fortress Feud: replays are large (phones fetch them from the battle poll) and designs stay secret.
+  if (game.type === 'battle') {
+    const siege = parseOnlineSiege(room.round_state);
+    if (siege) room.round_state = publicSiege(siege);
+    else delete room.round_state.replay;
+  }
   if (game.type === 'memory' && Array.isArray(room.round_state.cards)) {
     const state = room.round_state;
     const deck = secret?.cards ?? state.cards;

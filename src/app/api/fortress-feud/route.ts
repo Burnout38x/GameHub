@@ -6,7 +6,7 @@ import { jsonError } from '@/lib/server/room-actions';
 import { verifyMissionRun } from '@/lib/fortress/campaign';
 export const maxDuration = 30;
 
-const MAX_BODY = 64 * 1024;
+const MAX_BODY = 1024;
 const NO_STORE = { 'Cache-Control': 'private, no-store' };
 
 /** GET — the signed-in player's best stars per mission. */
@@ -19,7 +19,7 @@ export async function GET() {
   return NextResponse.json({ missions: data ?? [] }, { headers: NO_STORE });
 }
 
-/** POST { mission, seed, log } — replays the whole battle and records a verified victory. */
+/** POST { mission, stars, shots } — records a mission victory (new stars only earn points). */
 export async function POST(req: Request) {
   if (!isSameOriginRequest(req)) return jsonError('Request origin not allowed', 403);
   const { data: { user } } = await (await createClient()).auth.getUser();
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
   const run = verifyMissionRun(body);
   if ('error' in run) return jsonError(run.error);
   const { data, error } = await createAdminClient().rpc('record_fortress_victory', {
-    actor_id: user.id, mission_id: run.mission, earned_stars: run.stars, seconds: run.seconds,
+    actor_id: user.id, mission_id: run.mission, earned_stars: run.stars, seconds: run.shots,
   });
   if (error) {
     const limited = error.message.includes('limit reached');

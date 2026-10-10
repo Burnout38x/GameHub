@@ -40,7 +40,7 @@ async function audit(page, label, { axe = true } = {}) {
 }
 
 async function context(viewport) {
-  const ctx = await browser.newContext({ viewport, hasTouch: viewport.width < 600 });
+  const ctx = await browser.newContext({ viewport, hasTouch: viewport.width < 900 });
   ctx.setDefaultTimeout(20000);
   await ctx.route('**/*', route => {
     const origin = new URL(route.request().url()).origin;
@@ -69,79 +69,78 @@ async function signIn(viewport, index) {
   return { ctx, page, id: created.data.user.id, name };
 }
 
-async function hudNumbers(page) {
-  return page.evaluate(() => {
-    const labels = [...document.querySelectorAll('[class*="barLabel"]')].map(node => node.textContent ?? '');
-    const gold = Number(document.querySelector('[class*="gold"]')?.textContent?.replace(/\D/g, '') ?? NaN);
-    const elixir = Number(document.querySelector('[role="meter"]')?.getAttribute('aria-valuenow') ?? NaN);
-    return { labels, gold, elixir };
-  });
-}
+const field = page => page.getByRole('application', { name: 'Fortress Feud siege' });
+const launch = page => page.getByRole('button', { name: '🚀 Launch' });
 
 async function soloChecks() {
-  for (const viewport of [{ width: 390, height: 844 }, { width: 1440, height: 900 }, { width: 320, height: 640 }]) {
+  for (const viewport of [{ width: 390, height: 844 }, { width: 1440, height: 900 }, { width: 320, height: 640 }, { width: 844, height: 390 }]) {
     const { ctx, page } = await context(viewport);
     const tag = `${viewport.width}x${viewport.height}`;
     await page.goto(app + '/play/fortress-feud');
     await page.getByRole('heading', { name: 'Fortress Feud', level: 1 }).waitFor();
-    await page.getByRole('button', { name: /Mission 2: Archer Hill\. Locked/ }).waitFor();
+    await page.getByRole('button', { name: /Mission 2: Stone Cold\. Locked/ }).waitFor();
     await audit(page, `hub-${tag}`);
     await page.getByRole('button', { name: 'Start campaign' }).click();
-    await page.getByRole('dialog', { name: /First Watch/ }).waitFor();
+    await page.getByRole('dialog', { name: /Target Practice/ }).waitFor();
     await audit(page, `briefing-${tag}`);
-    await page.getByRole('button', { name: 'Begin battle →' }).click();
-    await page.getByRole('application', { name: 'Fortress Feud battle' }).waitFor();
-    await poll(async () => (await page.locator('[class*="countdown"]').count()) === 0, 'Countdown never finished', 8000);
-    const before = await hudNumbers(page);
-    // Deploy with a card then a lane button, and build with the plot list (desktop) or a canvas tap (phone).
-    await page.getByRole('button', { name: /^Goblin Gang, 2 elixir/ }).click();
-    await page.getByRole('group', { name: 'Deploy lane' }).getByRole('button', { name: 'Middle' }).click();
-    if (viewport.width >= 900) {
-      await page.getByRole('group', { name: 'Your plots' }).getByRole('button', { name: /Middle front/ }).click();
-    } else {
-      const box = await page.locator('canvas').boundingBox();
-      // Middle front plot: centre lane, 205/1000 up from the bottom of the field.
-      await page.mouse.click(box.x + box.width / 2, box.y + box.height * (1 - 205 / 1000));
-    }
-    await page.getByRole('button', { name: /^Build Archer Tower for 120 gold/ }).click();
-    await sleep(600);
-    const after = await hudNumbers(page);
-    assert.ok(after.gold < before.gold, `gold should drop after building (${before.gold} → ${after.gold})`);
-    await poll(async () => /([1-9]\d*) troops/.test((await hudNumbers(page)).labels[1] ?? '') || /[1-9]/.test((await hudNumbers(page)).labels.join(' ')), 'Troops never appeared');
-    await sleep(2500);
+    await page.getByRole('button', { name: 'Build my fortress →' }).click();
+    await page.getByRole('heading', { name: /Fortify for/ }).waitFor();
+    // Steel walls cost gold: the ammo money must drop.
+    const money = async () => Number((await page.getByText(/^🪙 -?\d+$/).nth(1).textContent()).replace(/[^\d-]/g, ''));
+    const before = await money();
+    await page.getByRole('radiogroup', { name: 'Front walls' }).getByRole('radio', { name: /Steel/ }).click();
+    assert.ok(await money() < before, 'steel costs gold');
+    await audit(page, `build-${tag}`);
+    await page.getByRole('button', { name: '⚔️ To battle!' }).click();
+    await field(page).waitFor();
+    await launch(page).waitFor();
+    await sleep(800);
     await audit(page, `battle-${tag}`, { axe: viewport.width === 390 || viewport.width === 1440 });
-    // Keyboard: arm Knight with 2, deploy left with A.
-    await page.locator('[role="application"]').focus();
-    await page.keyboard.press('2');
-    await page.getByText('Choose a lane for Knight').waitFor();
-    await page.keyboard.press('a');
-    await page.getByRole('button', { name: 'Battle menu' }).click();
-    await page.getByRole('button', { name: '⏸ Pause' }).click();
-    await page.getByText('Battle paused').waitFor();
-    await page.getByRole('button', { name: '▶ Resume' }).click();
-    await page.getByRole('button', { name: 'Battle menu' }).click();
-    await page.getByRole('button', { name: 'Retreat to the war room' }).click();
-    await page.getByRole('heading', { name: 'Fortress Feud', level: 1 }).waitFor();
-    pass(`solo battle controls ${tag}`);
+    if (viewport.width >= 1000) {
+      // Keyboard: raise the angle, then launch with Enter.
+      await page.getByLabel(/^Battlefield\. Arrow keys/).focus();
+      for (let i = 0; i < 5; i++) await page.keyboard.press('ArrowUp');
+      await page.getByText('Angle 50°').waitFor();
+      await page.keyboard.press('Enter');
+    } else {
+      // Touch: drag back on the field and let go.
+      const box = await page.locator('canvas').boundingBox();
+      const x = box.x + box.width * 0.55, y = box.y + box.height * 0.35;
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      for (let i = 1; i <= 8; i++) await page.mouse.move(x - i * 12, y + i * 10);
+      await page.mouse.up();
+    }
+    await page.getByText('Incoming…').waitFor();
+    await sleep(1200);
+    await audit(page, `flight-${tag}`, { axe: false });
+    // The Machine answers, then it is our turn again with one shot fewer.
+    await poll(async () => (await page.getByText('Your turn — drag back on the field to aim').count()) > 0, 'Turn never came back', 40000);
+    assert.ok(await page.getByText(/^9 shots left$/).count() || await page.locator('span', { hasText: /^🎯 9 shots left$/ }).count(), 'one shot spent');
+    pass(`solo siege: build, aim, launch, the Machine replies ${tag}`);
     await ctx.close();
   }
 }
 
-async function soloDefeatScreen() {
+async function soloResult() {
   const { ctx, page } = await context({ width: 390, height: 844 });
-  await page.clock.install();
   await page.goto(app + '/play/fortress-feud');
   await page.getByRole('heading', { name: 'Quick battle vs the Machine' }).waitFor();
-  await page.getByRole('button', { name: 'Machine King Merciless' }).click();
-  await page.getByRole('application', { name: 'Fortress Feud battle' }).waitFor();
-  for (let i = 0; i < 400; i++) {
-    await page.clock.runFor(1000);
-    if (await page.getByRole('dialog', { name: /Defeat|Victory|Draw/ }).count()) break;
+  await page.getByRole('button', { name: 'Machine King Rarely misses' }).click();
+  await page.getByRole('button', { name: '⚔️ To battle!' }).click();
+  await field(page).waitFor();
+  const end = Date.now() + 240_000;
+  while (Date.now() < end && !(await page.getByRole('dialog', { name: /Defeat|Victory|Stalemate/ }).count())) {
+    const skip = page.getByRole('button', { name: 'Skip to the result' });
+    if (await skip.count()) await skip.click().catch(() => undefined);
+    else if (await launch(page).isEnabled().catch(() => false)) await launch(page).click().catch(() => undefined);
+    await sleep(300);
   }
-  await page.getByRole('dialog', { name: /Defeat|Draw/ }).waitFor();
+  await page.getByRole('dialog', { name: /Defeat|Victory|Stalemate/ }).waitFor({ timeout: 5000 });
   await audit(page, 'solo-result-390');
   await page.getByRole('button', { name: 'Back to the war room' }).click();
-  pass('idle commander loses to the Machine and sees the result card');
+  await page.getByRole('heading', { name: 'Fortress Feud', level: 1 }).waitFor();
+  pass('a full solo battle ends with a result card');
   await ctx.close();
 }
 
@@ -161,44 +160,56 @@ async function join(guest, code) {
 }
 const roomRow = async code => (await admin.from('rooms').select('*').eq('code', code).single()).data;
 
+async function buildAndStart(host, guest, { coop = false } = {}) {
+  await host.page.getByRole('button', { name: 'Start with 2 players' }).click();
+  await Promise.all([host, guest].map(p => p.page.getByRole('heading', { name: /Build your/ }).waitFor()));
+  await audit(host.page, `online-build-${coop ? 'coop' : 'duel'}-390`);
+  await host.page.getByRole('button', { name: /Lock in my fortress/ }).click();
+  if (!coop) {
+    await host.page.getByRole('heading', { name: 'Fortress ready' }).waitFor();
+    await guest.page.getByRole('button', { name: /Iron Bastion/ }).click();
+    await guest.page.getByRole('button', { name: /Lock in my fortress/ }).click();
+  }
+  await Promise.all([host, guest].map(p => field(p.page).waitFor({ timeout: 30000 })));
+}
+
 async function onlineDuel(host, guest) {
   const code = await createRoom(host, 'fortress-feud');
   await host.page.getByText('⚔️ 1v1 Duel').waitFor();
   await audit(host.page, 'battle-lobby-390');
   await join(guest, code);
-  await host.page.getByRole('button', { name: 'Start with 2 players' }).click();
-  await Promise.all([host, guest].map(p => p.page.getByRole('application', { name: 'Fortress Feud battle' }).waitFor()));
-  await poll(async () => (await host.page.locator('[class*="countdown"]').count()) === 0, 'Countdown did not finish', 10000);
-  await host.page.getByRole('button', { name: /^Knight, 3 elixir/ }).click();
-  await host.page.getByRole('group', { name: 'Deploy lane' }).getByRole('button', { name: 'Middle' }).click();
-  await guest.page.getByRole('group', { name: 'Your plots' }).getByRole('button', { name: /Middle front/ }).click();
-  await guest.page.getByRole('button', { name: /^Build Cannon for 160 gold/ }).click();
-  const room = await poll(async () => { const r = await roomRow(code); return r.round_state.log.length >= 2 ? r : null; }, 'Orders did not reach the server');
-  assert.deepEqual(room.round_state.log.map(c => [c.p, c.k]).sort(), [[0, 'deploy'], [1, 'build']]);
-  // The guest should see the host's knight arrive as an enemy troop.
-  await poll(async () => /[1-9]\d* troops/.test((await hudNumbers(guest.page)).labels[0]), 'Guest never saw the enemy knight');
-  await sleep(1500);
-  await audit(host.page, 'online-duel-host-390', { axe: false });
-  await audit(guest.page, 'online-duel-guest-1440', { axe: false });
-  // Out-of-range or unaffordable orders are refused by the server.
-  const refused = await host.page.request.post(`${app}/api/rooms/${code}/battle`, { data: { action: 'command', command: { k: 'deploy', card: 'giant', lane: 9 } } });
+  await buildAndStart(host, guest);
+  const started = await roomRow(code);
+  assert.equal(started.round_state.stage, 'battle');
+  assert.equal(started.round_state.match.world.bodies.filter(b => b.side === 1 && b.kind === 'block').length, 12, 'guest built the bastion');
+  await guest.page.getByText(/Waiting for/).waitFor();
+  // Out-of-turn orders are refused by the server.
+  const refused = await guest.page.request.post(`${app}/api/rooms/${code}/battle`, { data: { action: 'order', order: { type: 'fire', angle: 45, power: 0.7, ammo: 'stone' } } });
   assert.equal(refused.status(), 409);
-  // Forfeit (after the 30-second grace period, when walking out counts): the guest is recorded as the winner.
-  const { startAt } = (await roomRow(code)).round_state;
-  await sleep(Math.max(0, startAt + 31_000 - Date.now()));
-  await host.page.getByRole('button', { name: 'Battle menu' }).click();
-  await host.page.getByRole('button', { name: 'Forfeit and leave' }).click();
+  await launch(host.page).click();
+  await poll(async () => (await roomRow(code)).round_state.replayTurn === 0, 'Host shot never reached the server');
+  // The guest's phone replays the same shot, then it is their turn.
+  await guest.page.getByText('Incoming…').waitFor({ timeout: 10000 });
+  await audit(guest.page, 'online-duel-guest-flight-1440', { axe: false });
+  await guest.page.getByText('Your turn — drag back on the field to aim').waitFor({ timeout: 30000 });
+  await guest.page.getByRole('button', { name: /Iron Ball/ }).click();
+  await launch(guest.page).click();
+  await poll(async () => (await roomRow(code)).round_state.replayTurn === 1, 'Guest shot never reached the server');
+  await host.page.getByText('Your turn — drag back on the field to aim').waitFor({ timeout: 30000 });
+  await audit(host.page, 'online-duel-host-390', { axe: false });
+  // Walking out after both sides fired concedes the duel.
+  await host.page.getByRole('button', { name: 'Forfeit' }).click();
   await host.page.waitForURL('**/games');
-  await guest.page.getByRole('heading', { name: /wins/ }).waitFor();
-  await guest.page.getByText('A commander left the battlefield.').waitFor();
+  await guest.page.getByText('A commander left the battlefield.').waitFor({ timeout: 20000 });
   await audit(guest.page, 'online-duel-result-1440');
   const finished = await roomRow(code);
   assert.equal(finished.status, 'finished');
   assert.deepEqual(finished.winner_ids, [guest.id]);
+  assert.equal('replay' in ((await guest.page.request.get(`${app}/api/rooms/${code}`)).ok() ? (await (await guest.page.request.get(`${app}/api/rooms/${code}`)).json()).room.round_state : {}), false, 'room snapshot omits replays');
   const { data: history } = await admin.from('match_history').select('profile_id, won').eq('room_id', finished.id);
   assert.equal(history.length, 2);
   assert.equal(history.find(h => h.profile_id === guest.id).won, true);
-  pass('online duel: orders sync, server validates, forfeit records the result');
+  pass('online duel: build, shots replay on both phones, turns enforced, forfeit records the result');
 }
 
 async function onlineCoop(host, guest) {
@@ -207,22 +218,19 @@ async function onlineCoop(host, guest) {
     await page.getByLabel('Machine difficulty').selectOption('easy');
   });
   await join(guest, code);
-  await host.page.getByRole('button', { name: 'Start with 2 players' }).click();
-  await Promise.all([host, guest].map(p => p.page.getByRole('application', { name: 'Fortress Feud battle' }).waitFor()));
-  await host.page.getByText(/You \+ /).first().waitFor();
-  await host.page.getByText('🤖 The Machine').first().waitFor();
-  await sleep(6000);
-  await poll(async () => /[1-9]\d* troops/.test((await hudNumbers(host.page)).labels[0]), 'The Machine never attacked', 40000);
-  // Jump the server clock past the buzzer, then let the clients settle the result.
+  await buildAndStart(host, guest, { coop: true });
+  await host.page.getByText('Your team').first().waitFor();
+  await launch(host.page).click();
+  // After the shot lands the server fires for the Machine, then it is the guest's turn.
+  await poll(async () => { const r = await roomRow(code); return r.round_state.match.turn >= 2 ? r : null; }, 'The Machine never fired', 40000);
   const room = await roomRow(code);
-  await admin.from('rooms').update({ round_state: { ...room.round_state, startAt: Date.now() - 200_000 } }).eq('id', room.id);
-  await Promise.all([host, guest].map(p => p.page.reload()));
-  await poll(async () => (await roomRow(code)).status === 'finished', 'Co-op battle did not settle', 40000);
-  await host.page.getByRole('heading', { name: /Team victory|Machine wins/ }).waitFor();
-  await audit(host.page, 'online-coop-result-390');
-  const finished = await roomRow(code);
-  assert.equal(finished.round_state.result.reason === 'time' || finished.round_state.result.reason === 'keep', true);
-  pass(`online co-op: Machine attacks both players and the server settles (${finished.winner_ids.length ? 'win' : 'loss'})`);
+  assert.equal(room.round_state.match.last.player, 1, 'the Machine took the second shot');
+  await guest.page.getByText('Your turn — drag back on the field to aim').waitFor({ timeout: 30000 });
+  await audit(guest.page, 'online-coop-guest-1440', { axe: false });
+  await guest.page.getByRole('button', { name: 'Leave battle' }).click();
+  await guest.page.waitForURL('**/games**');
+  await poll(async () => (await roomRow(code)).status === 'finished', 'Co-op room did not close');
+  pass('online co-op: shared fortress, the server fires for the Machine, leaving closes the room');
 }
 
 async function truthOrDare(host, guest) {
@@ -269,7 +277,7 @@ try {
   if (!process.env.QA_SKIP_SOLO) {
     await libraryChecks();
     await soloChecks();
-    await soloDefeatScreen();
+    await soloResult();
   }
   const host = await signIn({ width: 390, height: 844 }, 0);
   const guest = await signIn({ width: 1440, height: 900 }, 1);

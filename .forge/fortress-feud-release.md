@@ -34,3 +34,33 @@
 - Migration applied to production after the deploy (no open Truth or Dare rooms). Readback: Truth or Dare has 41 classic + 40 After Dark cards; After Dark game inactive; `fortress-feud` activated (sort order 5, first on the home page).
 - Live public smoke at 390 and 1440 px (no accounts created): library search shows Fortress Feud in solo and online sections, the home page features it, a campaign battle starts and deploys troops, 0 page errors, 0 horizontal overflow.
 - Supabase security advisor: only new item is the expected INFO "RLS enabled, no policy" on server-only `fortress_campaign`.
+
+# Fortress Feud v2 — physics siege rewrite (2026-10-10)
+
+## Why
+Player feedback: the lane battler felt unrealistic; they wanted the classic "drag back, aim and launch at the other fortress" game, with more detail.
+
+## What changed
+- New engine (`src/lib/fortress`): planck.js 1.5.0 rigid-body physics. Fortresses are timber, stone, steel and glass blocks guarding a King and two Knights. Damage comes from contact impulses (rubble does 30% of a projectile's damage), plus explosions, cluster splits, fire that burns timber for three turns, and Bunker Busters that pierce.
+- Economy kept from v1: gold builds the fortress (three layouts × three materials per part) and buys ammo. Income is +30 per turn, 10% of the damage dealt, and 80 per royal knocked out. Elixir +1 per turn (max 6) buys Barrage (3) and Titan Boulder (5). Patch up costs 100.
+- Win by knocking out every enemy royal. Otherwise, after 10 shots each, the higher score wins (royal health ×2 + standing walls).
+- Modes: a 12-mission campaign (stars: win · no royal lost · within par), quick battles vs Machine levels 1–5, online duel, and online co-op (shared fortress; the Machine fires after each human).
+- Online: the server simulates every shot and stores a keyframe replay that both phones play back (about 15–40 KB, served only by the battle poll and stripped from room snapshots). Designs stay hidden during the build phase; build cost is enforced on the server. Turn timer is 45 s; the Machine fires through `advance` after the last shot lands. Results go through `finish_battle_room` under version fencing.
+- Anti-farming: only players who really fired earn points. A duel has a winner only once both sides have fired, and a forfeit counts only after both have fired.
+- Campaign saves are trust-limited (browser physics can't be replayed exactly on the server): reports must be self-consistent (3 stars need shots ≤ par), and points are paid only for new stars, with an hourly limit (unchanged RPC). The `best_seconds` column now stores the fewest shots.
+- No database migration was needed. There were no Fortress Feud rooms in production at release time.
+
+## Verification
+- `npm run lint` clean; `npm test` 137/137 (13 Fortress tests); `npm run build` passes.
+- Balance probes:
+  - Machine vs Machine battles at equal levels last 6–10 shots each, and higher levels win more.
+  - Early missions win for a moderate player (M1 5/6, M2 5/6, M4 6/6); later missions ramp up.
+  - Machine planning takes up to ~300 ms on the server.
+- Browser QA against an isolated local Supabase stack and a production build (`scripts/test-fortress-browser.mjs`): 41 checks, 0 axe WCAG 2.2 AA violations, 0 horizontal overflow, 0 page errors.
+  - Viewports: 390×844, 1440×900, 320×640 and 844×390 landscape.
+  - Solo: build cost, keyboard and drag-to-aim launches, the Machine replying, and a full battle reaching the result card.
+  - Online duel: hidden build, the replay arriving on the other phone, an out-of-turn shot refused (409), and a forfeit recording the right winner in `match_history`.
+  - Online co-op: the server fires for the Machine; leaving closes the room.
+  - Truth or Dare regression.
+- WebKit iPhone 13 emulation: touch drag-to-launch, the replay and the Machine's reply, no errors.
+- Independent review found 2 high, 2 medium and 3 low issues (win farming through skips and forfeits, a missed replay after a skip, designs leaking during build, overlapping replays, client-only cost check, the Machine pausing after a skip, end-screen flicker). All were fixed and are covered by tests and QA.
