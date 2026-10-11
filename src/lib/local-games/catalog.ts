@@ -1,5 +1,21 @@
 export const LOCAL_GAMES = [
   {
+    slug: 'brain-bowl',
+    emoji: '🏆',
+    name: 'Brain Bowl: Buzzer Duel',
+    description:
+      'Two players, one phone. Slam your buzzer first on trivia from eight sections; a wrong answer lets your rival steal.',
+    meta: 'Exactly 2 players · 256 questions · buzzer · log in to play',
+  },
+  {
+    slug: 'what-would-you-do',
+    emoji: '🤔',
+    name: 'What Would You Do?',
+    description:
+      'Pass the phone: the hot seat picks what they would really do in love, war, money or the apocalypse. Everyone else guesses.',
+    meta: '2–8 players · 160 situations · hot seat',
+  },
+  {
     slug: 'mystery-card',
     emoji: '🕵️',
     name: 'Mystery Card',

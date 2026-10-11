@@ -2,6 +2,7 @@ import type { Game, Prompt, Room, RoomPlayer, RoundAnswer } from '@/lib/types';
 import { activeAnswers } from './multiplayer-rules';
 import { hasPicked } from '@/lib/truth-or-dare';
 import { parseOnlineSiege, publicSiege } from '@/lib/fortress/online';
+import { engineFor } from '@/lib/live/registry';
 
 export function sanitizeSnapshot(
   input: { room: Room; game: Game; players: RoomPlayer[]; answers: RoundAnswer[]; prompt: Prompt | null },
@@ -18,6 +19,17 @@ export function sanitizeSnapshot(
     const siege = parseOnlineSiege(room.round_state);
     if (siege) room.round_state = publicSiege(siege);
     else delete room.round_state.replay;
+  }
+  // Live games: each phone sees only its own view (no trivia answers, no other Whot hands).
+  const live = engineFor(game.type);
+  if (live) {
+    const state = room.status === 'lobby' ? null : live.parse(room.round_state);
+    const { closedReason, nextRoomCode, setup } = room.round_state;
+    room.round_state = {
+      ...(state ? { view: live.view(state, userId, Date.now()) } : { setup: setup ?? null }),
+      ...(closedReason ? { closedReason } : {}),
+      ...(nextRoomCode ? { nextRoomCode } : {}),
+    };
   }
   if (game.type === 'memory' && Array.isArray(room.round_state.cards)) {
     const state = room.round_state;

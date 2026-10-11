@@ -61,7 +61,7 @@ test('library filters show accurate per-mode counts, preserve launch links, and 
   assert.ok(view.getByRole('heading', { name: 'No games found' }));
   fireEvent.click(view.getByRole('button', { name: 'Show all games' }));
   assert.equal((view.getByLabelText('Find a game') as HTMLInputElement).value, '');
-  assert.equal(view.getByRole('button', { name: 'All ways to play 11' }).getAttribute('aria-pressed'), 'true');
+  assert.equal(view.getByRole('button', { name: 'All ways to play 13' }).getAttribute('aria-pressed'), 'true');
   assert.equal(view.getByRole('link', { name: 'Create Mental Math room' }).getAttribute('href'), '/rooms/new?game=mental-math-duel');
 });
 

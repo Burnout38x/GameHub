@@ -13,6 +13,7 @@ const categories = [{ id: 'all', label: 'All games' }, ...GAME_CATEGORIES] as co
 const SOLO_ROUTES: Record<string, { href: string; meta: string; cta: string }> = {
   'pocket-paradise': { href: '/play/pocket-paradise', meta: '1 player · 20 placements · daily & relaxed play', cta: 'Build your paradise →' },
   'fortress-feud': { href: '/play/fortress-feud', meta: '12 missions · quick battles vs the Machine', cta: 'Enter the war room →' },
+  whot: { href: '/play/whot', meta: '1–3 Machine opponents · three skill levels', cta: 'Deal me in →' },
 };
 const uniqueCount = (games: { slug: string }[]) => new Set(games.map(game => game.slug)).size;
 const playerLabel = (type: string) => type === 'market' ? '2–4' : type === 'predict' || type === 'battle' ? 'Exactly 2' : type === 'chain' || type === 'rule' ? '2–10' : '1–10';
@@ -20,7 +21,7 @@ const playerLabel = (type: string) => type === 'market' ? '2–4' : type === 'pr
 export default function GameLibrary({ online, local, initialSearch = '' }: { online: OnlineGame[]; local: LocalGame[]; initialSearch?: string }) {
   const [filters, setFilters] = useState<LibraryFilters>({ ...initialFilters, search: initialSearch });
   const roomGames = online.filter(game => game.type !== 'solo');
-  const solo = online.filter(game => game.type === 'solo' || (game.type === 'battle' && SOLO_ROUTES[game.slug]));
+  const solo = online.filter(game => game.type === 'solo' || (game.type !== 'solo' && SOLO_ROUTES[game.slug]));
   const soloGames = solo.filter(game => matchesGame(game, filters, 'solo'));
   const soloMatches = solo.filter(game => matchesGame(game, { ...filters, mode: 'all' }, 'solo'));
   const soloCount = soloMatches.length;

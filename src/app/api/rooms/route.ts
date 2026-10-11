@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { generateRoomCode, spotlightEligible } from '@/lib/game-utils';
 import { jsonError } from '@/lib/server/room-actions';
+import { engineFor } from '@/lib/live/registry';
 
 /** POST /api/rooms — create a room and add the host as first player. */
 export async function POST(req: NextRequest) {
@@ -21,6 +22,7 @@ export async function POST(req: NextRequest) {
     isPublic = false,
     answerSeconds = null,
     rematchOf,
+    setup,
   } = body;
   if (!gameId) return jsonError('gameId is required');
   if (!['easy', 'hard', 'mixed'].includes(difficulty)) return jsonError('Bad difficulty');
@@ -42,7 +44,8 @@ export async function POST(req: NextRequest) {
   if (!(isBattle ? ['duel', 'coop'] : ['classic', 'spotlight']).includes(roomMode)) return jsonError('Bad mode');
   if (mode === 'spotlight' && !spotlightEligible(game.slug, game.type))
     return jsonError('Spotlight mode is not available for this game');
-  if (timer && game.type !== 'quiz' && game.type !== 'chain')
+  const live = engineFor(game.type);
+  if (timer && game.type !== 'quiz' && game.type !== 'chain' && !live)
     return jsonError('Timers are not available for this game');
 
   const { data: profile } = await admin
@@ -65,6 +68,8 @@ export async function POST(req: NextRequest) {
         is_public: !!isPublic,
         answer_seconds: timer,
         total_rounds: game.type === 'market' ? 10 : isBattle ? 1 : rounds,
+        // Live games keep their lobby choices (section, topic) until the host starts.
+        ...(live ? { round_state: { setup: live.parseSetup(setup) } } : {}),
       })
       .select()
       .single();

@@ -20,6 +20,9 @@ const taxonomy: Record<string, { category: GameCategory; audiences: GameAudience
   'pocket-paradise': { category: 'strategy', audiences: ['family', 'groups', 'couples'] },
   'market-day': { category: 'strategy', audiences: ['family', 'groups', 'couples'] },
   'fortress-feud': { category: 'strategy', audiences: ['family', 'groups', 'couples'] },
+  'brain-bowl': { category: 'trivia', audiences: ['groups', 'couples', 'family'] },
+  'what-would-you-do': { category: 'conversation', audiences: ['groups', 'couples'] },
+  whot: { category: 'strategy', audiences: ['family', 'groups', 'couples'] },
   'doctor-dash': { category: 'trivia', audiences: ['groups', 'couples'] },
   'riddle-rush': { category: 'words', audiences: ['groups', 'couples'] },
   'emoji-movie': { category: 'trivia', audiences: ['groups', 'couples'] },
@@ -41,7 +44,7 @@ const taxonomy: Record<string, { category: GameCategory; audiences: GameAudience
   'rule-discoverer': { category: 'logic', audiences: ['groups', 'couples', 'family'] },
   'word-chain': { category: 'words', audiences: ['groups', 'couples'] },
 };
-const engineCategories: Record<string, GameCategory> = { quiz: 'trivia', prompt: 'conversation', memory: 'memory', predict: 'couples', code: 'logic', rule: 'logic', chain: 'words', guess: 'logic' };
+const engineCategories: Record<string, GameCategory> = { bowl: 'trivia', dilemma: 'conversation', whot: 'strategy', quiz: 'trivia', prompt: 'conversation', memory: 'memory', predict: 'couples', code: 'logic', rule: 'logic', chain: 'words', guess: 'logic' };
 export function gameCategory(game: LibraryGame): GameCategory | undefined {
   return taxonomy[game.slug]?.category ?? engineCategories[game.type ?? ''];
 }

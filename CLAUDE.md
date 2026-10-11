@@ -5,6 +5,7 @@
 - `src/lib/server` holds room lifecycle helpers. `src/components/room` renders online game types.
 - `src/app/games/local` contains eight same-device games; shared validators/content live in `src/lib/local-games`.
 - Fortress Feud: drag-aim-launch siege on planck.js physics in `src/lib/fortress` (`design.ts` block fortress model + validation, `missions.ts` campaign/AI levels, `world.ts` terrain/craters, `physics.ts` shot sim). Online shots are simulated on the server and stored as keyframe replays (served only by `GET /api/rooms/[code]/battle?since=`); room snapshots use `publicSiege` (no replay, designs hidden). UI and canvas art in `src/components/fortress`.
+- Live room games (Brain Bowl `bowl`, What Would You Do? `dilemma`, Whot! `whot`): pure engines in `src/lib/{bowl,dilemma,whot}` implement the `LiveEngine` contract in `src/lib/live/types.ts`; the server registry (`src/lib/live/registry.ts`) is server-only because the trivia bank holds answers. All moves go through `/api/rooms/[code]/live` (version-fenced; results via the `finish_live_room` RPC). Phones only see `engine.view(state, viewer)`. UI in `src/components/live` and `src/components/whot`; solo Whot at `/play/whot`; same-device modes under `src/app/games/local`.
 - `supabase/schema.sql` is initial setup, not a repeatable migration. Do not run it over an existing project.
 - Never print `.env.local` or service-role keys. Use test identities for integration checks.
 - UI uses shared classes in `src/app/globals.css`; preserve responsive, keyboard, loading and error states.

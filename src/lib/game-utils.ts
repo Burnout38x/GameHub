@@ -42,7 +42,7 @@ export function deadlinePassed(deadline: string | null | undefined, now: number 
 /** Most players a room of this game type can hold. Mirrored by the social invitation SQL. */
 export function roomCapacity(gameType: string | null | undefined): number {
   if (gameType === 'predict' || gameType === 'battle') return 2;
-  return gameType === 'market' ? 4 : 10;
+  return gameType === 'market' || gameType === 'whot' ? 4 : 10;
 }
 
 /** Games where one player acts per round instead of everyone answering at once. */
@@ -54,7 +54,8 @@ export function isTurnBased(gameSlug: string, gameType: string, mode: string = '
 
 /** Games that can be played in spotlight mode (one player answers at a time). */
 export function spotlightEligible(gameSlug: string, gameType: string): boolean {
-  return gameType === 'quiz' || gameSlug === 'never-have-i-ever';
+  // What Would You Do? uses spotlight as its Hot Seat mode.
+  return gameType === 'quiz' || gameType === 'dilemma' || gameSlug === 'never-have-i-ever';
 }
 
 /** Rounds the requested question count to a multiple of the player count for equal turns. */

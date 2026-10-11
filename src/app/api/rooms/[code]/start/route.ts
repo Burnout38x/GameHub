@@ -8,6 +8,7 @@ import { randomInt } from 'node:crypto';
 import { buildRuleRound } from '@/lib/server/rule-round';
 import { createOnlineSiege } from '@/lib/fortress/online';
 import { battleAiLevel } from '@/lib/fortress/rooms';
+import { engineFor } from '@/lib/live/registry';
 
 /** POST /api/rooms/[code]/start — host starts the game. */
 async function handlePost(_req: Request, { params }: { params: { code: string } }) {
@@ -35,7 +36,20 @@ async function handlePost(_req: Request, { params }: { params: { code: string } 
     turn_player_id: firstTurn,
   };
 
-  if (game.type === 'battle') {
+  const live = engineFor(game.type);
+  if (live) {
+    if (players.length < live.minPlayers || players.length > live.maxPlayers)
+      return jsonError(live.minPlayers === live.maxPlayers ? `This game needs exactly ${live.minPlayers} players` : `This game needs ${live.minPlayers}–${live.maxPlayers} players`, 409);
+    const created = live.create({
+      players: players.map(p => ({ id: p.profile_id, name: p.display_name })),
+      setup: live.parseSetup(room.round_state?.setup),
+      difficulty: room.difficulty, mode: room.mode, rounds: room.total_rounds, seconds: room.answer_seconds,
+      seed: randomInt(1, 2147483647), now: Date.now(),
+    });
+    if ('error' in created) return jsonError(created.error, 409);
+    update.round_state = created;
+    update.total_rounds = live.rounds(created);
+  } else if (game.type === 'battle') {
     update.total_rounds = 1;
     update.round_state = createOnlineSiege(room.mode === 'coop' ? 'coop' : 'duel', battleAiLevel(room.difficulty), players.map(p => p.profile_id), randomInt(1, 2147483647), Date.now());
   } else if (game.type === 'market') {

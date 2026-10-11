@@ -9,18 +9,21 @@ export default function LeaveButton({
   status,
   isHost,
   endsMatch = false,
+  concedes = false,
 }: {
   code: string;
   status: RoomStatus;
   isHost: boolean;
   endsMatch?: boolean;
+  /** Leaving a live match that is under way hands the win to whoever is left. */
+  concedes?: boolean;
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
   async function leave() {
-    if (status === 'playing' && !confirm(endsMatch ? "End this Market Day for everyone? No result will be recorded. To take a break and return, close this tab instead." : "Leave the game? You can't rejoin once it started.")) return;
+    if (status === 'playing' && !confirm(endsMatch ? "End this Market Day for everyone? No result will be recorded. To take a break and return, close this tab instead." : concedes ? "Leave the game? You can't rejoin, and if only one player is left once the match is under way, they take the win." : "Leave the game? You can't rejoin once it started.")) return;
     if (status === 'lobby' && isHost && !confirm('Close the room for everyone?')) return;
     setBusy(true);
     setError('');

@@ -6,6 +6,8 @@ import type { Game } from '@/lib/types';
 import { spotlightEligible } from '@/lib/game-utils';
 import { TRUTH_OR_DARE_VIBES } from '@/lib/truth-or-dare';
 import { BATTLE_DIFFICULTY_LABELS } from '@/lib/fortress/rooms';
+import { isLiveType } from '@/lib/live/types';
+import LiveRoomOptions, { defaultLiveOptions, liveRequest, type LiveOptions } from '@/components/live/LiveRoomOptions';
 
 function NewRoomForm() {
   const router = useRouter();
@@ -23,6 +25,7 @@ function NewRoomForm() {
   const [timerChoice, setTimerChoice] = useState<{ slug: string; value: string } | null>(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [liveOptions, setLiveOptions] = useState<LiveOptions>(defaultLiveOptions);
 
   useEffect(() => {
     let active = true;
@@ -57,10 +60,11 @@ function NewRoomForm() {
   const isChain = game?.type === 'chain';
   const isBattle = game?.type === 'battle';
   const isTruthOrDare = !!game?.config?.pickTruthOrDare;
+  const liveType = isLiveType(game?.type) ? game.type : null;
   // Truth or Dare defaults to the everyone-friendly deck; adult decks are an explicit choice.
   const difficulty = difficultyChoice?.slug === gameSlug ? difficultyChoice.value : isTruthOrDare ? 'easy' : 'mixed';
   const setDifficulty = (value: string) => setDifficultyChoice({ slug: gameSlug, value });
-  const canSpotlight = game ? spotlightEligible(game.slug, game.type) : false;
+  const canSpotlight = game && !liveType ? spotlightEligible(game.slug, game.type) : false;
   const effectiveMode = canSpotlight ? mode : 'classic';
   const roundOptions = isMarket || isBattle ? ['1'] : isMemory
     ? ['6', '8', '10', '12', '15', '20']
@@ -83,7 +87,7 @@ function NewRoomForm() {
       const res = await fetch('/api/rooms', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+        body: JSON.stringify(liveType ? { gameId: game.id, isPublic, ...liveRequest(liveType, liveOptions) } : {
           gameId: game.id,
           difficulty,
           totalRounds: Number(selectedRounds),
@@ -142,7 +146,8 @@ function NewRoomForm() {
             </select>
           </>}
         </>}
-        {game && !isPredict && !isBattle && <p className="mt-2 text-xs text-indigo-200">{isMarket ? "2–4 rivals. Build district sets and claim shared contracts. Highest prosperity after ten equal turns wins; ties share the victory." : isRule || isChain ? "For 2–10 players. Invite someone to play before starting." : "Play solo or invite up to 9 more players."}</p>}
+        {liveType && <LiveRoomOptions type={liveType} value={liveOptions} onChange={setLiveOptions} />}
+        {game && !isPredict && !isBattle && !liveType && <p className="mt-2 text-xs text-indigo-200">{isMarket ? "2–4 rivals. Build district sets and claim shared contracts. Highest prosperity after ten equal turns wins; ties share the victory." : isRule || isChain ? "For 2–10 players. Invite someone to play before starting." : "Play solo or invite up to 9 more players."}</p>}
         {isPredict && (
           <p className="mt-2 text-xs font-bold text-indigo-200">
             💞 For exactly 2 players — question count is evened out so you both get equal turns.
@@ -173,7 +178,7 @@ function NewRoomForm() {
             {difficulty !== 'easy' && <p className="mt-2 text-xs text-white/60">Adults only. Agree on boundaries first — anyone can skip any card.</p>}
           </>
         )}
-        {game?.type !== 'guess' && game?.type !== 'memory' && !isPredict && !isCode && !isRule && !isChain && !isMarket && !isBattle && !isTruthOrDare && (
+        {game?.type !== 'guess' && game?.type !== 'memory' && !isPredict && !isCode && !isRule && !isChain && !isMarket && !isBattle && !isTruthOrDare && !liveType && (
           <>
             <label className="field-label" htmlFor="difficulty">Difficulty</label>
             <select id="difficulty" className="input" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
@@ -195,7 +200,7 @@ function NewRoomForm() {
           </>
         )}
 
-        {!isBattle && <>
+        {!isBattle && !liveType && <>
         <label className="field-label" htmlFor="rounds">
           {isTruthOrDare ? 'Number of turns' : isMarket ? 'Market days (one turn each per day)' : isMemory
             ? 'Number of pairs'

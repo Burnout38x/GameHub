@@ -6,6 +6,8 @@ import { loadRoomContext, jsonError, nextTurnPlayer } from '@/lib/server/room-ac
 import { activeAnswers } from '@/lib/server/multiplayer-rules';
 import { isTurnBased, roundDeadline } from '@/lib/game-utils';
 import { forfeitSiege, parseOnlineSiege } from '@/lib/fortress/online';
+import { engineFor } from '@/lib/live/registry';
+import { saveLive } from '@/lib/server/live-room';
 
 /** POST /api/rooms/[code]/leave — leave the room; closes it if too few players remain. */
 async function handlePost(_req: Request, { params }: { params: { code: string } }) {
@@ -57,6 +59,34 @@ async function handlePost(_req: Request, { params }: { params: { code: string } 
 
   // Playing: remove the player (their answers/score history stays), then keep the game sane.
   const remaining = players.filter((p) => p.profile_id !== userId);
+
+  // Live games drop the player from the match itself, so turns and rounds carry on without them.
+  const live = engineFor(game.type);
+  const liveState = live?.parse(room.round_state);
+  if (live && liveState) {
+    const update = live.remove(liveState, userId, Date.now());
+    if ('error' in update) return jsonError(update.error, 409);
+    const liveCtx = { engine: live, state: liveState };
+    if (remaining.length < 2) {
+      // Walking out of a match that is properly under way concedes it; an early exit just closes the room.
+      if (remaining.length === 1 && live.progressed(liveState)) {
+        const saved = await saveLive(ctx, liveCtx, { ...update.state, ended: true }, [remaining[0].profile_id]);
+        if (saved === 'error') return jsonError('Could not leave the game. Please retry.', 500);
+        if (saved === 'conflict') return jsonError('This game changed. Please refresh.', 409);
+        return NextResponse.json({ ok: true, closed: true });
+      }
+    } else {
+      // The room lock serialises every live move, so this save cannot race another one.
+      // If that was the final round, the result is recorded for everyone, the leaver included.
+      const saved = await saveLive(update.state.ended ? ctx : { ...ctx, players: remaining }, liveCtx, update.state);
+      if (saved === 'error') return jsonError('Could not leave the game. Please retry.', 500);
+      if (saved === 'conflict') return jsonError('This game changed. Please refresh.', 409);
+      if (saved === 'finished') return NextResponse.json({ ok: true, closed: true });
+      await admin.from('room_players').delete().eq('id', me.id);
+      if (room.host_id === userId) await admin.from('rooms').update({ host_id: remaining[0].profile_id }).eq('id', room.id);
+      return NextResponse.json({ ok: true });
+    }
+  }
   await admin.from('room_players').delete().eq('id', me.id);
 
   if (remaining.length < 2) {

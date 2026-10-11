@@ -17,6 +17,8 @@ import ChainPlay from './ChainPlay';
 import BattlePlay, { BattleResultBanner } from './BattlePlay';
 import Scoreboard from './Scoreboard';
 import LeaveButton from './LeaveButton';
+import LivePlay, { LiveResults } from '@/components/live/LivePlay';
+import { isLiveType } from '@/lib/live/types';
 
 export interface RoomBundle {
   room: Room;
@@ -77,7 +79,7 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
   // Kick players back to /games when the room closes under them (host left / too few players).
   useEffect(() => {
     if (!bundle) return;
-    battleLiveRef.current = bundle.game.type === 'battle' && bundle.room.status === 'playing';
+    battleLiveRef.current = (bundle.game.type === 'battle' || isLiveType(bundle.game.type)) && bundle.room.status === 'playing';
     const { room, players } = bundle;
     const amIn = players.some((p) => p.profile_id === userId);
     const closedReason = room.status === 'finished' ? room.round_state?.closedReason : null;
@@ -111,6 +113,15 @@ export default function RoomClient({ code, userId }: { code: string; userId: str
   if (room.status === 'lobby') return <>{connectionNotice}<Lobby {...full} code={code} inRoom={inRoom} /></>;
   // Battles stay mounted when they finish so the last shot can land before the results.
   if (game.type === 'battle' && (room.status === 'playing' || room.status === 'finished') && inRoom) return <>{connectionNotice}<BattlePlay {...full} /></>;
+  const live = isLiveType(game.type);
+  if (live && room.status === 'finished') return <div className="mx-auto flex w-full max-w-xl flex-col gap-4">{connectionNotice}<LiveResults view={room.round_state?.view} players={bundle.players} /><EndScreen {...full} /></div>;
+  if (live && room.status === 'playing' && inRoom) return (
+    <div className={`mx-auto flex w-full ${game.type === 'whot' ? 'max-w-4xl' : 'max-w-2xl'} flex-col gap-4`}>
+      {connectionNotice}
+      <LivePlay key={room.id} code={code} view={room.round_state?.view} userId={userId} refresh={load} />
+      <LeaveButton code={code} status={room.status} isHost={room.host_id === userId} concedes />
+    </div>
+  );
   if (room.status === 'finished' && game.type === 'battle') return <>{connectionNotice}<BattleResultBanner room={room} players={bundle.players} /><EndScreen {...full} /></>;
   if (room.status === 'finished') return game.type === 'market'
     ? <div className="mx-auto flex w-full max-w-6xl flex-col gap-4">{connectionNotice}<MarketPlay {...full} /><EndScreen {...full} controlsOnly /></div>
