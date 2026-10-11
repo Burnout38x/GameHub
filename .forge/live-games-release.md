@@ -72,3 +72,17 @@ Request (2026-10-10): add 3–4 games:
   - Whot move numbers repeating across hands;
   - a sound played inside a state updater.
 - Re-verified afterwards: 160/160 tests, and browser QA with 25 checks (including the forfeit) and 0 violations.
+
+## Production release (2026-10-10)
+- Code went out first: `main` fast-forwarded to cf649f1, and Vercel reported success.
+- Migration `live_games` was applied after the deploy. Readback:
+  - `brain-bowl`, `what-would-you-do` and `whot` are active;
+  - `finish_live_room` is not executable by browsers;
+  - both social functions carry the 4-seat Whot cap.
+- Live public smoke test (Chrome at 390×844 and 1440×900; no accounts created):
+  - all three games are listed in the library;
+  - solo Whot dealt, and moves were played against the Machine;
+  - the dilemma pass-and-play hot seat starts;
+  - `/api/bowl/deck` returns 401 when signed out;
+  - 0 page errors, 0 horizontal overflow.
+- Online matches were verified end to end on the isolated local stack: test identities only, never production accounts.
