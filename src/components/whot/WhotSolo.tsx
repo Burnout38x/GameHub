@@ -5,7 +5,7 @@ import { seeded } from '@/lib/live/types';
 import { applyMove, deal, type WhotHand } from '@/lib/whot/game';
 import { chooseMove, type BotLevel } from '@/lib/whot/bot';
 import type { Shape } from '@/lib/whot/cards';
-import WhotTable, { type TableState } from './WhotTable';
+import WhotTable, { settleTime, type TableState } from './WhotTable';
 import { CardFace } from './WhotCard';
 import { useSfx } from '@/components/live/sfx';
 
@@ -21,7 +21,9 @@ const LEVELS: { level: BotLevel; label: string; detail: string }[] = [
   { level: 2, label: 'Sharp', detail: 'Saves Whot and punishes' },
   { level: 3, label: 'Ruthless', detail: 'Counts every card' },
 ];
-const BOT_THINK_MS = 950;
+/** The Machine thinks like a person: a little longer each time, never instantly. */
+const BOT_THINK_MS = 1400;
+const BOT_THINK_SPREAD_MS = 900;
 const STATS_KEY = 'gamehub:whot:solo-stats';
 
 interface Setup { opponents: 1 | 2 | 3; level: BotLevel; hands: 1 | 3 | 5 }
@@ -58,6 +60,10 @@ export default function WhotSolo() {
 
   // The Machine takes its turns with a short, human-feeling pause.
   const botTurn = match && !match.hand.winners && match.hand.turn !== 0 ? match.hand.step : null;
+  // Wait for the last move to finish on screen (cards landing, call-outs), then think.
+  const botPause = match && botTurn !== null
+    ? settleTime(match.hand.events, match.hand.step) + BOT_THINK_MS + ((match.hand.step * 7) % 10) * (BOT_THINK_SPREAD_MS / 10)
+    : 0;
   useEffect(() => {
     if (botTurn === null) return;
     const id = setTimeout(() => {
@@ -66,9 +72,9 @@ export default function WhotSolo() {
         const random = seeded((current.seed ^ (current.hand.step * 2654435761)) >>> 0);
         return apply(current, current.hand.turn, chooseMove(current.hand, current.hand.turn, current.setup.level, random));
       });
-    }, BOT_THINK_MS);
+    }, botPause);
     return () => clearTimeout(id);
-  }, [botTurn]);
+  }, [botTurn, botPause]);
 
   const decided = match ? match.wins.some(count => count > match.setup.hands / 2) || match.handNo >= match.setup.hands : false;
   const over = !!match?.hand.winners && decided;

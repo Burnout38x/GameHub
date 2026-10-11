@@ -234,7 +234,7 @@ async function soloWhot() {
     for (let move = 0; move < 6; move++) {
       await poll(async () => (await page.getByRole('group', { name: /Your hand/ }).getByRole('button', { name: /playable/ }).count()) > 0
         || (await page.getByRole('button', { name: /^Go to market/ }).isEnabled().catch(() => false))
-        || (await page.getByRole('dialog', { name: /wins|win!|share/ }).count()) > 0, 'your turn never came', 15000);
+        || (await page.getByRole('dialog', { name: /wins|win!|share/ }).count()) > 0, 'your turn never came', 60000);
       if (await page.getByRole('dialog').count()) break;
       await playWhotTurn(page);
     }

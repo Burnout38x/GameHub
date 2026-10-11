@@ -5,13 +5,15 @@ import { canPlay, cardById, DECK, HAND_SIZE, handPoints, powerOf, type Power, ty
 
 export interface Seat { id: string; name: string; hand: number[]; bot?: boolean }
 
-export type WhotEvent =
+/** Something that happened at the table. `s` is the move number it happened on, so screens animate each event once. */
+export type WhotEvent = (
   | { t: 'play'; seat: number; card: number; call?: Shape; power: Power | null }
   | { t: 'draw'; seat: number; count: number; reason: 'market' | 'pick' | 'general' }
   | { t: 'skip'; seat: number }
   | { t: 'last'; seat: number }
   | { t: 'shuffle' }
-  | { t: 'win'; seat: number; how: 'checkup' | 'tender' };
+  | { t: 'win'; seat: number; how: 'checkup' | 'tender' }
+) & { s?: number };
 
 export interface WhotHand {
   seats: Seat[];
@@ -71,7 +73,8 @@ function tenderFinish(hand: WhotHand, events: WhotEvent[]): WhotHand {
 }
 
 function finishStep(hand: WhotHand, events: WhotEvent[]): WhotHand {
-  return { ...hand, step: hand.step + 1, events: events.slice(-12) };
+  const step = hand.step + 1;
+  return { ...hand, step, events: events.map(event => (event.s === undefined ? { ...event, s: step } : event)).slice(-12) };
 }
 
 function tendered(hand: WhotHand, events: WhotEvent[]): WhotHand {

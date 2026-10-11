@@ -244,7 +244,8 @@ test('a Whot card calls a shape; the last card checks up and wins', () => {
   assert.ok('error' in applyMove(hand, 1, { type: 'draw' }), 'not your turn');
   const finish = play(rigged([card('star', 3)], [card('circle', 4)], card('star', 7)), 0, card('star', 3));
   assert.deepEqual(finish.winners, [0]);
-  assert.deepEqual(finish.events.at(-1), { t: 'win', seat: 0, how: 'checkup' });
+  assert.deepEqual(finish.events.at(-1), { t: 'win', seat: 0, how: 'checkup', s: finish.step });
+  assert.ok(finish.events.every(event => typeof event.s === 'number'), 'every event knows the move it happened on');
 });
 
 test('an empty market reshuffles once, then the hand ends in a tender count', () => {

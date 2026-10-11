@@ -86,3 +86,35 @@ Request (2026-10-10): add 3–4 games:
   - `/api/bowl/deck` returns 401 when signed out;
   - 0 page errors, 0 horizontal overflow.
 - Online matches were verified end to end on the isolated local stack: test identities only, never production accounts.
+
+## Whot! feel pass (2026-10-10)
+Request: "add some animation, I want to see the card come to me when I pick market, and see the total number of cards I have". Follow-up: "the game is so fast-paced… I can't tell what's happening, let it feel more real and seamless".
+
+**Drawing**
+- Cards fly face down from the market to whoever picks them up: you, or an opponent's fan. This covers market draws, Pick Two/Three and General Market, one card at a time.
+- Your cards land and flip face up, and your hand scrolls to show them.
+- A "+n" pops on the card counter.
+
+**Your card count**
+- A 🃏 badge in your bar always shows your card count. Opponents' counts sit under their fans.
+
+**Pacing**
+- The Machine waits for the last move to finish on screen before it moves: cards landing and call-outs. It then thinks for 1.4–2.3 s.
+- Opponents show "thinking…" on their turn.
+
+**Readability**
+- Played cards fly from the player's seat to the pile (650 ms).
+- Special cards trigger a call-out: HOLD ON!, PICK TWO!, PICK THREE!, SUSPENSION!, GENERAL MARKET!, WHOT! with the called shape.
+- The last three moves stay on screen as a history.
+- The end-of-hand sheet appears after the final card lands.
+
+**Technical**
+- Each Whot event now carries the move number it happened on (`s`), so every phone animates each event exactly once.
+- SVG ids are unique per card. Before this, a hidden template card could blank every card back's pattern.
+- Reduced-motion users get no flights or call-outs.
+
+**Verification**
+- Tests: 160/160 pass.
+- Live QA: 25 checks, 0 violations.
+- Frame captures confirmed the flight into your hand, the +1 pop and the call-outs.
+- Measured Machine turns: 1.4–5 s each, longer for Hold On and General Market chains.

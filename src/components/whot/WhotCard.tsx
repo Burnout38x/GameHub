@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import type { Shape, Suit } from '@/lib/whot/cards';
 import { cardById, powerOf, POWER_NAMES, SHAPE_NAMES } from '@/lib/whot/cards';
 
@@ -30,15 +31,17 @@ export function cardLabel(id: number): string {
 
 /** A face-up card. Width drives everything; the height follows the 5:7 card ratio. */
 export function CardFace({ id, width = 72 }: { id: number; width?: number }) {
+  // SVG ids are document-wide: each card needs its own, or a hidden card's gradient breaks the rest.
+  const cream = `cream${useId().replace(/:/g, '')}`;
   const card = cardById(id);
   const whot = card.suit === 'whot';
   const power = powerOf(card);
   return (
     <svg width={width} height={width * 1.4} viewBox="0 0 100 140" role="img" aria-label={cardLabel(id)}>
       <defs>
-        <linearGradient id="cream" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#fffaf0" /><stop offset="1" stopColor="#f3e7cf" /></linearGradient>
+        <linearGradient id={cream} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#fffaf0" /><stop offset="1" stopColor="#f3e7cf" /></linearGradient>
       </defs>
-      <rect x="1.5" y="1.5" width="97" height="137" rx="9" fill="url(#cream)" stroke="#d6c4a1" strokeWidth="2" />
+      <rect x="1.5" y="1.5" width="97" height="137" rx="9" fill={`url(#${cream})`} stroke="#d6c4a1" strokeWidth="2" />
       <rect x="6" y="6" width="88" height="128" rx="6" fill="none" stroke={INK} strokeOpacity=".18" strokeWidth="1.2" />
       {/* Corners */}
       <text x="10" y="24" fontSize="19" fontWeight="900" fill={INK}>{card.value}</text>
@@ -77,14 +80,15 @@ function Glyph({ suit }: { suit: Suit }) {
 
 /** The maroon back every Whot player knows. */
 export function CardBack({ width = 72 }: { width?: number }) {
+  const weave = `weave${useId().replace(/:/g, '')}`;
   return (
     <svg width={width} height={width * 1.4} viewBox="0 0 100 140" aria-hidden="true">
       <defs>
-        <pattern id="weave" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+        <pattern id={weave} width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <rect width="10" height="10" fill="#7a1420" /><rect width="5" height="10" fill="#8f1d2b" />
         </pattern>
       </defs>
-      <rect x="1.5" y="1.5" width="97" height="137" rx="9" fill="url(#weave)" stroke="#4c0b14" strokeWidth="2" />
+      <rect x="1.5" y="1.5" width="97" height="137" rx="9" fill={`url(#${weave})`} stroke="#4c0b14" strokeWidth="2" />
       <rect x="9" y="9" width="82" height="122" rx="6" fill="none" stroke="#fde68a" strokeOpacity=".55" strokeWidth="1.5" />
       <ellipse cx="50" cy="70" rx="30" ry="16" fill="#4c0b14" stroke="#fde68a" strokeWidth="1.5" />
       <text x="50" y="76" textAnchor="middle" fontSize="16" fontWeight="900" fill="#fde68a" letterSpacing="2">WHOT</text>
